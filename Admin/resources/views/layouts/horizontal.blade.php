@@ -375,7 +375,7 @@
 
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{ isset(Auth::user()->avatar) ? asset(Auth::user()->avatar) : asset('build/images/users/avatar-1.jpg') }}" alt="Header Avatar">
+                    <img class="rounded-circle header-profile-user" src="{{  asset('build/images/users/user-dummy-img.jpg')  }}" alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1" key="t-henry">{{ucfirst(Auth::user()->name)}}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
@@ -554,29 +554,22 @@
                                     <div class="arrow-down"></div>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="topnav-project">
-                                    <!-- <a href="projects-grid" class="dropdown-item" key="t-p-grid">@lang('translation.Projects_Grid')</a>
-                                    <a href="projects-list" class="dropdown-item" key="t-p-list">@lang('translation.Projects_List')</a>
-                                    <a href="arifurtable"  class="dropdown-item" key="arifurtable-list">@lang('translation.arifurtable')</a>  -->
-                                    
-                                    <!-- <a href="createcontract"  class="dropdown-item" key="createcontract-list">@lang('translation.createcontract')</a>  -->
                                     
                                     <a href="Contract-List"  class="dropdown-item" key="Contract-List">@lang('translation.Contract-List')</a>
-                                    <a href="Edit-Contract-List"  class="dropdown-item" key="Edit-Contract-List">@lang('translation.Edit-Contract-List')</a>
+                                   
 
                                     <a href="Product-List"  class="dropdown-item" key="Product-List">@lang('translation.Product-List')</a>
                                     <a href="Variable-List"  class="dropdown-item" key="Variable-List">@lang('translation.Variable-List')</a>
                                     <a href="Price-List"  class="dropdown-item" key="Price-List">@lang('translation.Price-List')</a>
                                    
-                                    <a href="Sales-Lists"  class="dropdown-item" key="Sales-Lists">@lang('translation. Sales-Lists')</a>
+                                    <a href="Contract-History"  class="dropdown-item" key="Contract-History">@lang('translation.Contract-History')</a>
+
+                                    <a href="Sales-Lists"  class="dropdown-item" key="Sales-Lists">@lang('translation.Sales-Lists')</a>
                                    
-                                    <!-- <a href=" Sales-Details"  class="dropdown-item" key=" Sales-Details">@lang('translation. Sales-Details')</a> -->
-                                     
-                                   
-                                    <a href="Add-New-Price"  class="dropdown-item" key="Add-New-Price">@lang('translation.Add-New-Price')</a>
+                                
                                     
                                     <a href="HeaderAndFooter"  class="dropdown-item" key="HeaderAndFooter">@lang('translation.HeaderAndFooter')</a>
-                                    <!-- <a href="projects-overview" class="dropdown-item" key="t-p-overview">@lang('translation.Project_Overview')</a>
-                                    <a href="projects-create" class="dropdown-item" key="t-create-new">@lang('translation.Create_New')</a> -->
+ 
                                 </div>
                             </div>
                             <div class="dropdown">

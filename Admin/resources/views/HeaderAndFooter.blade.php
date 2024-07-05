@@ -151,7 +151,7 @@
                 <!-- <th>Content</th> -->
                 <th style="text-align: left;">Created Date</th>
                 <th style="text-align: left;"> Updated Date</th>
-                <th style="text-align: left;" >Action</th>
+                <th style="text-align: left;  width: 18%" >Action</th>
             </tr>
         </thead>
        

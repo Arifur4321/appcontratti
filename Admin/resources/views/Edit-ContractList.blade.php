@@ -1,57 +1,59 @@
+ 
 @extends('layouts.master')
 @section('title')
-    @lang('translation.arifurtable')
+    @lang('translation.Variable-List')
 @endsection
+
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1')
             Projects
         @endslot
         @slot('title')
-           Edit Contract List 
+        Edit Contract List 
         @endslot
     @endcomponent
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Include SweetAlert CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
 <!-- Include SweetAlert JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
- 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
 
- <script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
-window.onbeforeunload = function() {
-    var message = 'Do you want to leave this page?';
-    return message;
-}
- </script>
-     
-    <!-- Header Or Footer modal working one  with below script-->
-    <div class="modal" id="HeaderOrFooterModal" tabindex="-1" aria-labelledby="HeaderOrFooterModalLabel" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="HeaderOrFooterModalLabel">Header/Footer Entries</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+ <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
+
+ <!-- Include MetisMenu via CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
+
+
+<div class="modal" id="HeaderOrFooterModal" tabindex="-1" aria-labelledby="HeaderOrFooterModalLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="HeaderOrFooterModalLabel">Header/Footer Entries</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="headerFooterForm">
+                    @csrf
+                    <input type="hidden" name="contractID" id="contractID" value="{{ $contract->id }}">
                     <div class="mb-3">
                         <input type="checkbox" id="checkbox1" onchange="toggleDropdowns('checkbox1', 'dropdown1', 'dropdown2')"> Header
                         <div class="row">
                             <div class="col">
-                                <select id="dropdown1" class="form-select" style="display: none;">
+                                <select name="headerID" id="dropdown1" class="form-select" style="display: none;">
                                     @foreach($headerEntries as $id => $header)
                                         <option value="{{ $id }}">{{ $header }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col">
-                                <select id="dropdown2" class="form-select" style="display: none;">
+                                <select name="headerFrequency" id="dropdown2" class="form-select" style="display: none;">
                                     <option value="first">First Page</option>
                                     <option value="every">Every Page</option>
                                 </select>
@@ -62,49 +64,30 @@ window.onbeforeunload = function() {
                         <input type="checkbox" id="checkbox2" onchange="toggleDropdowns('checkbox2', 'dropdown3', 'dropdown4')"> Footer
                         <div class="row">
                             <div class="col">
-                                <select id="dropdown3" class="form-select" style="display: none;">
+                                <select name="footerID" id="dropdown3" class="form-select" style="display: none;">
                                     @foreach($footerEntries as $id => $footer)
                                         <option value="{{ $id }}">{{ $footer }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col">
-                                <select id="dropdown4" class="form-select" style="display: none;">
+                                <select name="footerFrequency" id="dropdown4" class="form-select" style="display: none;">
                                     <option value="first">First Page</option>
                                     <option value="every">Every Page</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitForm()">Save</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function openHeaderOrFooterModal() {
-            var myModal = new bootstrap.Modal(document.getElementById('HeaderOrFooterModal'));
-            myModal.show();
-        }
-
-        function toggleDropdowns(checkboxId, dropdownId1, dropdownId2) {
-            var checkbox = document.getElementById(checkboxId);
-            var dropdown1 = document.getElementById(dropdownId1);
-            var dropdown2 = document.getElementById(dropdownId2);
-
-            if (checkbox.checked) {
-                dropdown1.style.display = 'block';
-                dropdown2.style.display = 'block';
-            } else {
-                dropdown1.style.display = 'none';
-                dropdown2.style.display = 'none';
-            }
-        }
-    </script>
 
     <div class="card">
             <div class="card-body">
@@ -160,20 +143,13 @@ window.onbeforeunload = function() {
                         </div>
                     </div>
 
-                <!-- For licensed CKEditor  onclick="previewPDF()"
-                     <div id="presence-list-container"></div>
-                    <div id="editor-container">
-                        <div class="container">
-                            <div id="outline" class="document-outline-container"></div>
-                          
-                        </div>
-                    </div> -->
+           
 
             <textarea id="editor" name="editor" style="width: 100%; max-width: 500px;">{{ $contract->editor_content }}</textarea>
           
 
                     <style>
-                        
+                        /*------------------------- CKEditor CSS ------------------------- */
                         .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
                             border-color: var(--ck-color-base-border);
                             height: 500px !important;
@@ -197,44 +173,6 @@ window.onbeforeunload = function() {
                 </form>
             </div>
         </div>
-
-        <!-- 
-        <script>
-            $(document).ready(function() {
-                    $('.add-checkbox').each(function() {
-                        var variableId = $(this).data('variable-id');
-                        var isChecked = localStorage.getItem('isChecked_' + variableId);
-                        if (isChecked === 'true') {
-                            $(this).prop('checked', true);
-                        }
-                    });
-                });
-        </script> 
-        -->
-
-
-
-<script>
-
-//variable pop up search
-$(document).ready(function () {
-        // Reference to the input field and the table
-        var $searchInput = $('#searchInputvariable');
-        var $table = $('#ContractList');
-
-        // Event listener for keyup on the search input
-        $searchInput.on('keyup', function () {
-            var searchText = $(this).val().toLowerCase();
-
-            // Filter the table rows based on the search text
-            $table.find('tbody tr').filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1);
-            });
-        });
-      });
-
-</script>
-
 
 <!-- Preview PDF Modal -->
 <div class="modal fade" id="previewPdfModal" tabindex="-1" aria-labelledby="previewPdfModalLabel" aria-hidden="true">
@@ -319,8 +257,385 @@ $(document).ready(function () {
     </div>
 
  
-       <!--  for select product modal checkbox -->
-        <script>
+   <!-- price Modal -->
+   <div class="modal" id="exampleModalPrice" tabindex="-1" aria-labelledby="exampleModalLabelNew" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                
+            <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabelNew">Price List</h5>
+                    <div class="col-sm">
+                        
+                    </div>
+
+                    <div class="search-box me-2 d-inline-block">
+                            <div class="position-relative">
+                                <input type="text" class="form-control" autocomplete="off" id="searchInputprice" placeholder="Search...">
+                                <i class="bx bx-search-alt search-icon"></i>
+                            </div>
+                        </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                    <form id="priceFormNew" action="/get-price-lists" method="POST">
+                        <!-- for table -->
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <table id="PriceList" action="/get-price-lists" method="POST" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Price ID</th>
+                                    <th>price Name</th>
+                                    <th>Currency</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($priceLists as $product)
+                                <tr>
+                                    <td>{{ $product->id }}</td>
+                                    <td>{{ $product->pricename }}</td>
+                                    <td>{{ $product->currency }}</td>
+                                    <td>
+                                        <!-- Checkbox to select product -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="{{$contract->id}},{{ $product->id }},{{ $product->pricename }}" id="priceCheckbox_{{ $product->id }}" name="selectedPrice">
+                                            <!-- <label class="form-check-label" for="priceCheckbox_{{ $product->id }}">
+                                                Add
+                                            </label> -->
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                   <button type="button" class="btn btn-primary" onclick="" id="addPriceButton" data-bs-dismiss="modal" disabled>Add</button>
+
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="button" class="btn btn-primary" onclick="">Save Product</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+<!-- variable Modal  
+ --><!-- variable Modal -->
+<div class="modal" id="exampleModalNew" tabindex="-1" aria-labelledby="exampleModalLabelNew" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelNew">Variable List</h5>
+                <div class="col-sm">
+                   
+                </div>
+
+                <div class="search-box me-2 d-inline-block">
+                        <div class="position-relative">
+                            <input type="text" class="form-control" autocomplete="off" id="searchInputvariable" placeholder="Search...">
+                            <i class="bx bx-search-alt search-icon"></i>
+                        </div>
+                    </div>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productFormNew" action="/edit-contract-list" method="POST">
+                    <!-- for table -->
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <!-- Wrap the table inside a div with fixed height and auto scroll -->
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        <table id="ContractList" action="/edit-contract-list" method="POST" class="table">
+                            <thead>
+                                <tr>
+                                    <th>VariableID</th>
+                                    <th>Var Name</th>
+                                    <th>Var Type</th>
+                                    <th>Description</th>
+                                    <th>CreatedDate</th>
+                                    <th>Action</th>
+                                    <th>Mandatory</th>
+                                    <th>Order</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($variables as $contract)
+                                <tr>
+                                    <td>{{ $contract->VariableID }}</td>
+                                    <td>{{ $contract->VariableName }}</td>
+                                    <td>{{ $contract->VariableType }}</td>
+                                    <td>{{ $contract->Description }}</td>
+                                    <td>{{ $contract->created_at }}</td>
+                                    <td>
+                                        <label class="form-check-label">
+                                            <input id="variablecheckbox" class="variable-checkbox form-check-input add-checkbox" type="checkbox" onchange="checkCheckbox(this, '{{ $contract->VariableName }}', '{{ $contract->VariableID }}')">
+                                        </label>
+                                        <button type="button" class="btn btn-primary add-button" data-bs-dismiss="modal" onclick="insertVariable('{{ $contract->VariableName }}')" disabled>Add</button>
+                                    </td>
+                                    <td>
+                                        <label class="form-check-label">
+                                            <!-- Hidden checkbox with checked attribute -->
+                                            <input id="mandatoryvariablecheckbox_{{ $contract->VariableID }}" class="mandatoryvariablecheckbox form-check-input" 
+                                            onchange="MandatoryCheckbox(this, '{{ $contract->VariableName }}', '{{ $contract->VariableID }}')"
+                                            type="checkbox"  disabled>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control input-number" id="variableorder" class="input-number" maxlength="2" disabled >
+                                        </div>
+                                    </td>
+                                  
+                              
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="saveAndCheck()" >Save</button>
+                <!-- <button type="button" class="btn btn-primary" onclick="">Save Product</button>   , '{{ $contract->id }}' , '{{ $contract->VariableID }}'  -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+ <!----------------------  script section start here  ---------------------------------------------------->
+ 
+@endsection
+
+@section('script')
+ 
+
+ 
+<!--  classic CSKEDitor custom build  -->
+<script src="{{ asset('js/newckeditor/build/ckeditor.js') }}"></script>
+
+<script>
+
+
+       let editor; // Global variable for main CKEditor instance    
+            
+        ClassicEditor
+            .create(document.querySelector('#editor'),{
+          
+                ckfinder: {
+                        uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                    },
+ 
+
+
+            }
+            )
+            .then(createdEditor => {
+                // Assign the created editor to the global variable
+                editor = createdEditor;
+
+                // Define a function to insert text into CKEditor 5
+                window.insertVariable = function(variableName) {
+                    // Insert variableName at the current cursor position
+                    const currentPosition = editor.model.document.selection.getLastPosition();
+                    if (currentPosition) {
+                        editor.model.change(writer => {
+                            writer.insertText("%"+variableName+"%", currentPosition);
+                        });
+                    }
+                }
+
+                window.insertprice = function(variableName) {
+                    // Insert variableName at the current cursor position
+                    const currentPosition = editor.model.document.selection.getLastPosition();
+                    var priceString = 'PRICE';
+                    if (currentPosition) {
+                        editor.model.change(writer => {
+                            writer.insertText("$"+priceString+"$", currentPosition);
+                        });
+                    }
+                }
+ 
+
+                
+                  // Signature button method
+                    $(document).ready(function() {
+                        $('#signbutton').click(function() {
+                            const imageUrl = 'https://i.ibb.co/71g553C/FIRMA-QUI.jpg';
+                            const currentPosition = editor.model.document.selection.getLastPosition();
+            
+                            if (currentPosition) {
+                                editor.model.change(writer => {
+                                    const imageElement = writer.createElement('imageBlock', {
+                                        src: imageUrl
+                                    });
+                                    editor.model.insertContent(imageElement, currentPosition);
+                                });
+                            }
+                        });
+                    });
+                
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+
+        // Function to delete "$PRICE$" string from CKEditor content
+        function deletePriceFromCKEditor() {
+            var priceRegex = /\$PRICE\$/g; // Regular expression to match all occurrences of "$PRICE$"
+            var editorData = editor.getData();
+            var newData = editorData.replace(priceRegex, ''); // Replace all occurrences of "$PRICE$" with an empty string
+            editor.data.set(newData, { suppressErrorInCollaboration: true });
+            console.log('I am here at deletePriceFromCKEditor');
+        }
+
+
+           
+    //variable pop up search
+    $(document).ready(function () {
+        // Reference to the input field and the table
+        var $searchInput = $('#searchInputvariable');
+        var $table = $('#ContractList');
+
+        // Event listener for keyup on the search input
+        $searchInput.on('keyup', function () {
+            var searchText = $(this).val().toLowerCase();
+
+            // Filter the table rows based on the search text
+            $table.find('tbody tr').filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1);
+            });
+        });
+      });
+
+window.onbeforeunload = function() {
+    var message = 'Do you want to leave this page?';
+    return message;
+}
+
+function openHeaderOrFooterModal() {
+        var contractID = window.location.pathname.split('/').pop();
+        document.getElementById('contractID').value = contractID;
+        
+        // Fetch the header and footer data passed from the backend
+        var headerFooterData = @json($headerFooterData);
+
+        if (headerFooterData) {
+            // Check and populate Header
+            if (headerFooterData.HeaderID) {
+                $('#checkbox1').prop('checked', true);
+                $('#dropdown1').val(headerFooterData.HeaderID).show();
+                $('#dropdown2').val(headerFooterData.HeaderPage).show();
+            } else {
+                $('#checkbox1').prop('checked', false);
+                $('#dropdown1').hide();
+                $('#dropdown2').hide();
+            }
+
+            // Check and populate Footer
+            if (headerFooterData.FooterID) {
+                $('#checkbox2').prop('checked', true);
+                $('#dropdown3').val(headerFooterData.FooterID).show();
+                $('#dropdown4').val(headerFooterData.FooterPage).show();
+            } else {
+                $('#checkbox2').prop('checked', false);
+                $('#dropdown3').hide();
+                $('#dropdown4').hide();
+            }
+        }
+
+        // Show the modal after setting the values
+        var myModal = new bootstrap.Modal(document.getElementById('HeaderOrFooterModal'));
+        myModal.show();
+    }
+
+    // Function to toggle dropdown visibility based on checkbox state
+    function toggleDropdowns(checkboxId, dropdownId1, dropdownId2) {
+        var checkbox = document.getElementById(checkboxId);
+        var dropdown1 = document.getElementById(dropdownId1);
+        var dropdown2 = document.getElementById(dropdownId2);
+
+        if (checkbox.checked) {
+            dropdown1.style.display = 'block';
+            dropdown2.style.display = 'block';
+        } else {
+            dropdown1.style.display = 'none';
+            dropdown2.style.display = 'none';
+        }
+    }
+
+     
+
+    function submitForm() {
+        var form = document.getElementById('headerFooterForm');
+        var formData = new FormData(form);
+
+        // Clear previous hidden inputs
+        var previousHiddenInputs = form.querySelectorAll('input[type=hidden][name="type"], input[type=hidden][name="HeaderID"], input[type=hidden][name="HeaderPage"], input[type=hidden][name="FooterID"], input[type=hidden][name="FooterPage"]');
+        previousHiddenInputs.forEach(input => input.remove());
+
+        // Append necessary hidden inputs based on the selected checkboxes
+        if (document.getElementById('checkbox1').checked) {
+            formData.append('type', 'header');
+            formData.append('HeaderID', document.getElementById('dropdown1').value);
+            formData.append('HeaderPage', document.getElementById('dropdown2').value);
+        }
+
+        if (document.getElementById('checkbox2').checked) {
+            formData.append('type', 'footer');
+            formData.append('FooterID', document.getElementById('dropdown3').value);
+            formData.append('FooterPage', document.getElementById('dropdown4').value);
+        }
+
+        // Send the AJAX request
+        $.ajax({
+            url: "{{ url('/saveHeaderFooter') }}",
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('input[name="_token"]').val()
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: response.message,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                var myModal = bootstrap.Modal.getInstance(document.getElementById('HeaderOrFooterModal'));
+                myModal.hide();
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'There was an issue saving your data. Please try again.',
+                });
+
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    function createHiddenInput(name, value) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        return input;
+    }
 
         document.addEventListener("DOMContentLoaded", function() {
             // Get all checkboxes within the modal content
@@ -411,22 +726,7 @@ $(document).ready(function () {
         });
 
 
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     // Get all checkboxes within the modal content
-        //     var checkboxes = document.querySelectorAll('#exampleModalProduct input[type="checkbox"]');
-            
-        //     // Add event listener to each checkbox
-        //     checkboxes.forEach(function(checkbox) {
-        //         checkbox.addEventListener('change', function() {
-        //             // Uncheck all checkboxes except the one that was just checked
-        //             checkboxes.forEach(function(cb) {
-        //                 if (cb !== checkbox) {
-        //                     cb.checked = false;
-        //                 }
-        //             });
-        //         });
-        //     });
-        // });
+ 
 
         $(document).ready(function () {
         // Reference to the input field and the table
@@ -443,78 +743,10 @@ $(document).ready(function () {
             });
         });
       });
-        </script>
 
-    <!-- price Modal -->
-    <div class="modal" id="exampleModalPrice" tabindex="-1" aria-labelledby="exampleModalLabelNew" aria-hidden="true" data-bs-backdrop="static">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                
-            <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabelNew">Price List</h5>
-                    <div class="col-sm">
-                        
-                    </div>
 
-                    <div class="search-box me-2 d-inline-block">
-                            <div class="position-relative">
-                                <input type="text" class="form-control" autocomplete="off" id="searchInputprice" placeholder="Search...">
-                                <i class="bx bx-search-alt search-icon"></i>
-                            </div>
-                        </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
 
-                <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
-                    <form id="priceFormNew" action="/get-price-lists" method="POST">
-                        <!-- for table -->
-                        <meta charset="UTF-8">
-                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <table id="PriceList" action="/get-price-lists" method="POST" class="table">
-                            <thead>
-                                <tr>
-                                    <th>Price ID</th>
-                                    <th>price Name</th>
-                                    <th>Currency</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($priceLists as $product)
-                                <tr>
-                                    <td>{{ $product->id }}</td>
-                                    <td>{{ $product->pricename }}</td>
-                                    <td>{{ $product->currency }}</td>
-                                    <td>
-                                        <!-- Checkbox to select product -->
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="{{$contract->id}},{{ $product->id }},{{ $product->pricename }}" id="priceCheckbox_{{ $product->id }}" name="selectedPrice">
-                                            <!-- <label class="form-check-label" for="priceCheckbox_{{ $product->id }}">
-                                                Add
-                                            </label> -->
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                   <button type="button" class="btn btn-primary" onclick="" id="addPriceButton" data-bs-dismiss="modal" disabled>Add</button>
-
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
-                    <!-- <button type="button" class="btn btn-primary" onclick="">Save Product</button> -->
-                </div>
-            </div>
-        </div>
-    </div>
-
- 
-<!--  for select price modal checkbox -->
-    <script>
-        
-         document.addEventListener("DOMContentLoaded", function() {
+      document.addEventListener("DOMContentLoaded", function() {
             var checkboxes = document.querySelectorAll('#exampleModalPrice input[type="checkbox"]');
             var addPriceButton = document.getElementById('addPriceButton');
 
@@ -540,12 +772,7 @@ $(document).ready(function () {
                             pricename: ids[2]
                         };
                         console.log('selectedPriceId :', selectedPriceId);
-                        // addPriceButton.addEventListener('click', function() {
-                        //     // call insertprice logic when the button is clicked
-                        //     insertprice(selectedPriceId.pricename);
-                        //     console.log('Add button clicked!');
-                        // });
-                        // insert $PRICE$ in Ckeditor 
+             
 
                         var csrfToken = $('meta[name="csrf-token"]').attr('content');    
                         if (selectedPriceId !== null) {
@@ -614,15 +841,7 @@ $(document).ready(function () {
             });
         });
 
-        //addPriceButton.removeEventListener('click', arguments.callee);
-        // addPriceButton.addEventListener('click', function(event) {
-        //                     // call insertprice logic when the button is clicked
-        //                     var price = 'price';
-        //                     insertprice(price);
-        //                     console.log('Add button clicked! 1st time');
-        //                     // Remove the event listener after it has been triggered
-        //                     addPriceButton.removeEventListener('click', arguments.callee);
-        // });
+ 
 
         $(document).ready(function () {
         // Reference to the input field and the table
@@ -639,136 +858,15 @@ $(document).ready(function () {
             });
         });
       });
-        </script>
-
-@endsection
-
-@section('script')
-<!-- <script src="https://cdn.ckbox.io/CKBox/2.2.0/ckbox.js"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/super-build/ckeditor.js"></script> -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<!-- image resize CDN but not good
-    <script src="https://cdn.jsdelivr.net/npm/ckeditor5-build-classic-with-image-resize@12.4.0/build/ckeditor.min.js"></script> -->
-<!--  decoupled document CSKEDitor  -->
-<!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/decoupled-document/ckeditor.js"></script> -->
-
-<!--  classic CSKEDitor  
-<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>  -->
-
-<!--  classic CSKEDitor custom build  -->
-<script src="{{ asset('js/ckeditor/build/ckeditor.js') }}"></script>
-<script>
-       
-       let editor; // Global variable for main CKEditor instance    
-         
-        
-        ClassicEditor
-            .create(document.querySelector('#editor'),{
-          
-                ckfinder: {
-                        uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
-                    },
-                // testing image resize plugins 
-                // plugins: [Image, ImageResize],
-                // toolbar: ['imageResize', '|', 'imageUpload', '|', 'undo', 'redo']
-            }
-            )
-            .then(createdEditor => {
-                // Assign the created editor to the global variable
-                editor = createdEditor;
-
-                // Define a function to insert text into CKEditor 5
-                window.insertVariable = function(variableName) {
-                    // Insert variableName at the current cursor position
-                    const currentPosition = editor.model.document.selection.getLastPosition();
-                    if (currentPosition) {
-                        editor.model.change(writer => {
-                            writer.insertText("%"+variableName+"%", currentPosition);
-                        });
-                    }
-                }
-
-                window.insertprice = function(variableName) {
-                    // Insert variableName at the current cursor position
-                    const currentPosition = editor.model.document.selection.getLastPosition();
-                    var priceString = 'PRICE';
-                    if (currentPosition) {
-                        editor.model.change(writer => {
-                            writer.insertText("$"+priceString+"$", currentPosition);
-                        });
-                    }
-                }
-
-                   // Signature button with hellobox signer tag 
-                    // $(document).ready(function() {
-                    //     $('#signbutton').click(function() {
-                    //         const currentPosition = editor.model.document.selection.getLastPosition();
-                    //         var SignatureString = '[sig|req|signer1]';
-                    //         if (currentPosition) {
-                    //             editor.model.change(writer => {
-                    //                 writer.insertText(SignatureString, currentPosition);
-                    //             });
-                    //         }
-                    //     });
-                    // });
 
 
-                
-                  // Signature button method
-                    $(document).ready(function() {
-                        $('#signbutton').click(function() {
-                            const imageUrl = 'https://i.ibb.co/71g553C/FIRMA-QUI.jpg';
-                            const currentPosition = editor.model.document.selection.getLastPosition();
-            
-                            if (currentPosition) {
-                                editor.model.change(writer => {
-                                    const imageElement = writer.createElement('imageBlock', {
-                                        src: imageUrl
-                                    });
-                                    editor.model.insertContent(imageElement, currentPosition);
-                                });
-                            }
-                        });
-                    });
-                
-            })
-            .catch(error => {
-                console.error(error);
-            });
-               
-           
 
-        //     function previewPDF() {
-        //     // Get data from CKEditor
-        //     var editorData = editor.getData();
 
-        //     // Convert HTML content to PDF using jQuery
-        //     var myWindow = window.open('', 'PRINT', 'height=600,width=800');
 
-        //     myWindow.document.write('<html><head><title>PDF Preview</title>');
-        //     myWindow.document.write('</head><body>');
-        //     myWindow.document.write(editorData);
-        //     myWindow.document.write('</body></html>');
-
-        //     myWindow.document.close(); // necessary for IE >= 10
-        //     myWindow.onload = function () {
-        //         myWindow.print();
-        //         myWindow.close();
-        //     };
-        // }
-
-        // Function to delete "$PRICE$" string from CKEditor content
-        function deletePriceFromCKEditor() {
-            var priceRegex = /\$PRICE\$/g; // Regular expression to match all occurrences of "$PRICE$"
-            var editorData = editor.getData();
-            var newData = editorData.replace(priceRegex, ''); // Replace all occurrences of "$PRICE$" with an empty string
-            editor.data.set(newData, { suppressErrorInCollaboration: true });
-            console.log('I am here at deletePriceFromCKEditor');
-        }
 
 
         function previewPDF() {
+
             // Get data from CKEditor
             var editorData = editor.getData();
 
@@ -830,6 +928,7 @@ $(document).ready(function () {
             // Write editor data
             myWindow.document.write(editorData);
 
+           
             // Include footer based on selection
             myWindow.document.write('</body><footer>' + footerHTML + '</footer></html>');
 
@@ -840,57 +939,20 @@ $(document).ready(function () {
             };
         }
         
-    //  $('#mytestButton').on('click', function() {
-    //         //event.preventDefault();
-    //         // Call the getTheContract() function when the button is clicked
-    //         var selectedContract = $('#Contract').val();
-            
-    //         getTheContractmytest(selectedContract);
-    //           // Wait for 5 seconds (5000 milliseconds)
-             
-    //     });
-
-
-    function previewPDFNew() {
+ $(document).ready(function() {
+    
+  window.previewPDFNew = function() {
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
         var editorData = editor.getData();
+        var contractID = window.location.pathname.split('/').pop();
 
-        var headerCheckboxElement = document.getElementById('checkbox1');
-        var footerCheckboxElement = document.getElementById('checkbox2');
-        var headerDropdown = document.getElementById('dropdown1');
-        var footerDropdown = document.getElementById('dropdown3');
-        var headerLocationElement = document.getElementById('dropdown2');
-        var footerLocationElement = document.getElementById('dropdown4');
-
-        console.log('headerCheckboxElement , footerCheckboxElement ,headerDropdown ,  headerLocationElement , footerLocationElement ',
-        headerCheckboxElement , footerCheckboxElement ,headerDropdown ,  headerLocationElement , footerLocationElement);
-
-        // Check if elements exist
-        if (!headerCheckboxElement || !footerCheckboxElement || !headerDropdown || !footerDropdown || !headerLocationElement || !footerLocationElement) {
-            console.error('One or more elements are missing');
-            return;
-        }
-
-        var headerCheckbox = headerCheckboxElement.checked;
-        var footerCheckbox = footerCheckboxElement.checked;
-
-        var headerValue = headerDropdown.selectedIndex !== -1 ? headerDropdown.options[headerDropdown.selectedIndex].text : null;
-        var footerValue = footerDropdown.selectedIndex !== -1 ? footerDropdown.options[footerDropdown.selectedIndex].text : null;
-
-        var headerLocation = headerLocationElement.value;
-        var footerLocation = footerLocationElement.value;
-
+        $('#spinner-overlay').show();
         $.ajax({
-            url: '/get-pdf-sales',
+            url: '/get-pdf-sales-new',
             type: 'POST',
             data: {
                 editorData: editorData,
-                headerCheckbox: headerCheckbox,
-                footerCheckbox: footerCheckbox,
-                headerValue: headerValue,
-                footerValue: footerValue,
-                headerLocation: headerLocation,
-                footerLocation: footerLocation
+                contractID: contractID,
             },
             headers: {
                 'X-CSRF-TOKEN': csrfToken
@@ -899,34 +961,48 @@ $(document).ready(function () {
                 var pdfUrl = response.pdf_url;
                 console.log('pdfUrl:', pdfUrl);
 
+                // Inject the PDF into the modal body
                 $('#previewPdfModalBody').html('<embed src="' + pdfUrl + '" type="application/pdf" style="width:100%; height:100%;">');
-                $('#previewPdfModal').modal('show');
+                
+                // Show the modal
+                //$('#previewPdfModal').modal('show');
 
+
+                var myModal = new bootstrap.Modal(document.getElementById('previewPdfModal'));
+                myModal.show();
+                // now working
                 $('#closePreviewPdfModalBtn').on('click', function() {
-                    $.ajax({
-                        url: '/delete-pdf',
-                        type: 'POST',
-                        data: {
-                            pdfUrl: pdfUrl
-                        },
-                        headers: {
-                            'X-CSRF-TOKEN': csrfToken
-                        },
-                        success: function(response) {
-                            console.log('PDF deleted successfully');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error deleting PDF:', error);
-                        }
+                        $.ajax({
+                            url: '/delete-pdf',
+                            type: 'POST',
+                            data: {
+                                pdfUrl: pdfUrl
+                            },
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            success: function(response) {
+                                console.log('PDF deleted successfully');
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error deleting PDF:', error);
+                            }
+                        });
                     });
-                });
+
+                // Hide the spinner
+                $('#spinner-overlay').hide();
             },
             error: function(xhr, status, error) {
-                console.error(error);
+                console.error('Error generating PDF:', error);
+                $('#spinner-overlay').hide();
             }
         });
     }
-  
+    
+ });
+
+
     // Function to get the contract and generate PDF
     function getTheContractmytest(selectedContract) {
         if (selectedContract) {
@@ -989,8 +1065,8 @@ $(document).ready(function () {
             }
         });
 
-        function saveData() {
-        // Check if CKEditor is initialized
+        function saveData() {     
+        // Check if CKEditor is initialized 
         if (!editor) {
             console.error('CKEditor is not initialized.');
             return;
@@ -1092,11 +1168,7 @@ $(document).ready(function () {
                             var checkbox = document.getElementById('productCheckbox_' + response.product_id);
                             if (checkbox) {
                                 checkbox.checked = true;
-                               // var addPriceButton = document.getElementById('addPriceButton');
-                               // addPriceButton.disabled = false;
-                                //addPriceButton.removeEventListener('click', arguments.callee);
-                            
-
+     
                             }
                         }
                     },
@@ -1158,52 +1230,7 @@ $(document).ready(function () {
 
  
              
-        //     function openModalNew(contractID, variableIDs) {
-        //     // AJAX request to retrieve variable IDs
-        //     $.ajax({
-        //         url: '/checkedVariable',
-        //         method: 'POST',
-        //         data: {
-        //             _token: "{{ csrf_token() }}",
-        //             contract_id: contractID
-        //         },
-        //         success: function(response) {
-        //             // Loop through the response data
-
-        //             console.log('response value now : ',response); 
-        //             response.forEach(function(variableID) {
-        //                 // Find the checkbox corresponding to the variableID in the table and check it
-        //                 $('tbody tr').each(function() {
-        //                     var rowVariableID = $(this).find('td:first').text().trim(); // Get the VariableID of the current row
-        //                     if (rowVariableID === variableID) {
-        //                         $(this).find('.add-checkbox').prop('checked', true);
-        //                         $(this).find('.add-button').prop('disabled', false);
-
-        //                         // for the mandatory checlbox  .prop('checked', false)
-        //                         $(this).find('.mandatoryvariablecheckbox').prop('disabled', false);
-        //                       //  $(this).find('.input-number').val(orderValues);
-                                
-        //                     }
-        //                 });
-        //             });
-
-        //             // Open the modal with the retrieved variable IDs
-        //             var myModal = new bootstrap.Modal(document.getElementById('exampleModalNew'));
-        //             myModal.show(); // Open the modal
-
-        //             // Delegate the change event handling to the tbody element
-        //             $('tbody').on('change', '.add-checkbox', function() {
-        //                 // Find the parent row of the checkbox
-        //                 var $row = $(this).closest('tr');
-        //                 // Find the add button within the same row and enable/disable it based on the checkbox state
-        //                 $row.find('.add-button').prop('disabled', !$(this).prop('checked'));
-        //             });
-        //         },
-        //         error: function(xhr, status, error) {
-        //             // Handle error
-        //         }
-        //     });
-        // }
+         
 
         function openModalNew(contractID, variableIDs) {
             // AJAX request to retrieve variable IDs and order values
@@ -1229,9 +1256,20 @@ $(document).ready(function () {
                             // Enable the add button
                             $row.find('.add-button').prop('disabled', false);
                             // Enable the mandatory checkbox
-                            $row.find('.mandatoryvariablecheckbox').prop('disabled', false).prop('checked', true);
+                            //$row.find('.mandatoryvariablecheckbox').prop('disabled', false);
+                            
+                            // Set the mandatory checkbox based on the response
+                            if (response.mandatoryStatuses[index]) {
+                                $row.find('.mandatoryvariablecheckbox').prop('disabled', false).prop('checked', true);
+                            } else {
+                                $row.find('.mandatoryvariablecheckbox').prop('disabled', false).prop('checked', false);
+                            }
+                            
                             // Set the order value in the input field
                             $row.find('.input-number').val(response.orderValues[index]);
+                            $row.find('.input-number').prop('disabled', false);
+
+
                         }
                     });
 
@@ -1255,95 +1293,7 @@ $(document).ready(function () {
  
         $('#exampleModalNew').modal('hide');
 
-</script>
-
-<!-- variable Modal  
- --><!-- variable Modal -->
-<div class="modal" id="exampleModalNew" tabindex="-1" aria-labelledby="exampleModalLabelNew" aria-hidden="true" data-bs-backdrop="static">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabelNew">Variable List</h5>
-                <div class="col-sm">
-                   
-                </div>
-
-                <div class="search-box me-2 d-inline-block">
-                        <div class="position-relative">
-                            <input type="text" class="form-control" autocomplete="off" id="searchInputvariable" placeholder="Search...">
-                            <i class="bx bx-search-alt search-icon"></i>
-                        </div>
-                    </div>
-
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="productFormNew" action="/edit-contract-list" method="POST">
-                    <!-- for table -->
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <!-- Wrap the table inside a div with fixed height and auto scroll -->
-                    <div style="max-height: 400px; overflow-y: auto;">
-                        <table id="ContractList" action="/edit-contract-list" method="POST" class="table">
-                            <thead>
-                                <tr>
-                                    <th>VariableID</th>
-                                    <th>Var Name</th>
-                                    <th>Var Type</th>
-                                    <th>Description</th>
-                                    <th>CreatedDate</th>
-                                    <th>Action</th>
-                                    <th>Mandatory</th>
-                                    <th>Order</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($variables as $contract)
-                                <tr>
-                                    <td>{{ $contract->VariableID }}</td>
-                                    <td>{{ $contract->VariableName }}</td>
-                                    <td>{{ $contract->VariableType }}</td>
-                                    <td>{{ $contract->Description }}</td>
-                                    <td>{{ $contract->created_at }}</td>
-                                    <td>
-                                        <label class="form-check-label">
-                                            <input id="variablecheckbox" class="variable-checkbox form-check-input add-checkbox" type="checkbox" onchange="checkCheckbox(this, '{{ $contract->VariableName }}', '{{ $contract->VariableID }}')">
-                                        </label>
-                                        <button type="button" class="btn btn-primary add-button" data-bs-dismiss="modal" onclick="insertVariable('{{ $contract->VariableName }}')" disabled>Add</button>
-                                    </td>
-                                    <td>
-                                        <label class="form-check-label">
-                                            <!-- Hidden checkbox with checked attribute -->
-                                            <input id="mandatoryvariablecheckbox_{{ $contract->VariableID }}" class="mandatoryvariablecheckbox form-check-input" 
-                                            onchange="MandatoryCheckbox(this, '{{ $contract->VariableName }}', '{{ $contract->VariableID }}')"
-                                            type="checkbox"  disabled>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control input-number" id="variableorder" class="input-number" maxlength="2" disabled >
-                                        </div>
-                                    </td>
-                                  
-                              
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"  onclick="saveAndCheck()" >Save</button>
-                <!-- <button type="button" class="btn btn-primary" onclick="">Save Product</button>   , '{{ $contract->id }}' , '{{ $contract->VariableID }}'  -->
-            </div>
-        </div>
-    </div>
-</div>
-
  
-
-<script>
  
  function saveAndCheck() {
     // Save functionality here
@@ -1543,111 +1493,112 @@ $(document).ready(function () {
 
  
  
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
  <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+ 
 <style>
-    #spinner-overlay {
-        display: none;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-    }
+        #spinner-overlay {
+            display: none;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
 
-    #spinner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 120px;
-        height: 120px;
-    }
+        #spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+        }
 
-    .ring {
-        border: 8px solid transparent;
-        border-radius: 50%;
-        position: absolute;
-        animation: spin 1.5s linear infinite;
-    }
+        .ring {
+            border: 8px solid transparent;
+            border-radius: 50%;
+            position: absolute;
+            animation: spin 1.5s linear infinite;
+        }
 
-    .ring:nth-child(1) {
-        width: 120px;
-        height: 120px;
-        border-top: 8px solid #3498db;
-        animation-delay: -0.45s;
-    }
+        .ring:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            border-top: 8px solid #3498db;
+            animation-delay: -0.45s;
+        }
 
-    .ring:nth-child(2) {
-        width: 100px;
-        height: 100px;
-        border-right: 8px solid #f39c12;
-        animation-delay: -0.3s;
-    }
+        .ring:nth-child(2) {
+            width: 100px;
+            height: 100px;
+            border-right: 8px solid #f39c12;
+            animation-delay: -0.3s;
+        }
 
-    .ring:nth-child(3) {
-        width: 80px;
-        height: 80px;
-        border-bottom: 8px solid #e74c3c;
-        animation-delay: -0.15s;
-    }
+        .ring:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            border-bottom: 8px solid #e74c3c;
+            animation-delay: -0.15s;
+        }
 
-    .ring:nth-child(4) {
-        width: 60px;
-        height: 60px;
-        border-left: 8px solid #9b59b6;
-    }
+        .ring:nth-child(4) {
+            width: 60px;
+            height: 60px;
+            border-left: 8px solid #9b59b6;
+        }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-</style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+ 
+    <!-- Spinner Overlay -->
+    <div id="spinner-overlay">
+        <div id="spinner">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
+        </div>
+    </div>  
 
-<!-- Spinner Overlay -->
-<div id="spinner-overlay">
-    <div id="spinner">
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-        <div class="ring"></div>
-    </div>
-</div>
+  
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const spinnerOverlay = document.getElementById("spinner-overlay");
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const spinnerOverlay = document.getElementById("spinner-overlay");
-
-        // Show the spinner when the page is loading
-        spinnerOverlay.style.display = "block";
-
-        window.addEventListener("load", function() {
-            // Hide the spinner when the page has fully loaded
-            spinnerOverlay.style.display = "none";
-        });
-
-        document.addEventListener("ajaxStart", function() {
-            // Show the spinner when an AJAX request starts
+            // Show the spinner when the page is loading
             spinnerOverlay.style.display = "block";
-        });
 
-        document.addEventListener("ajaxStop", function() {
-            // Hide the spinner when the AJAX request completes
-            spinnerOverlay.style.display = "none";
-        });
-    });
-</script>
+            window.addEventListener("load", function() {
+                // Hide the spinner when the page has fully loaded
+                spinnerOverlay.style.display = "none";
+            });
 
+            $(document).ajaxStart(function() {
+                // Show the spinner when an AJAX request starts
+                spinnerOverlay.style.display = "block";
+            });
+
+            $(document).ajaxStop(function() {
+                // Hide the spinner when the AJAX request completes
+                spinnerOverlay.style.display = "none";
+            });
+        });
+    </script>
  
 @endsection
  

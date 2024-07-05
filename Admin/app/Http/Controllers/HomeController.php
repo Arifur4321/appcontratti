@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use App\Models\Contract;
+use App\Models\VariableList; 
 
 class HomeController extends Controller
 {
@@ -36,7 +38,18 @@ class HomeController extends Controller
 
     public function root()
     {
-        return view('index');
+        return view('/');
+    }
+
+    public function contractList()
+    {
+        // Fetch contracts from the database if needed
+ 
+
+
+        $contracts = Contract::all();
+        $variables = VariableList::all();
+        return view('ContractList', compact('contracts', 'variables'));
     }
 
     /*Language Translation*/

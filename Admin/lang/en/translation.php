@@ -63,6 +63,7 @@ return [
   "createcontract" => "New Contract",
   "Contract-List" => "Contract-List",
   "Price-List" => "Price-List",
+  "Contract-History" => "Contract-History",
   "Sales-Lists"=>"Sales-Lists",
   "Sales-Details"=>"Sales-Details",
   "Add-New-Price" => "Add-New-Price",

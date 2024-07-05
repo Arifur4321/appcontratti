@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 //For the pricelist table
 use App\Models\PriceList;
+ 
+use App\Models\HeaderAndFooterContractpage;
 
 class EditContractListController extends Controller
 {
@@ -193,28 +195,34 @@ class EditContractListController extends Controller
     
    // to insert contractvariablecheckbox when pop up variable is checked
 
-       public function insertContractVariable(Request $request)
-       {
-           // Retrieve contract_id and variable_id from the request
-           $contractId = $request->input('contract_id');
-           $variableId = $request->input('variable_id');
-           $Mandatory = $request->input('Mandatory');
-        
-           $orderValue = $request->input('orderValue');
+ 
+   public function insertContractVariable(Request $request)
+   {
+       // Retrieve contract_id and variable_id from the request
+       $contractId = $request->input('contract_id');
+       $variableId = $request->input('variable_id');
+       $mandatory = $request->input('Mandatory');
+       $orderValue = $request->input('orderValue');
    
-           // Insert data into the contractvariablecheckbox table
-           $contractVariable = new contractvariablecheckbox();
-           $contractVariable->LoggedinUser = Auth::user()->name;
-           $contractVariable->ContractID = $contractId; // Update to match the actual column name in the table
-           $contractVariable->VariableID = $variableId;
-           $contractVariable->Mandatory = $Mandatory;
-           $contractVariable->Order = $orderValue;
-         //  $contractVariable->Mandatory = $Mandatory; // Update to match the actual column name in the table
-           $contractVariable->save();
+       // Delete all existing records for the given contract_id and variable_id
+       ContractVariableCheckbox::where('ContractID', $contractId)
+                               ->where('VariableID', $variableId)
+                               ->delete();
    
-           // You can return a response if needed
-           return response()->json(['message' => 'Data inserted successfully']);
-       }
+       // Create a new record with the updated values
+       $contractVariable = new ContractVariableCheckbox();
+       $contractVariable->LoggedinUser = Auth::user()->name;
+       $contractVariable->ContractID = $contractId; // Ensure this matches the actual column name
+       $contractVariable->VariableID = $variableId;
+       $contractVariable->Mandatory = $mandatory;
+       $contractVariable->Order = $orderValue;
+       $contractVariable->save();
+   
+       // Return a response indicating success
+       return response()->json(['message' => 'Data inserted successfully']);
+   }
+
+
 
        //delete the row from contractvariablecheckbox when unchecked
        public function deleteContractVariable(Request $request)
@@ -255,39 +263,46 @@ class EditContractListController extends Controller
 
        // checked the variableID corresponding to contractID
 
-       public function checkedVariable(Request $request)
-       {
-           $contractID = $request->input('contract_id');
-       
-           // Retrieve variable IDs and order values
-           $variables = ContractVariableCheckbox::where('ContractID', $contractID)
-                                                ->select('VariableID', 'Order')
-                                                ->get();
-       
-           // Prepare the response data array
-           $responseData = [
-               'variableIDs' => $variables->pluck('VariableID')->toArray(),
-               'orderValues' => $variables->pluck('Order')->toArray(),
-           ];
-       
-           // Return the response as JSON
-           return response()->json($responseData);
-       }
-       
-
     //    public function checkedVariable(Request $request)
-    //     {
-    //         $contractID = $request->input('contract_id');
+    //    {
+    //        $contractID = $request->input('contract_id');
+       
+    //        // Retrieve variable IDs and order values
+    //        $variables = ContractVariableCheckbox::where('ContractID', $contractID)
+    //                                             ->select('VariableID', 'Order')
+    //                                             ->get();
+       
+    //        // Prepare the response data array
+    //        $responseData = [
+    //            'variableIDs' => $variables->pluck('VariableID')->toArray(),
+    //            'orderValues' => $variables->pluck('Order')->toArray(),
+    //        ];
+       
+    //        // Return the response as JSON
+    //        return response()->json($responseData);
+    //    }
+       
 
-    //         // Assuming ContractVariableCheckbox is the correct model for the contractvariablecheckbox table
-    //         $variableIDs = ContractVariableCheckbox::where('ContractID', $contractID)->pluck('VariableID')->toArray();
-    //         $orderValue = ContractVariableCheckbox::where('ContractID', $contractID)->pluck('Order')->toArray();
-    //       //  $MandatoryIDs = ContractVariableCheckbox::where   do the query based on ContractID and  VariableID to get Mandatory value true or false 
+    public function checkedVariable(Request $request)
+    {
+        $contractID = $request->input('contract_id');
+    
+        // Retrieve variable IDs, order values, and mandatory status
+        $variables = ContractVariableCheckbox::where('ContractID', $contractID)
+                                             ->select('VariableID', 'Order', 'Mandatory') // Include 'Mandatory' in the selection
+                                             ->get();
+    
+        // Prepare the response data array
+        $responseData = [
+            'variableIDs' => $variables->pluck('VariableID')->toArray(),
+            'orderValues' => $variables->pluck('Order')->toArray(),
+            'mandatoryStatuses' => $variables->pluck('Mandatory')->toArray() // Add mandatory statuses to the response
+        ];
+    
+        // Return the response as JSON
+        return response()->json($responseData);
+    }
 
-    //         return response()->json($variableIDs  );
-    //     }
-
-      
 
         public function getMandatoryFieldValues(Request $request)
         {
@@ -314,17 +329,43 @@ class EditContractListController extends Controller
     }
 
      
+    // public function edit($id)
+    // {
+       
+    //     $contract = Contract::findOrFail($id);
+    //     $variables = VariableList::all();
+    //     $products = Product::all(); 
+    //     $headerEntries = HeaderAndFooter::where('type', 'Header')->pluck('name', 'id')->toArray();
+    //     $footerEntries = HeaderAndFooter::where('type', 'Footer')->pluck('name', 'id')->toArray();
+    //     $priceLists = PriceList::all();
+    //     return view('Edit-ContractList', compact('contract', 'variables', 'products','headerEntries', 'footerEntries','priceLists'));
+    // }
+
     public function edit($id)
     {
-       
+        // Fetch the contract details
         $contract = Contract::findOrFail($id);
+        
+        // Fetch all variables and products
         $variables = VariableList::all();
-        $products = Product::all(); 
+        $products = Product::all();
+
+        // Fetch header and footer entries
         $headerEntries = HeaderAndFooter::where('type', 'Header')->pluck('name', 'id')->toArray();
         $footerEntries = HeaderAndFooter::where('type', 'Footer')->pluck('name', 'id')->toArray();
+
+        // Fetch price lists
         $priceLists = PriceList::all();
-        return view('Edit-ContractList', compact('contract', 'variables', 'products','headerEntries', 'footerEntries','priceLists'));
+
+        // Fetch existing header/footer settings for the contract
+        $headerFooterData = HeaderAndFooterContractpage::where('contractID', $id)->first();
+
+        // Pass all the necessary data to the view
+        return view('Edit-ContractList', compact('contract', 'variables', 'products', 'headerEntries', 'footerEntries', 'priceLists', 'headerFooterData'));
     }
+
+
+
     public function updateContract(Request $request)
     {
         // Validate the request data

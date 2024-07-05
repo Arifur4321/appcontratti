@@ -78,7 +78,7 @@
                 <th style="text-align: left;" >Email</th>
                 <th style="text-align: left;" >Phone</th>
             
-                <th style="text-align: left;">Action</th>
+                <th style="text-align: left; width: 18%">Action</th>
             </tr>
         </thead>
         <!-- Table body  -->

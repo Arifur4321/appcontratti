@@ -22,148 +22,311 @@ class ProductController extends Controller
 
 
 //********************************* */
-public function generatePdfforSales(Request $request)
-{
-    $editorData = $request->input('editorData');
+ 
+    public function generatePdfforSales(Request $request)
+    {
+        $editorData = $request->input('editorData');
+        $headerCheckbox = filter_var($request->input('headerCheckbox'), FILTER_VALIDATE_BOOLEAN);
+        $footerCheckbox = filter_var($request->input('footerCheckbox'), FILTER_VALIDATE_BOOLEAN);
+        $headerValue = $request->input('headerValue');
+        $footerValue = $request->input('footerValue');
+        $headerLocation = $request->input('headerLocation');
+        $footerLocation = $request->input('footerLocation');
 
-    $htmlContent = $editorData;
+        $htmlContent = $editorData;
+        $htmlContent = $this->processImageTags($htmlContent);
 
-    // Process image tags
-    $htmlContent = $this->processImageTags($htmlContent);
+        $options = new Options();
+        $options->set('isRemoteEnabled', true);
 
-    // Set options to allow for remote file access
-    $options = new Options();
-    $options->set('isRemoteEnabled', true);
+        $dompdf = new Dompdf($options);
+        $dompdf->set_option('isHtml5ParserEnabled', true);
 
-    $dompdf = new Dompdf($options);
-    $dompdf->set_option('isHtml5ParserEnabled', true);
+        $htmlContent = str_replace('src="http://localhost:8000/media/', 'src="' . public_path('media') . '/', $htmlContent);
 
-    // Update image paths to be absolute URLs
-    $htmlContent = str_replace('src="http://localhost:8000/media/', 'src="' . public_path('media') . '/', $htmlContent);
+        date_default_timezone_set('Europe/Rome');
+        $creationDate = date('Y-m-d H:i:s');
 
-    // Add CSS for title, date, and page numbers
-  // Set the timezone to Italian timezone
-    date_default_timezone_set('Europe/Rome');
-
-    // Now generate the creation date with the correct timezone
-    $creationDate = date('Y-m-d H:i:s');
-
-    $title = "Codice 1%";
-
-    $fullHtmlContent = '
-    <html>
-    <head>
-        <style>
+        $fullHtmlContent = '<html><head><style>
             body { 
                 margin: 0;
-                padding-top: 60px; /* Reduced padding for less gap between header and content */
-                padding-bottom: 50px; /* Adjust as needed for footer space */
+                padding-top: 70px; /* Increased padding to avoid overlap with header */
+                padding-bottom: 70px; /* Increased padding to avoid overlap with footer */
             }
-            .header {
+            .header, .footer {
                 position: fixed;
-                top: 10px; /* Adjust as needed to move the title up */
-                width: 100%;
-                text-align: center;
-                font-size: 14px;
-                font-weight: bold;
-                height: 50px; /* Reduced height for less gap */
-            }
-            .footer {
-                position: fixed;
-                bottom: 0;
                 width: 100%;
                 font-size: 10px;
-                height: 50px; /* Adjust as needed */
+                height: 50px;
+                background-color: white; /* Ensures it covers any underlying text */
+                z-index: 1000; /* Keeps it above other content */
             }
-            .footer-left {
-                float: left;
-                text-align: left;
-            }
-            .footer-right {
-                float: right;
+            .header {
+                top: 0;
                 text-align: right;
             }
+            .footer {
+                bottom: 0;
+                text-align: right;
+            }
+            .creation-date {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                font-size: 10px;
+            }
+            .page-number {
+                position: fixed;
+                bottom: 0;
+                right: 0;
+                font-size: 10px;
+            }
             .page-number:before {
-                content: "Page " counter(page); /* Updated content for page numbering */
+                content: "Page " counter(page);
             }
-        </style>
-    </head>
-    <body>
-        <div class="header">' . $title . '</div>
-        <div class="footer">
-            <div class="footer-left">' . $creationDate . '</div>
-            <div class="footer-right page-number"></div>
-        </div>';
-
-    $fullHtmlContent .= $htmlContent;
-    $fullHtmlContent .= '</body></html>';
-
-        
-
-
-
-    $dompdf->loadHtml($fullHtmlContent);
-    $dompdf->setPaper('A4', 'portrait');
-    $dompdf->render();
-
-    $pdfContent = $dompdf->output();
-    $filename = 'contract_' . time() . '.pdf';
-
-    // Save the PDF file
-    Storage::disk('public')->put('pdf/' . $filename, $pdfContent);
-    $pdfUrl = Storage::url('pdf/' . $filename);
-
-    // Store the HTML content in session for later use
-    session(['html_content' => $htmlContent]);
-
-    return response()->json(['pdf_url' => $pdfUrl]);
-}
-
-// Working fine only for firma qui photo position
-private function processImageTags($htmlContent)
-{
-    // Define regex patterns for different image tags
-    $patterns = [
-        'right' => '/<figure class="image image-style-side"><img[^>]*><\/figure>/i',
-        'left' => '/<p><img[^>]*><\/p>/i',
-        'middle' => '/<figure class="image"><img[^>]*><\/figure>/i'
-    ];
-
-    foreach ($patterns as $position => $pattern) {
-        preg_match_all($pattern, $htmlContent, $matches);
-
-        foreach ($matches[0] as $imgTag) {
-            // Extract src, width, and height attributes
-            preg_match('/src="([^"]*)"/i', $imgTag, $srcMatch);
-            preg_match('/width="([^"]*)"/i', $imgTag, $widthMatch);
-            preg_match('/height="([^"]*)"/i', $imgTag, $heightMatch);
-
-            $src = $srcMatch[1] ?? '';
-            $width = $widthMatch[1] ?? '';
-            $height = $heightMatch[1] ?? '';
-
-            // Generate the new image tag based on the position
-            switch ($position) {
-                case 'right':
-                    $newImgTag = "<div style=\"text-align: right;\"><img style=\"aspect-ratio:{$width}/{$height};\" src=\"{$src}\" width=\"{$width}\" height=\"{$height}\"></div>";
-                    break;
-                case 'left':
-                    $newImgTag = "<div style=\"text-align: left;\"><img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\"></div>";
-                    break;
-                case 'middle':
-                default:
-                    $newImgTag = "<div style=\"text-align: center;\"><img style=\"aspect-ratio:{$width}/{$height};\" src=\"{$src}\" width=\"{$width}\" height=\"{$height}\"></div>";
-                    break;
+            table {
+                margin-left: auto;
+                margin-right: auto;
+                border-collapse: collapse;
+                width: 90%;
             }
+            table, th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+            img {
+                margin: 10px;
+            }
+        </style></head><body>';
 
-            // Replace the old image tag with the new one in the HTML content
-            $htmlContent = str_replace($imgTag, $newImgTag, $htmlContent);
+        // Add creation date and page number for every page
+        $fullHtmlContent .= '<div class="creation-date">' . $creationDate . '</div>';
+        $fullHtmlContent .= '<div class="page-number"></div>';
+
+        // Add header and footer based on user selection
+        if ($headerCheckbox && $headerLocation === 'every') {
+            $fullHtmlContent .= '<div class="header">' . $headerValue . '</div>';
         }
+
+        if ($footerCheckbox && $footerLocation === 'every') {
+            $fullHtmlContent .= '<div class="footer">' . $footerValue . '</div>';
+        }
+
+        // Add content
+        $fullHtmlContent .= $htmlContent;
+
+        // Add header for the first page if selected
+        if ($headerCheckbox && $headerLocation === 'first') {
+            $firstPageHeader = '<div class="header">' . $headerValue . '</div>';
+            $fullHtmlContent = str_replace('<body>', '<body>' . $firstPageHeader, $fullHtmlContent);
+        }
+
+        // Add footer for the first page if selected
+        if ($footerCheckbox && $footerLocation === 'first') {
+            $firstPageFooter = '<div class="footer">' . $footerValue . '</div>';
+            $fullHtmlContent = str_replace('</body>', $firstPageFooter . '</body>', $fullHtmlContent);
+        }
+
+        $fullHtmlContent .= '</body></html>';
+
+        $dompdf->loadHtml($fullHtmlContent);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $pdfContent = $dompdf->output();
+        $filename = 'contract_' . time() . '.pdf';
+
+        Storage::disk('public')->put('pdf/' . $filename, $pdfContent);
+        $pdfUrl = Storage::url('pdf/' . $filename);
+
+        session(['html_content' => $htmlContent]);
+
+        return response()->json(['pdf_url' => $pdfUrl]);
     }
 
-    return $htmlContent;
-}
+    private function processImageTags($htmlContent)
+    {
+        // Define regex patterns for different image tags
+        $patterns = [
+            'right' => '/<figure class="image image-style-side"><img[^>]*><\/figure>/i',
+            'left' => '/<p><img[^>]*><\/p>/i',
+            'middle' => '/<figure class="image"><img[^>]*><\/figure>/i'
+        ];
 
+        foreach ($patterns as $position => $pattern) {
+            preg_match_all($pattern, $htmlContent, $matches);
+
+            foreach ($matches[0] as $imgTag) {
+                // Extract src, width, and height attributes
+                preg_match('/src="([^"]*)"/i', $imgTag, $srcMatch);
+                preg_match('/width="([^"]*)"/i', $imgTag, $widthMatch);
+                preg_match('/height="([^"]*)"/i', $imgTag, $heightMatch);
+
+                $src = $srcMatch[1] ?? '';
+                $width = $widthMatch[1] ?? '';
+                $height = $heightMatch[1] ?? '';
+
+                // Generate the new image tag based on the position
+                switch ($position) {
+                    case 'right':
+                        $newImgTag = "<img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\" style=\"float: right; margin: 10px;\">";
+                        break;
+                    case 'left':
+                        $newImgTag = "<img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\" style=\"float: left; margin: 10px;\">";
+                        break;
+                    case 'middle':
+                    default:
+                        $newImgTag = "<div style=\"text-align: center;\"><img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\" style=\"display: inline-block;\"></div>";
+                        break;
+                }
+
+                // Replace the old image tag with the new one in the HTML content
+                $htmlContent = str_replace($imgTag, $newImgTag, $htmlContent);
+            }
+        }
+
+        return $htmlContent;
+    }
+
+
+    // public function generatePdfforSales(Request $request)
+    // {
+    //     $editorData = $request->input('editorData');
+
+    //     $htmlContent = $editorData;
+
+    //     // Process image tags
+    //     $htmlContent = $this->processImageTags($htmlContent);
+
+    //     // Set options to allow for remote file access
+    //     $options = new Options();
+    //     $options->set('isRemoteEnabled', true);
+
+    //     $dompdf = new Dompdf($options);
+    //     $dompdf->set_option('isHtml5ParserEnabled', true);
+
+    //     // Update image paths to be absolute URLs
+    //     $htmlContent = str_replace('src="http://localhost:8000/media/', 'src="' . public_path('media') . '/', $htmlContent);
+
+    //     // Add CSS for date and page numbers
+    //     // Set the timezone to Italian timezone
+    //     date_default_timezone_set('Europe/Rome');
+
+    //     // Now generate the creation date with the correct timezone
+    //     $creationDate = date('Y-m-d H:i:s');
+
+    //     $fullHtmlContent = '
+    //     <html>
+    //     <head>
+    //         <style>
+    //             body { 
+    //                 margin: 0;
+    //                 padding-top: 20px; /* Reduced padding for less gap between header and content */
+    //                 padding-bottom: 50px; /* Adjust as needed for footer space */
+    //             }
+    //             .footer {
+    //                 position: fixed;
+    //                 bottom: 0;
+    //                 width: 100%;
+    //                 font-size: 10px;
+    //                 height: 50px; /* Adjust as needed */
+    //             }
+    //             .footer-left {
+    //                 float: left;
+    //                 text-align: left;
+    //             }
+    //             .footer-right {
+    //                 float: right;
+    //                 text-align: right;
+    //             }
+    //             .page-number:before {
+    //                 content: "Page " counter(page); /* Updated content for page numbering */
+    //             }
+    //             table {
+    //                 margin-left: auto;
+    //                 margin-right: auto;
+    //                 border-collapse: collapse;
+    //                 width: 90%; /* Adjust width as necessary */
+    //             }
+    //             table, th, td {
+    //                 border: 1px solid black;
+    //                 padding: 8px;
+    //                 text-align: left;
+    //             }
+    //         </style>
+    //     </head>
+    //     <body>
+    //         <div class="footer">
+    //             <div class="footer-left">' . $creationDate . '</div>
+    //             <div class="footer-right page-number"></div>
+    //         </div>';
+
+    //     $fullHtmlContent .= $htmlContent;
+    //     $fullHtmlContent .= '</body></html>';
+
+    //     $dompdf->loadHtml($fullHtmlContent);
+    //     $dompdf->setPaper('A4', 'portrait');
+    //     $dompdf->render();
+
+    //     $pdfContent = $dompdf->output();
+    //     $filename = 'contract_' . time() . '.pdf';
+
+    //     // Save the PDF file
+    //     Storage::disk('public')->put('pdf/' . $filename, $pdfContent);
+    //     $pdfUrl = Storage::url('pdf/' . $filename);
+
+    //     // Store the HTML content in session for later use
+    //     session(['html_content' => $htmlContent]);
+
+    //     return response()->json(['pdf_url' => $pdfUrl]);
+    // }
+
+
+// Working fine only for firma qui photo position
+// private function processImageTags($htmlContent)
+// {
+//     // Define regex patterns for different image tags
+//     $patterns = [
+//         'right' => '/<figure class="image image-style-side"><img[^>]*><\/figure>/i',
+//         'left' => '/<p><img[^>]*><\/p>/i',
+//         'middle' => '/<figure class="image"><img[^>]*><\/figure>/i'
+//     ];
+
+//     foreach ($patterns as $position => $pattern) {
+//         preg_match_all($pattern, $htmlContent, $matches);
+
+//         foreach ($matches[0] as $imgTag) {
+//             // Extract src, width, and height attributes
+//             preg_match('/src="([^"]*)"/i', $imgTag, $srcMatch);
+//             preg_match('/width="([^"]*)"/i', $imgTag, $widthMatch);
+//             preg_match('/height="([^"]*)"/i', $imgTag, $heightMatch);
+
+//             $src = $srcMatch[1] ?? '';
+//             $width = $widthMatch[1] ?? '';
+//             $height = $heightMatch[1] ?? '';
+
+//             // Generate the new image tag based on the position
+//             switch ($position) {
+//                 case 'right':
+//                     $newImgTag = "<div style=\"text-align: right;\"><img style=\"aspect-ratio:{$width}/{$height};\" src=\"{$src}\" width=\"{$width}\" height=\"{$height}\"></div>";
+//                     break;
+//                 case 'left':
+//                     $newImgTag = "<div style=\"text-align: left;\"><img src=\"{$src}\" width=\"{$width}\" height=\"{$height}\"></div>";
+//                     break;
+//                 case 'middle':
+//                 default:
+//                     $newImgTag = "<div style=\"text-align: center;\"><img style=\"aspect-ratio:{$width}/{$height};\" src=\"{$src}\" width=\"{$width}\" height=\"{$height}\"></div>";
+//                     break;
+//             }
+
+//             // Replace the old image tag with the new one in the HTML content
+//             $htmlContent = str_replace($imgTag, $newImgTag, $htmlContent);
+//         }
+//     }
+
+//     return $htmlContent;
+// }
 
  public function deletePdf(Request $request)
  {
@@ -180,6 +343,8 @@ private function processImageTags($htmlContent)
      return response()->json(['message' => 'PDF deleted successfully']);
  }
 
+
+ 
 
 
 

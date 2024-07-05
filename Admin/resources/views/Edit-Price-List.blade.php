@@ -23,21 +23,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
- <!--  Arifur change  -->
- <!-- <div class="row">
-            <div class="col-sm">
-                <div class="search-box me-2 d-inline-block">
-              <div class="position-relative">
-                        <input type="text" class="form-control" autocomplete="off" id="searchInput" placeholder="Search...">
-                        <i class="bx bx-search-alt search-icon"></i>
-                    </div>  
-                </div>
-            </div>
-    </div> -->
-<!-- two div one will be 75% of screen and another on will be 25%  of screen-->
-
-
- 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
  
  
@@ -58,29 +43,7 @@
     </div>
 </div>
 
-  <!-- <div class="row mt-3">
-    <div class="col-sm d-flex align-items-center">
-        <label for="priceName" class="col-form-label me-3">Price Name :</label>
-        <input type="text" id="priceName" name="priceName" class="form-control w-25" value="{{$priceList->pricename }}">
-    </div>
-</div> -->
-
-<!-- Added margin-top for spacing -->
-
-<!-- <div class="row mt-3">
-    <div class="col-sm">
-        <div class="input-group">
-            <label class="input-group-text" for="currency">Select currency:</label>
-            <select class="form-select" id="currency" name="currency">
-                <option value="EUR" {{ old('currency', 'EUR') === 'EUR' ? 'selected' : '' }}>Euro (EUR)</option>
-                <option value="USD" {{ old('currency') === 'USD' ? 'selected' : '' }}>US Dollar (USD)</option>
-                <option value="GBP" {{ old('currency') === 'GBP' ? 'selected' : '' }}>British Pound (GBP)</option>
-                <option value="JPY" {{ old('currency') === 'JPY' ? 'selected' : '' }}>Japanese Yen (JPY)</option>
-              
-            </select>
-        </div>
-    </div>
-</div> -->
+  
 
 <div class="row mt-3">
     <div class="col-sm">
@@ -121,17 +84,6 @@
     </div>
 </div>
 
-
-<!--     
-<div class="row mt-3">
-    <div class="col-sm d-flex align-items-center">
-        <label for="selection">Select an option : </label>
-        <select id="selection" name="selection">
-            <option value="fixed">Fixed</option>
-            <option value="dynamic">Dynamic</option>
-        </select>
-    </div>
-</div> -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.7.0/nouislider.min.js"></script>
@@ -237,81 +189,134 @@
 
 
         </div>
-        
-        <div id="dynamicInput" class="{{ $priceList->selection === 'dynamic' ? '' : 'hidden' }}">
-                    <!-- <div class="mb-3">
-                        <label for="fixedValue2" class="form-label">Enter a fixed value:</label>
-                        <input type="number" class="form-control w-25" id="fixedValue2" name="fixedValue2" value="{{ $priceList->fixedvalue }}">
-                    </div> -->
-                    <label for="minRange">Min Range: <span id="minValue">{{ $priceList->dynamicminRange }}</span> </label>
-                    <div id="minRangeSlider"></div>
-                    <!-- <span id="minValue">{{ $priceList->dynamicminRange }}</span> --> <br>
+            
+             
+                    <div id="dynamicInput" class="{{ $priceList->selection === 'dynamic' ? '' : 'hidden' }}">
+                        <div class="form-group row align-items-center">
+                            <label for="minRange" class="col-sm-2 col-form-label">Min Range:</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control w-50" id="minRangeInput" value="{{ $priceList->dynamicminRange }}" min="1" max="1000000">
+                            </div>
+                            <div class="col-sm-6 mt-2">
+                                <div id="minRangeSlider"></div>
+                            </div>
+                        </div>
+                        <br>
 
-                    <label for="maxRange">Max Range: <span id="maxValue">{{ $priceList->dynamicmaxRange }}</span> </label>
-                    <div id="maxRangeSlider"></div>
-                    <!-- <span id="maxValue">{{ $priceList->dynamicmaxRange }}</span> --> <br>
-                </div>
+                        <div class="form-group row align-items-center">
+                            <label for="maxRange" class="col-sm-2 col-form-label">Max Range:</label>
+                            <div class="col-sm-4">
+                                <input type="number" class="form-control w-50" id="maxRangeInput" value="{{ $priceList->dynamicmaxRange }}" min="2" max="1000000">
+                            </div>
+                            <div class="col-sm-6 mt-2">
+                                <div id="maxRangeSlider"></div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+
+
+
             </div>
         </div>
 
 <script>
   var fixedValue = document.getElementById('fixedValue').value;
 // Initialize min range slider
+ 
+// Initialize min range slider
 var minRangeSlider = document.getElementById('minRangeSlider');
-    noUiSlider.create(minRangeSlider, {
-        start: ['{{ $priceList->dynamicminRange }}'],
-        connect: 'lower',
-        range: {
-            'min': 1,
-            'max':  1000000
-        }
-    });
+noUiSlider.create(minRangeSlider, {
+    start: ['{{ $priceList->dynamicminRange }}'],
+    connect: 'lower',
+    range: {
+        'min': 1,
+        'max': 1000000
+    }
+});
 
-    // Update min value span when slider value changes
-    minRangeSlider.noUiSlider.on('update', function (values, handle) {
-        var intValue = parseInt(values[handle]); // Convert to integer
-        document.getElementById('minValue').innerHTML = intValue;
-    });
+// Initialize max range slider
+var maxRangeSlider = document.getElementById('maxRangeSlider');
+noUiSlider.create(maxRangeSlider, {
+    start: ['{{ $priceList->dynamicmaxRange }}'],
+    connect: 'lower',
+    range: {
+        'min': 2,
+        'max': 1000000
+    }
+});
 
-    // Initialize max range slider
-    var maxRangeSlider = document.getElementById('maxRangeSlider');
-    noUiSlider.create(maxRangeSlider, {
-        start: ['{{ $priceList->dynamicmaxRange }}'],
-        connect: 'lower',
-        range: {
-            'min': 2,
-            'max':  1000000
-        }
-    });
+// Elements
+var minRangeInput = document.getElementById('minRangeInput');
+var maxRangeInput = document.getElementById('maxRangeInput');
 
-    // Update max value span when slider value changes
-    maxRangeSlider.noUiSlider.on('update', function (values, handle) {
-        var intValue = parseInt(values[handle]); // Convert to integer
-        document.getElementById('maxValue').innerHTML = intValue;
-    });
+// Update input fields when sliders change
+minRangeSlider.noUiSlider.on('update', function (values, handle) {
+    var intValue = parseInt(values[handle]); // Convert to integer
+    minRangeInput.value = intValue;
+});
 
+maxRangeSlider.noUiSlider.on('update', function (values, handle) {
+    var intValue = parseInt(values[handle]); // Convert to integer
+    maxRangeInput.value = intValue;
+});
 
+// Update sliders when input fields change
+minRangeInput.addEventListener('change', function () {
+    var inputValue = parseInt(minRangeInput.value);
+    var maxRangeValue = parseInt(maxRangeInput.value);
 
+    if (inputValue >= maxRangeValue) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Min range value should be at least 1 lower than max range value.',
+        }).then(function() {
+            minRangeInput.value = lastValidMinValue;
+        });
+    } else {
+        minRangeSlider.noUiSlider.set(inputValue);
+        lastValidMinValue = inputValue;
+    }
+});
 
-    // Update min value span when slider value changes
-    var lastValidMinValue = parseInt(minRangeSlider.noUiSlider.get());
+maxRangeInput.addEventListener('change', function () {
+    var inputValue = parseInt(maxRangeInput.value);
+    var minRangeValue = parseInt(minRangeInput.value);
+
+    if (inputValue <= minRangeValue) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Max range value should be at least 1 greater than min range value.',
+        }).then(function() {
+            maxRangeInput.value = lastValidMaxValue;
+        });
+    } else {
+        maxRangeSlider.noUiSlider.set(inputValue);
+        lastValidMaxValue = inputValue;
+    }
+});
+
+// Track last valid values to revert if needed
+var lastValidMinValue = parseInt(minRangeSlider.noUiSlider.get());
 var lastValidMaxValue = parseInt(maxRangeSlider.noUiSlider.get());
 
 minRangeSlider.noUiSlider.on('update', function (values, handle) {
     var intValue = parseInt(values[handle]); // Convert to integer
-    document.getElementById('minValue').innerHTML = intValue;
+    minRangeInput.value = intValue;
 
-    var maxRangeValue = parseInt(document.getElementById('maxValue').innerHTML);
+    var maxRangeValue = parseInt(maxRangeInput.value);
 
     if (intValue >= maxRangeValue) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Min range value should be at least 1 lower than max range value. First Increase the Max Range',
+            text: 'Min range value should be at least 1 lower than max range value.',
         }).then(function() {
             // Revert to last valid value
             minRangeSlider.noUiSlider.set(lastValidMinValue);
-            document.getElementById('minValue').innerHTML = lastValidMinValue;
+            minRangeInput.value = lastValidMinValue;
         });
     } else {
         // Update last valid value
@@ -321,25 +326,27 @@ minRangeSlider.noUiSlider.on('update', function (values, handle) {
 
 maxRangeSlider.noUiSlider.on('update', function (values, handle) {
     var intValue = parseInt(values[handle]); // Convert to integer
-    document.getElementById('maxValue').innerHTML = intValue;
+    maxRangeInput.value = intValue;
 
-    var minRangeValue = parseInt(document.getElementById('minValue').innerHTML);
+    var minRangeValue = parseInt(minRangeInput.value);
 
     if (intValue <= minRangeValue) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'Max range value should be at least 1 greater than min range value. First Decrease the Min Range',
+            text: 'Max range value should be at least 1 greater than min range value.',
         }).then(function() {
             // Revert to last valid value
             maxRangeSlider.noUiSlider.set(lastValidMaxValue);
-            document.getElementById('maxValue').innerHTML = lastValidMaxValue;
+            maxRangeInput.value = lastValidMaxValue;
         });
     } else {
         // Update last valid value
         lastValidMaxValue = intValue;
     }
 });
+
+
 
 
 </script>
@@ -709,34 +716,7 @@ function handleExclusiveSelection(checkbox) {
 
             
             </div>  
-<!-- Full width on mobile, 25% width on medium and larger screens -->
-            <!-- <div class="col-12 col-md-4 bg-light"> 
-                <p>Example text for live view</p>
-
-                <div class="row">
-                    <p class="col-6 col-md-12">Price Name:</p>
-                    <div class="col-6 col-md-12" id="selectedpricename1"></div>
-                </div>
-
-                <div class="row">
-                    <p class="col-6 col-md-12">Selected currency:</p>
-                    <div class="col-6 col-md-12" id="selectedcurrency1"></div>
-                </div>
-
-                <div class="row">
-                    <p class="col-6 col-md-12">Calculated tax Value:</p>
-                    <div class="col-6 col-md-12" id="selectedfoxedvalue1"></div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <p>Imposta l'Agenda dei pagamenti:</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12" id="ImpostaTable1"></div>
-                </div>
-            </div> -->
+ 
 
         <script>
 
@@ -760,326 +740,95 @@ function handleExclusiveSelection(checkbox) {
                     calculatedVal = parseFloat(fixedValueInput) + (vatPercentage * parseFloat(fixedValueInput)) / 100 +  " "  + " IVA Compresa (" +  getCurrencySymbol(currency.value)  + (vatPercentage * parseFloat(fixedValueInput)) / 100 +") "  ;
                     calculatedValue =  getCurrencySymbol(currency.value) + calculatedVal ;
 
-                        // Declare tbody as a global variable
-                        function updateCalculatedValue() {
-                            var maxRange = 0;
-                            var selectionValue = document.getElementById('selection').value;
-                            
-                            var includeOnPrice = document.getElementById('priceTypeToggle').checked;
-                            
-                            var vatPercentage = parseFloat(document.getElementById('vatPercentage').value);
-                            var enableVat = document.getElementById('vatCheckbox').checked;
-                            var fixedValueInput = parseFloat(document.getElementById("fixedValue").value);
-                            var EditableDates = document.getElementById('EditableDates').checked;;
-                          
+ 
+                    function updateCalculatedValue() {
+                        var maxRange = 0;
+                        var selectionValue = document.getElementById('selection').value;
 
-                            var minRangeSlider = parseInt(document.getElementById('minRangeSlider').noUiSlider.get());
+                        var includeOnPrice = document.getElementById('priceTypeToggle').checked;
+                        var vatPercentage = parseFloat(document.getElementById('vatPercentage').value) || 0;
+                        var enableVat = document.getElementById('vatCheckbox').checked;
+                        var fixedValueInput = parseFloat(document.getElementById("fixedValue").value) || 0;
+                        var EditableDates = document.getElementById('EditableDates').checked;
 
+                        var dynamicMinRange = parseInt(document.getElementById('minRangeSlider').noUiSlider.get()) || 0;
+                        var currency = document.getElementById("currency").value;
 
+                        var selectedFixedValueDiv = document.getElementById("ImpostaTable1");
+                        selectedFixedValueDiv.innerHTML = ''; // Clear previous table content
 
-                            var newcalculation = parseFloat(fixedValueInput) + (vatPercentage * parseFloat(fixedValueInput)) / 100 ;
-
-                            var multiplePayments = document.getElementById('multiplePayments').checked;
-
-                            if (multiplePayments === false){
-                                maxRange =1 ;
-                               
-                            }else {
-                                maxRange = parseInt(document.getElementById('maxPaymentRangeSlider').noUiSlider.get());
-                            }
-                         
-                     
-                            
-                                    
-                            var frequency = document.getElementById("frequency").value;
-                            var currency = document.getElementById("currency").value;
+                        var newCalculation = fixedValueInput + (vatPercentage * fixedValueInput) / 100;
+                        var minRangeSliderCAL = dynamicMinRange + (vatPercentage * dynamicMinRange) / 100;
                         
-                            // Clear previous table content
-                            selectedFixedValueDiv.innerHTML = '';
+                        var frequency = document.getElementById("frequency").value;
+                        var currency = document.getElementById("currency").value;
                         
-                            // Create table
-                            var table = document.createElement('table');
-                            table.className = 'table table-responsive';
-                        
-                            // Create table header
-                            var thead = table.createTHead();
-                            var headerRow = thead.insertRow();
+                        var vatAmount = 0;
 
-                            if ( selectionValue === 'dynamic'  ){
-                                var colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + minRangeSlider + ' + IVA sarà corrisposto con le seguenti modalità valuta in :'+ getCurrencySymbol(currency);
-                            }else {
-
-                                var colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + fixedValueInput + ' + IVA sarà corrisposto con le seguenti modalità valuta in :' + getCurrencySymbol(currency);
-                            }
-                            
-                            var th = document.createElement('th');
-                            th.textContent = colName;
-                        
-                            // Count the number of columns in the table body
-                            var numColumns = 5; // You have two columns: importoInput and dovutoIl
-                            th.colSpan = numColumns;
-                        
-                            headerRow.appendChild(th);
-                        
-                            // Create table body
-                            var tbody = table.createTBody();
-                            for (var i = 1; i <= maxRange; i++) {
-                                var row = tbody.insertRow();
-                                var descrizione = 'Rata' + i ;
-                                
-                                
-                                if ( selectionValue === 'dynamic'  ){
-                         
-                                    var minRangeSliderCAL = parseFloat(minRangeSlider) + (vatPercentage * parseFloat(minRangeSlider)) / 100 ;
-                                    
-                                    if (includeOnPrice && enableVat === true ){
-                                        var importo = (minRangeSliderCAL / maxRange).toFixed(2);
-
-                                    } 
-                                      
-                                    else {
-                                        var importo = (minRangeSlider / maxRange).toFixed(2);
-                                    }
-
-                                   
-                                }
-                                
-                                else {
-                                    if (includeOnPrice && enableVat === true ){
-                                     var importo = (newcalculation / maxRange).toFixed(2);
-                                    } else {
-                                        var importo = (fixedValueInput / maxRange).toFixed(2);
-                                    }
-                                
-                                }
-                                
-                        
-                                // Create input field for the first row
-                                var importoInput = document.createElement('input');
-
-                                importoInput.classList.add('form-control');
-                                importoInput.style = "width: 118px;"; 
-                                importoInput.type = 'number';
-                                
-                                importoInput.value = importo; 
-                                
-                                var newImporto ;
-                                // Update other rows' importo values based on the input field value
-                                importoInput.addEventListener('input', function() {
-                                    var inputVal = parseFloat(this.value);
-                                     
-                                    if ( selectionValue === 'dynamic' ){
-                                        var minRangeSliderCAL = parseFloat(minRangeSlider) + (vatPercentage * parseFloat(minRangeSlider)) / 100 ;
-
-                                        if (includeOnPrice && enableVat === true ){
-                                        newImporto = (minRangeSliderCAL - inputVal) / (maxRange - 1);
-                                        }else {
-                                            newImporto = (minRangeSlider - inputVal) / (maxRange - 1);
-                                        }
-                                    }
-                                    
-
-                                    else  {
-                                        if (includeOnPrice && enableVat === true ){
-                                            newImporto = (newcalculation - inputVal) / (maxRange - 1);
-
-                                        }else {
-
-                                             newImporto = ( fixedValueInput- inputVal) / (maxRange - 1);
-                                        }
-                                         
-                                     
-                                    }
-                                    
-                                    var rows = tbody.rows;
-                                    for (var j = 0; j < rows.length; j++) {
-                                        var cell = rows[j].cells[1];
-                                        if (cell.firstChild !== this) {
-                                            cell.firstChild.value = newImporto.toFixed(2);
-                                        }
-                                    }
-                                });
-                        
-                                var dovutoIl = getDateByFrequency(frequency, i);
-
-                                // Create input field for the date
-                                var dovutoIlInput = document.createElement('input');
-                                dovutoIlInput.classList.add('form-control');
-                                dovutoIlInput.style = "width: 126px;"; 
-                                dovutoIlInput.type = 'date';
-
-
-                                // Format the date to "yyyy-MM-dd"
-                                var parts = dovutoIl.split('/');
-                                var yyyy_mm_dd = parts[2] + '-' + parts[1].padStart(2, '0') + '-' + parts[0].padStart(2, '0');
-                                dovutoIlInput.value = yyyy_mm_dd;
-
-
-                                // Add event listener to the date input field
-                                dovutoIlInput.addEventListener('change', function() {
-                                    // Get the index of the current row
-                                    var rowIndex = Array.from(this.parentNode.parentNode.parentNode.children).indexOf(this.parentNode.parentNode);
-                                    var selectedDate = new Date(this.value); // Get the selected date
-                                    
-                                    // Update subsequent date fields based on frequency
-                                    for (var k = rowIndex + 1; k < tbody.rows.length; k++) {
-                                    var nextDate = new Date(selectedDate);
-                                    switch (frequency) {
-                                        case 'daily':
-                                            nextDate.setDate(nextDate.getDate() + 1);
-                                            break;
-                                        case 'biweekly':
-                                            nextDate.setDate(nextDate.getDate() + (14 * 1)); // Assuming biweekly means every two weeks
-                                            break;
-                                        case 'weekly':
-                                            nextDate.setDate(nextDate.getDate() + (7 * 1));
-                                            break;
-                                        case 'monthly':
-                                            nextDate.setMonth(nextDate.getMonth() + 1);
-                                            break;
-                                        case 'annually':
-                                            nextDate.setFullYear(nextDate.getFullYear() + 1);
-                                            break;
-                                        default:
-                                            break;
-                                    }
-                                    // Format the next date as "yyyy-MM-dd"
-                                var yyyy_mm_dd = nextDate.toISOString().split('T')[0];
-
-                                
-                                    tbody.rows[k].cells[4].querySelector('input[type="date"]').value = yyyy_mm_dd;
-                                    selectedDate = nextDate; 
-                                    // Update selectedDate for the next iteration
-
-                                }
-                                });
-
-                                if (enableVat &&  includeOnPrice ===true){ 
-                                    calculatedValnew = " IVA Inc. "    ;
-                                    console.log('" IVACompresa " +  getCurrencySymbol(currency.value)  + (vatPercentage * parseFloat(fixedValueInput)) / 100 '); 
-                                }else if (enableVat ===false ) {
-
-                                  //  calculatedValnew = "+ IVA " + vatPercentage + "%"   ;
-                                    calculatedValnew = " "   ;
-                                    console.log('"+ IVA " + vatPercentage + "%" ');
-                                }else {
-                                    calculatedValnew = "+ IVA " + vatPercentage + "%"   ;
-                                }
-                              
-                   
-
-                                if (EditableDates === true){
-                                    var cells = [descrizione, importoInput , calculatedValnew , 'entro il' , dovutoIlInput  ];
-
-                                }else {
-                                 var cells = [descrizione, importoInput , calculatedValnew , 'entro il' , dovutoIl  ]; //'entro il '+
-                                }
-                                
-
-                                cells.forEach(function(cellData ) {
-                                    var cell = row.insertCell();
-                                    if (typeof cellData === 'object') {
-                                        cell.appendChild(cellData);
-                                    } else {
-                                        cell.textContent = cellData;
-                                    }
-                                });
-
-                              
-
-                            }
-                        
-                            // Append table to container
-                            selectedFixedValueDiv.appendChild(table);
+                        if (selectionValue === 'dynamic' && includeOnPrice && enableVat) {
+                            vatAmount = minRangeSliderCAL - dynamicMinRange;
                         }
 
+                        if (selectionValue === 'fixed' && includeOnPrice && enableVat) {
+                            vatAmount = newCalculation - fixedValueInput;
+                        }
 
-                    // Add event listeners
-                    document.getElementById("selection").addEventListener("change", updateCalculatedValue);
-                    document.getElementById("fixedValue").addEventListener("input", updateCalculatedValue);
-                    document.getElementById("EditableDates").addEventListener("input", updateCalculatedValue);
+                        var colName;
+                        if (selectionValue === 'dynamic') {
+                            if (includeOnPrice && enableVat) {
+                                colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + minRangeSliderCAL.toFixed(2) + ' (IVA Compresa ' + getCurrencySymbol(currency) + ' ' + vatAmount.toFixed(2) + ') sarà corrisposto con le seguenti modalità:';
+                            } else {
+                                colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + dynamicMinRange + ' + IVA sarà corrisposto con le seguenti modalità:';
+                            }
+                        } else {
+                            if (includeOnPrice && enableVat) {
+                                colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + newCalculation.toFixed(2) + ' (IVA Compresa ' + getCurrencySymbol(currency) + ' ' + vatAmount.toFixed(2) + ') sarà corrisposto con le seguenti modalità:';
+                            } else {
+                                colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + fixedValueInput + ' + IVA sarà corrisposto con le seguenti modalità:';
+                            }
+                        }
 
-                    document.getElementById("maxPaymentRangeSlider").addEventListener("change", updateCalculatedValue);
-                  
-                    document.getElementById("minRangeSlider").addEventListener("change", updateCalculatedValue);
-          
-                    document.getElementById("multiplePayments").addEventListener("input", updateCalculatedValue);
-
-                    document.getElementById("vatCheckbox").addEventListener("change", updateCalculatedValue);
-                    document.getElementById("vatPercentage").addEventListener("input", updateCalculatedValue);
-                    document.getElementById("currency").addEventListener("change", updateCalculatedValue);
-                    document.getElementById("frequency").addEventListener("change", updateCalculatedValue);
-
-                   document.getElementById("priceTypeToggle").addEventListener("change", updateCalculatedValue);
- 
-                    
-                      // Update table values when slider values change
-                   minRangeSlider.noUiSlider.on('change', updateCalculatedValue);
-                   // maxRangeSlider.noUiSlider.on('change', updateTableValues);
-                   maxPaymentRangeSlider.noUiSlider.on('change', updateCalculatedValue);
-                    // Initial calculation
-                    updateCalculatedValue();
-                    
-         
-
-            
-
-         
- 
- 
-                    function updateTableValues() {
-                        var fixedValueInput = parseFloat(document.getElementById("fixedValue").value);
-                        var minValue = parseInt(minRangeSlider.noUiSlider.get());
-                        var maxValue = parseInt(maxRangeSlider.noUiSlider.get());
-                        var frequency = document.getElementById('frequency').value;
-                        var currency = document.getElementById('currency').value;
-                        var tableDiv = document.getElementById('ImpostaTable1');
-
-                        // Clear existing table content
-                        tableDiv.innerHTML = '';
-
-                        // Create table
+                        // Create the table and append the header
                         var table = document.createElement('table');
-                        table.className = 'table';
-
-                        // Create table header
-                      /*  var thead = table.createTHead();
-                        var headerRow = thead.insertRow();
-                        var colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + fixedValueInput + ' + IVA sarà corrisposto con le seguenti modalità:';
-                        var th = document.createElement('th');
-                        th.textContent = colName;
-                        headerRow.appendChild(th);*/
-                        
-                            // Create table header
+                        table.className = 'table table-responsive';
                         var thead = table.createTHead();
                         var headerRow = thead.insertRow();
-                        var colName = 'Il costo totale di ' + getCurrencySymbol(currency) + ' ' + fixedValueInput + ' + IVA sarà corrisposto con le seguenti modalità:';
+
                         var th = document.createElement('th');
                         th.textContent = colName;
-                    
-                        // Count the number of columns in the table body
-                        var numColumns = 5; // You have two columns: importoInput and dovutoIl
-                        th.colSpan = numColumns;
-                    
+                        th.colSpan = 5; // Adjust based on actual number of columns
                         headerRow.appendChild(th);
-                                            
-    
-
 
                         // Create table body
-                        tbody = table.createTBody(); // Assign tbody here
-                        for (var i = 1; i <= maxValue; i++) {
+                        var tbody = table.createTBody();
+                        var multiplePayments = document.getElementById('multiplePayments').checked;
+                        maxRange = multiplePayments ? parseInt(document.getElementById('maxPaymentRangeSlider').noUiSlider.get()) || 1 : 1;
+
+                        for (var i = 1; i <= maxRange; i++) {
                             var row = tbody.insertRow();
-                            var descrizione = 'Pagamento' + i+''+ getCurrencySymbol(currency) ;
+                            var descrizione = 'Rata ' + i;
+
+                            var importo = (selectionValue === 'dynamic')
+                                ? (includeOnPrice && enableVat) ? (minRangeSliderCAL / maxRange).toFixed(2) : (dynamicMinRange / maxRange).toFixed(2)
+                                : (includeOnPrice && enableVat) ? (newCalculation / maxRange).toFixed(2) : (fixedValueInput / maxRange).toFixed(2);
+
+                            // Create input field for the first row
                             var importoInput = document.createElement('input');
+                            importoInput.classList.add('form-control');
+                            importoInput.style = "width: 118px;";
                             importoInput.type = 'number';
-                            // importoInput.className = 'form-control';
-                            importoInput.style = "width: 93px;"; // Adjust the width here
-                            importoInput.value = (fixedValueInput / maxValue).toFixed(2);
-                            importoInput.addEventListener('input', function() {
-                               // updateTableValues();
+                            importoInput.value = importo;
+
+                            var newImporto;
+                            importoInput.addEventListener('input', function () {
                                 var inputVal = parseFloat(this.value);
-                                var newImporto = (fixedValueInput - inputVal) / (maxValue - 1);
+
+                                if (selectionValue === 'dynamic') {
+                                    newImporto = (includeOnPrice && enableVat) ? (minRangeSliderCAL - inputVal) / (maxRange - 1) : (dynamicMinRange - inputVal) / (maxRange - 1);
+                                } else {
+                                    newImporto = (includeOnPrice && enableVat) ? (newCalculation - inputVal) / (maxRange - 1) : (fixedValueInput - inputVal) / (maxRange - 1);
+                                }
+
                                 var rows = tbody.rows;
                                 for (var j = 0; j < rows.length; j++) {
                                     var cell = rows[j].cells[1];
@@ -1090,31 +839,28 @@ function handleExclusiveSelection(checkbox) {
                             });
 
                             var dovutoIl = getDateByFrequency(frequency, i);
-
-                                              // Create input field for the date
                             var dovutoIlInput = document.createElement('input');
-                                dovutoIlInput.type = 'date';
+                            dovutoIlInput.classList.add('form-control');
+                            dovutoIlInput.style = "width: 126px;";
+                            dovutoIlInput.type = 'date';
 
-                                // Format the date to "yyyy-MM-dd"
-                                var parts = dovutoIl.split('/');
-                                var yyyy_mm_dd = parts[2] + '-' + parts[1].padStart(2, '0') + '-' + parts[0].padStart(2, '0');
-                                dovutoIlInput.value = yyyy_mm_dd;
+                            // Format the date to "yyyy-MM-dd"
+                            var parts = dovutoIl.split('/');
+                            var yyyy_mm_dd = parts[2] + '-' + parts[1].padStart(2, '0') + '-' + parts[0].padStart(2, '0');
+                            dovutoIlInput.value = yyyy_mm_dd;
 
-                                // Add event listener to the date input field
-                                dovutoIlInput.addEventListener('change', function() {
-                                    // Get the index of the current row
-                                    var rowIndex = Array.from(this.parentNode.parentNode.parentNode.children).indexOf(this.parentNode.parentNode);
-                                    var selectedDate = new Date(this.value); // Get the selected date
-                                    
-                                    // Update subsequent date fields based on frequency
-                                    for (var k = rowIndex + 1; k < tbody.rows.length; k++) {
+                            dovutoIlInput.addEventListener('change', function () {
+                                var rowIndex = Array.from(this.parentNode.parentNode.parentNode.children).indexOf(this.parentNode.parentNode);
+                                var selectedDate = new Date(this.value);
+
+                                for (var k = rowIndex + 1; k < tbody.rows.length; k++) {
                                     var nextDate = new Date(selectedDate);
                                     switch (frequency) {
                                         case 'daily':
                                             nextDate.setDate(nextDate.getDate() + 1);
                                             break;
                                         case 'biweekly':
-                                            nextDate.setDate(nextDate.getDate() + (14 * 1)); // Assuming biweekly means every two weeks
+                                            nextDate.setDate(nextDate.getDate() + (14 * 1));
                                             break;
                                         case 'weekly':
                                             nextDate.setDate(nextDate.getDate() + (7 * 1));
@@ -1128,37 +874,63 @@ function handleExclusiveSelection(checkbox) {
                                         default:
                                             break;
                                     }
-                                    // Format the next date as "yyyy-MM-dd"
                                     var yyyy_mm_dd = nextDate.toISOString().split('T')[0];
-                                    tbody.rows[k].cells[2].querySelector('input[type="date"]').value = yyyy_mm_dd;
-                                    selectedDate = nextDate; // Update selectedDate for the next iteration
+                                    tbody.rows[k].cells[4].querySelector('input[type="date"]').value = yyyy_mm_dd;
+                                    selectedDate = nextDate;
                                 }
-                                });
+                            });
 
-                            // Create cell for description
-                            var descrizioneCell = row.insertCell();
-                            descrizioneCell.textContent = descrizione   ;
+                            var calculatedValnew = "";
+                            if (enableVat && includeOnPrice) {
+                                calculatedValnew = " IVA Inc.";
+                            } else if (!enableVat) {
+                                calculatedValnew = " ";
+                            } else {
+                                calculatedValnew = "+ IVA " + vatPercentage + "%";
+                            }
 
-                            // Create cell for importo input field
-                            var importoCell = row.insertCell();
-                            importoCell.appendChild(importoInput);
+                            var cells = EditableDates
+                                ? [descrizione, importoInput, calculatedValnew, 'entro il', dovutoIlInput]
+                                : [descrizione, importoInput, calculatedValnew, 'entro il', dovutoIl];
 
-                            // Create cell for dovutoIl
-                        //    var dovutoIlCell = row.insertCell();
-                         //   dovutoIlCell.textContent =  ' entro il ' +dovutoIl; //' entro il ' +
-
-                          var dovutoIlCell = row.insertCell();
-                          dovutoIlCell.appendChild(dovutoIl) ; 
+                            cells.forEach(function (cellData) {
+                                var cell = row.insertCell();
+                                if (typeof cellData === 'object') {
+                                    cell.appendChild(cellData);
+                                } else {
+                                    cell.textContent = cellData;
+                                }
+                            });
                         }
 
-                        // Append table to container
-                        tableDiv.appendChild(table);
+                        selectedFixedValueDiv.appendChild(table);
                     }
 
+// Add event listeners
+document.getElementById("selection").addEventListener("change", updateCalculatedValue);
+document.getElementById("fixedValue").addEventListener("input", updateCalculatedValue);
+document.getElementById("EditableDates").addEventListener("input", updateCalculatedValue);
 
+document.getElementById("maxPaymentRangeSlider").addEventListener("change", updateCalculatedValue);
+document.getElementById("minRangeSlider").addEventListener("change", updateCalculatedValue);
+
+document.getElementById("multiplePayments").addEventListener("input", updateCalculatedValue);
+
+document.getElementById("vatCheckbox").addEventListener("change", updateCalculatedValue);
+document.getElementById("vatPercentage").addEventListener("input", updateCalculatedValue);
+document.getElementById("currency").addEventListener("change", updateCalculatedValue);
+document.getElementById("frequency").addEventListener("change", updateCalculatedValue);
+
+document.getElementById("priceTypeToggle").addEventListener("change", updateCalculatedValue);
+
+// Update table values when slider values change
+minRangeSlider.noUiSlider.on('change', updateCalculatedValue);
+maxPaymentRangeSlider.noUiSlider.on('change', updateCalculatedValue);
+
+// Initial calculation
+                    updateCalculatedValue();
 
                   
-
                     function getCurrencySymbol(currencyCode) {
                         switch (currencyCode) {
                             case 'EUR':

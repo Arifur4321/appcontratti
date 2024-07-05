@@ -120,9 +120,9 @@
                                 <p>Don't have an account ? <a href="auth-register" class="fw-medium text-primary">
                                         Signup now </a> </p>
                                 <p>© <script>
-                                        document.write(new Date().getFullYear())
+                                      document.write(new Date().getFullYear())
 
-                                    </script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand
+</script> Appcontratti Crafted with <i class="mdi mdi-heart text-danger"></i> by Codice 1%</p>
                                 </p>
                             </div>
                         </div>

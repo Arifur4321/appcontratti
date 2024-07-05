@@ -57,25 +57,7 @@
                         <label for="product-name-new" class="col-form-label">Variable Name:</label>
                         <input type="text" class="form-control" id="product-name-new">
                     </div>
-  
-                    <style>
-                        /* Style for the drag button */
-                         /* .drag-button {
-                            background-color: #007bff;
-                            color: #fff;
-                            border: none;
-                            border-radius: 50%;
-                            width: 24px;
-                            height: 24px;
-                            line-height: 24px;
-                            font-size: 14px;
-                            text-align: center;
-                            cursor: grab;
-                        }   */
- 
-                         
-                    </style>
-                                    
+
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
@@ -84,7 +66,7 @@
                                                         <option value="Single Line Text">Single Line Text</option>
                                                         <option value="Multiple Line Text">Multiple Line Text</option>
                                                         <option value="Dates">Dates</option>
-                                                        <option value="Multiple Box">Multiple new Box</option>
+                                                        <option value="Multiple Box">Multiple Box</option>
                                                         <option value="Single Box">Single Box</option>
                                 </select>
                             </div>
@@ -95,14 +77,11 @@
                         </div>
                     </div>
 
-              
-
                     <div class="mb-3">
                         <label for="description-new" class="col-form-label">Description:</label>
                         <textarea class="form-control" id="description-new"></textarea>
                     </div>
-               
-                     
+
                 </form>
             </div>
             <div class="modal-footer">
@@ -115,206 +94,298 @@
     </div>
 </div>
 
+<!-- ---------------------------------------------------------- end  --->
+
+<!-- CKEditor Modal -->
+<div class="modal" id="ckeditorModal" tabindex="-1" aria-labelledby="ckeditorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ckeditorModalLabel">Edit Content</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="ckeditorContent"></textarea>
+
+                <style>
+                        
+                        .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+                            border-color: var(--ck-color-base-border);
+                            height: 235px !important;
+
+                            width : 100% !important;
+             
+                                
+                                }
+                                .ck.ck-editor__editable_inline>:last-child {
+                                    margin-bottom: var(--ck-spacing-large);
+                                    height: 235px;
+                            
+                                }
+
+                                .ck-editor__editable {
+                                    min-height: 235px;
+                                   
+                                }
+                        </style>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveCkeditorContent">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ---------------------------------------------------------- end  --->
+
+<script src="{{ asset('js/newckeditor/build/ckeditor.js') }}"></script>
+
 <script>
 
+
 var inputFields = []; // Array to store input fields
+var editorInstances = {}; // Object to keep track of CKEditor instances by unique IDs
+ 
 
 document.addEventListener("DOMContentLoaded", function() {
-                            var variableTypeSelect = document.getElementById('variable-type');
-                            var dynamicFieldsContainer = document.getElementById('dynamic-fields-container');
-                            var addButton = null;
-                          
-                            variableTypeSelect.addEventListener('change', function() {
-                                clearInputFields();
-                                dynamicFieldsContainer.innerHTML = '';
-                                var selectedOption = variableTypeSelect.value;
+ 
+    var variableTypeSelect = document.getElementById('variable-type');
+    var dynamicFieldsContainer = document.getElementById('dynamic-fields-container');
+    var addButton = null;
 
-                                // Check if the selected option is "Multiple Box" or "Single Box"
-                                if (selectedOption === 'Multiple Box' || selectedOption === 'Single Box') {
-                                
-                                    addButton = createAddButton();
+    // Initialize CKEditor for the modal once document is ready
+    ClassicEditor
+        .create(document.querySelector('#ckeditorContent'), {
+            ckfinder: {
+                uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+            }
+        })
+        .then(newEditor => {
+            editorInstance = newEditor;
+            console.log('CKEditor initialized and editor assigned:', editorInstance);
+        })
+        .catch(error => {
+            console.error('CKEditor initialization error:', error);
+        });
 
-                                    dynamicFieldsContainer.appendChild(addButton);
-                                }
-                            });
+    variableTypeSelect.addEventListener('change', function() {
+        clearInputFields();
+        dynamicFieldsContainer.innerHTML = '';
+        var selectedOption = variableTypeSelect.value;
 
-                            // Function to create the "Add" button 
-                            function createAddButton() {
-                                addInputFields();
-                                var addButton = document.createElement('button');
-                                addButton.textContent = 'Add';
-                                addButton.classList.add('form-control');
-                                addButton.style=   "width: 58px;";
-                            
-                                addButton.setAttribute('type', 'button');
-                                addButton.addEventListener('click', function() {
-                                    addInputField();
-                                });
-                                return addButton;
-                            }
+        if (selectedOption === 'Multiple Box' || selectedOption === 'Single Box') {
+            addButton = createAddButton();
+            dynamicFieldsContainer.appendChild(addButton);
+        }
+    });
 
-                            // Function to add input fields
-                            function addInputFields() {
-                                inputFields.forEach(function(inputField) {
-                                    dynamicFieldsContainer.appendChild(inputField);
-                                });
-                            }
+    function createAddButton() {
+        addInputFields();
+        var addButton = document.createElement('button');
+        addButton.textContent = 'Add';
+        addButton.classList.add('form-control');
+        addButton.style = "width: 58px;";
+        addButton.setAttribute('type', 'button');
+        addButton.addEventListener('click', function() {
+            addInputField();
+        });
+        return addButton;
+    }
 
-                            // Function to add input field, drag button, and delete button
-                            function addInputField() {
-                                // Create wrapper div for input field and buttons
-                                var wrapperDiv = document.createElement('div');
-                                wrapperDiv.classList.add('dynamic-field');
+    function addInputFields() {
+        inputFields.forEach(function(inputField) {
+            dynamicFieldsContainer.appendChild(inputField);
+        });
+    }
 
-                                // Create input field
-                                // var inputField = document.createElement('input');
-                                // inputField.setAttribute('type', 'text');
-                                // inputField.setAttribute('placeholder', 'Enter value');
+    function addInputField() {
+        var uniqueId = 'row_' + new Date().getTime(); // Unique ID for each row
+
+        var wrapperDiv = document.createElement('div');
+        wrapperDiv.classList.add('dynamic-field');
+        wrapperDiv.setAttribute('data-id', uniqueId);
+
+        var inputField = document.createElement('input');
+        inputField.setAttribute('type', 'text');
+        inputField.setAttribute('placeholder', 'Enter value');
+        inputField.style.border = '1px solid #ccc';
+        inputField.style.borderRadius = '5px';
+        inputField.style.padding = '8px 12px';
+        inputField.style.width = '200px';
+        inputField.style.boxSizing = 'border-box';
+        inputField.setAttribute('data-id', uniqueId);
+
+        var dragButton = document.createElement('button');
+        dragButton.textContent = '☰';
+        dragButton.setAttribute('type', 'button');
+        dragButton.classList.add('btn', 'btn-primary', 'btn-sm', 'drag-button');
+
+        wrapperDiv.addEventListener('dragstart', function(event) {
+            event.dataTransfer.setData('text/plain', '');
+            event.currentTarget.classList.add('dragging');
+            event.stopPropagation();
+        });
+
+        wrapperDiv.setAttribute('draggable', 'true');
+
+        var deleteButton = document.createElement('button');
+        deleteButton.innerHTML = '&#10005;';
+        deleteButton.setAttribute('type', 'button');
+        deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+
+        deleteButton.addEventListener('click', function() {
+            wrapperDiv.remove();
+            removeFromInputFields(wrapperDiv);
+            delete editorInstances[uniqueId]; // Remove CKEditor instance associated with this row
+        });
+
+        var EditBodyCKeditor = document.createElement('button');
+        EditBodyCKeditor.innerHTML = '&#9998;';
+        EditBodyCKeditor.setAttribute('type', 'button');
+        EditBodyCKeditor.classList.add('btn', 'btn-primary', 'btn-sm');
+
+        EditBodyCKeditor.addEventListener('click', function() {
+            openCkeditorModal(uniqueId);
+
+            $('#saveCkeditorContent').off('click').on('click', function() {
+                var editedContent = editorInstance.getData();
+                editorInstances[uniqueId] = editedContent; // Store CKEditor content in the object
+                $('#ckeditorModal').modal('hide');
+            });
+        });
+
+        wrapperDiv.appendChild(inputField);
+        wrapperDiv.appendChild(dragButton);
+        wrapperDiv.appendChild(deleteButton);
+        wrapperDiv.appendChild(EditBodyCKeditor);
+
+        dynamicFieldsContainer.insertBefore(wrapperDiv, addButton);
+        inputFields.push(wrapperDiv);
+    }
+
+    function openCkeditorModal(uniqueId) {
+        // Clear any previous content
+        editorInstance.setData('');
+
+        // Set the CKEditor content for the specific row
+        if (uniqueId && editorInstances[uniqueId]) {
+            editorInstance.setData(editorInstances[uniqueId]);
+        }
+
+        $('#ckeditorModal').modal('show');
+    }
+
+    function removeFromInputFields(element) {
+        var index = inputFields.indexOf(element);
+        if (index !== -1) {
+            inputFields.splice(index, 1);
+        }
+    }
+
+    function clearInputFields() {
+        inputFields.forEach(function(inputField) {
+            inputField.remove();
+        });
+        inputFields = [];
+        editorInstances = {}; // Clear all stored CKEditor data
+    }
+});
+
+function allowDrop(event) {
+    event.preventDefault();
+}
+
+function drop(event) {
+    event.preventDefault();
+    var draggedElement = document.querySelector('.dragging');
+    var targetElement = event.target.closest('.dynamic-field');
+    if (targetElement) {
+        if (targetElement !== draggedElement) {
+            if (draggedElement.compareDocumentPosition(targetElement) === Node.DOCUMENT_POSITION_FOLLOWING) {
+                targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
+            } else {
+                targetElement.parentNode.insertBefore(draggedElement, targetElement);
+            }
+        }
+    } else {
+        event.target.appendChild(draggedElement);
+    }
+}
+ 
 
 
-                                // Create input field with custom styling
-                                var inputField = document.createElement('input');
-                                inputField.setAttribute('type', 'text');
-                                inputField.setAttribute('placeholder', 'Enter value');
-                            //    inputField.classList.add('form-control'); // Adding Bootstrap class
-                                inputField.style.border = '1px solid #ccc'; // Add border
-                                inputField.style.borderRadius = '5px'; // Add border radius
-                                inputField.style.padding = '8px 12px'; // Add padding
-                                inputField.style.width = '200px'; // Set width
-                                inputField.style.boxSizing = 'border-box'; // Include padding and border in the width           
-                                
-                  
-
-                          
-                                // Create drag button
-                                var dragButton = document.createElement('button');
-                                dragButton.textContent = '☰'; // Drag icon
-                                dragButton.setAttribute('type', 'button');
-                                dragButton.classList.add('btn', 'btn-primary', 'btn-sm'); // Adding Bootstrap classes
-                                dragButton.classList.add('drag-button'); // Apply CSS class for styling
-                                
-                                // Attach drag event listener to the wrapper div
-                                wrapperDiv.addEventListener('dragstart', function(event) {
-                                    event.dataTransfer.setData('text/plain', ''); // Required for drag-and-drop
-                                    event.currentTarget.classList.add('dragging'); // Add class to the dragged element
-                                    event.stopPropagation(); // Prevents parent drag event
-                                });
-
-                                // Set draggable attribute to true for the wrapper div
-                                wrapperDiv.setAttribute('draggable', 'true');
-
-                                // Create delete button
-                                // var deleteButton = document.createElement('button');
-                                // deleteButton.innerHTML = '&#10005;'; // Cross sign
-                                // deleteButton.setAttribute('type', 'button');
-                                // deleteButton.addEventListener('click', function() {
-                                //     wrapperDiv.remove();
-                                //     removeFromInputFields(wrapperDiv);
-                                // });
-
-                                // create delete button
-                                var deleteButton = document.createElement('button');
-                                deleteButton.innerHTML = '&#10005;'; // Cross sign
-                                deleteButton.setAttribute('type', 'button');
-                                deleteButton.classList.add('btn', 'btn-danger', 'btn-sm'); // Adding Bootstrap classes
-
-                                deleteButton.addEventListener('click', function() {
-                                    wrapperDiv.remove();
-                                    removeFromInputFields(wrapperDiv);
-                                });
-
-
-                                // Append input field, delete button, and drag button to wrapper div
-                                wrapperDiv.appendChild(inputField);
-                                wrapperDiv.appendChild(dragButton);
-                                wrapperDiv.appendChild(deleteButton);
-
-                                // Append wrapper div to container
-                                dynamicFieldsContainer.insertBefore(wrapperDiv, addButton);
-                                inputFields.push(wrapperDiv); // Add input field to the array
-                            }
-
-                            // Function to remove input field from the array
-                            function removeFromInputFields(element) {
-                                var index = inputFields.indexOf(element);
-                                if (index !== -1) {
-                                    inputFields.splice(index, 1);
-                                }
-                            }
-
-                            // Function to clear input fields array
-                            function clearInputFields() {
-                                inputFields.forEach(function(inputField) {
-                                    inputField.remove();
-                                });
-                                inputFields = [];
-                            }
-                        });
-
-                        // Function to allow dropping elements
-                        function allowDrop(event) {
-                            event.preventDefault();
-                        }
-
-                        // Function to handle dropping elements
-                        function drop(event) {
-                            event.preventDefault();
-                            var data = event.dataTransfer.getData("text/plain");
-                            var draggedElement = document.querySelector('.dragging');
-                            var targetElement = event.target.closest('.dynamic-field');
-                            if (targetElement) {
-                                if (targetElement !== draggedElement) {
-                                    if (draggedElement.compareDocumentPosition(targetElement) === Node.DOCUMENT_POSITION_FOLLOWING) {
-                                        targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
-                                    } else {
-                                        targetElement.parentNode.insertBefore(draggedElement, targetElement);
-                                    }
-                                }
-                            } else {
-                                event.target.appendChild(draggedElement);
-                            }
-                        }
-
+function checkVariableNameExists(productName, callback) {
+    $.ajax({
+        url: '/check-variable-name',
+        type: 'GET',
+        data: { VariableName: productName },
+        success: function(response) {
+            callback(response.exists);
+        },
+        error: function(error) {
+            console.error('Error checking variable name:', error);
+        }
+    });
+}
 
 function saveVariable() {
     var productName = $('#product-name-new').val();
     var description = $('#description-new').val();
-    var variableType = $('#variable-type').val(); // Get the selected variable type
+    var variableType = $('#variable-type').val();
 
     if (!productName || !description || !variableType) {
         console.error('All fields must be filled out.');
         return;
     }
 
-    var inputFieldValues = []; // Array to store values of dynamically added input fields
+    var inputFieldValues = null;
 
-    // Loop through inputFields array to collect values
-    inputFields.forEach(function(inputField) {
-        var value = $(inputField).find('input[type="text"]').val();
-        inputFieldValues.push(value);
-    });
+    if (variableType !== "Single Line Text" && variableType !== "Multiple Line Text" && variableType !== "Dates") {
+        inputFieldValues = [];
 
-    console.log('inputFieldValues ----> :' , inputFieldValues);
+        inputFields.forEach(function(wrapperDiv) {
+            var uniqueId = $(wrapperDiv).attr('data-id');
+            var inputField = $(wrapperDiv).find('input[type="text"]').val();
+            var ckEditorContent = editorInstances[uniqueId] || ''; // Get CKEditor content for this row
+            inputFieldValues.push({
+                id: uniqueId,
+                inputValue: inputField,
+                ckEditorContent: ckEditorContent
+            });
+        });
+    }
 
-    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    checkVariableNameExists(productName, function(exists) {
+        if (exists) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Variable name already exists. Please choose another name.'
+            });
+        } else {
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    $.ajax({
-        url: '/save-variable',
-        type: 'POST',
-        data: {
-            VariableName: productName,
-            description: description,
-            variableType: variableType,
-            inputFieldValues: inputFieldValues, // Include values of dynamically added input fields
-            _token: csrfToken
-        },
-        success: function (response) {
-            console.log('Data saved successfully.');
-            $('#exampleModalNew').modal('hide');
-            location.reload();
-        },
-        error: function (error) {
-            console.error('Error saving data:', error);
+            $.ajax({
+                url: '/save-variable',
+                type: 'POST',
+                data: {
+                    VariableName: productName,
+                    description: description,
+                    variableType: variableType,
+                    inputFieldValues: inputFieldValues,
+                    _token: csrfToken
+                },
+                success: function(response) {
+                    console.log('Data saved successfully.');
+                    $('#exampleModalNew').modal('hide');
+                    location.reload();
+                },
+                error: function(error) {
+                    console.error('Error saving data:', error);
+                }
+            });
         }
     });
 }
@@ -323,12 +394,29 @@ function saveVariable() {
 // function saveVariable() {
 //     var productName = $('#product-name-new').val();
 //     var description = $('#description-new').val();
-//     var variableType = $('#variable-type').val(); // Get the selected variable type
-
+//     var variableType = $('#variable-type').val();
 
 //     if (!productName || !description || !variableType) {
 //         console.error('All fields must be filled out.');
 //         return;
+//     }
+
+//     var inputFieldValues = null;
+
+//     // Check the variable type and only populate inputFieldValues if necessary
+//     if (variableType !== "Single Line Text" && variableType !== "Multiple Line Text" && variableType !== "Dates") {
+//         inputFieldValues = [];
+
+//         inputFields.forEach(function(wrapperDiv) {
+//             var uniqueId = $(wrapperDiv).attr('data-id');
+//             var inputField = $(wrapperDiv).find('input[type="text"]').val();
+//             var ckEditorContent = editorInstances[uniqueId] || ''; // Get CKEditor content for this row
+//             inputFieldValues.push({
+//                 id: uniqueId,
+//                 inputValue: inputField,
+//                 ckEditorContent: ckEditorContent
+//             });
+//         });
 //     }
 
 //     var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -339,24 +427,35 @@ function saveVariable() {
 //         data: {
 //             VariableName: productName,
 //             description: description,
-//             variableType: variableType, // Use variable_type instead of variableType
+//             variableType: variableType,
+//             inputFieldValues: inputFieldValues,
 //             _token: csrfToken
 //         },
-//         success: function (response) {
+//         success: function(response) {
 //             console.log('Data saved successfully.');
 //             $('#exampleModalNew').modal('hide');
 //             location.reload();
 //         },
-//         error: function (error) {
+//         error: function(error) {
 //             console.error('Error saving data:', error);
 //         }
 //     });
 // }
 
 
+
+
+function openModalNew() {
+    // Using Bootstrap's JavaScript to open the product list modal
+    var myModal = new bootstrap.Modal(document.getElementById('exampleModalNew'));
+    myModal.show();
+}
+
+
 </script>
 
-    <!-- for table -->
+    <!-- For Main table --------------------------------------------------------------------------------->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div class="table-responsive" style="margin-top:10px;">
@@ -369,7 +468,7 @@ function saveVariable() {
             <th  style="text-align: left;">Description</th>
             <th  style="text-align: left;">Created Date</th>
             <th  style="text-align: left;">Updated Date</th>
-            <th  style="text-align: left;" >Action</th>
+            <th  style="text-align: left;  width: 18%" >Action</th>
         </tr>
     </thead>
     <tbody>
@@ -386,9 +485,21 @@ function saveVariable() {
 
 
                 <div class="btn-toolbar">
-                                <button class="btn btn-primary" 
-                                onclick="openModal('{{ $contract->VariableID }}', '{{ $contract->VariableName }}', '{{ $contract->VariableType }}', '{{ $contract->Description }}', '{{ json_encode($contract->VariableLabelValue) }}')"
-                                >Edit</button>
+                                <!-- <button class="btn btn-primary" 
+                                onclick="openModal('{{ $contract->VariableID }}', '{{ $contract->VariableName }}', 
+                                {{ $contract->VariableType }}', '{{ $contract->Description }}',
+                                 '{{ json_encode($contract->VariableLabelValue) }}')"
+                                >Edit</button> -->
+
+                <button class="btn btn-primary" 
+                    onclick="openModal(
+                        '{{ $contract->VariableID }}', 
+                        '{{ addslashes($contract->VariableName) }}', 
+                        '{{ $contract->VariableType }}', 
+                        '{{ addslashes($contract->Description) }}', 
+                        '{{ json_encode($contract->VariableLabelValue) }}'
+                    )">Edit
+                </button>
 
 
                  <form id="deleteForm-{{ $contract->VariableID }}" action="{{ route('contract.delete', $contract->VariableID) }}" method="POST">
@@ -401,33 +512,6 @@ function saveVariable() {
                     </form>
                                 
                 </div>
-<!-- 
-    <div class="dropdown">
-        <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="mdi mdi-dots-horizontal font-size-18"></i>
-        </a>
-        <div class="dropdown-menu dropdown-menu-end">
-            <ul class="dropdown-menu dropdown-menu-end show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-31px, 27px, 0px);" data-popper-placement="bottom-end">
-     
-
-                <a href="#" class="dropdown-item edit-list" onclick="openModal('{{ $contract->VariableID }}', '{{ $contract->VariableName }}', '{{ $contract->VariableType }}', '{{ $contract->Description }}', '{{ json_encode($contract->VariableLabelValue) }}')">
-                    <i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit
-                </a>
-
-                <form id="deleteForm-{{ $contract->VariableID }}" action="{{ route('contract.delete', $contract->VariableID) }}" method="POST">
-                    @csrf
-                    @method('POST')
-                    <a href="#" class="dropdown-item edit-list" onclick="confirmDelete('{{ $contract->VariableID }}');">
-                        <i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> Delete
-                    </a>
-                </form>
-
-
-
-            </ul>
-        </div>
-    </div> -->
-
 
 </td>
         </tr>
@@ -561,7 +645,9 @@ $(document).ready(function() {
 
  
   
- <!-- edit Modal  -->
+ <!--------------------------------------------- edit Modal  ---------------------------------------------->
+ 
+ <!-- Main Edit Modal -->
 <div class="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -573,7 +659,7 @@ $(document).ready(function() {
                 <form id="variableForm">
                     <input type="hidden" id="variable-id" name="variable_id">
                     <div class="mb-3">
-                        <label for="variable-name" class="col-form-label">Variable name:</label>
+                        <label for="variable-name" class="col-form-label">Variable Name:</label>
                         <input type="text" class="form-control" id="variable-name" name="variableName">
                     </div>
                     <div class="row">
@@ -589,12 +675,10 @@ $(document).ready(function() {
                                 </select>
                             </div>
                         </div>
-
                         <div class="col-6" id="dynamic-fields-container-two">
-                         
+                            <!-- Dynamic fields will be added here -->
                         </div>
                     </div>
-
                     <div class="mb-3">
                         <label for="description" class="col-form-label">Description:</label>
                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
@@ -609,430 +693,438 @@ $(document).ready(function() {
     </div>
 </div>
 
+<!-- CKEditor Modal for Editing Content -->
+<div class="modal" id="ckeditorModalEdit" tabindex="-1" aria-labelledby="ckeditorModalLabelEdit" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="ckeditorModalLabelEdit">Edit Content</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="ckeditorContentEdit"></textarea>
 
+                <style>
+                    .ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
+                        border-color: var(--ck-color-base-border);
+                        height: 235px !important;
+                        width: 100% !important;
+                    }
+                    .ck.ck-editor__editable_inline>:last-child {
+                        margin-bottom: var(--ck-spacing-large);
+                        height: 235px;
+                    }
+                    .ck-editor__editable {
+                        min-height: 235px;
+                    }
+                </style>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="saveCkeditorContentEdit">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- arifur for search -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var inputFieldsTwo = []; // Array to store input fields for the edit modal
+    var editorInstancesEdit = {}; // Object to keep track of CKEditor content by unique IDs
+    var currentEditingId = null; // To keep track of the current editing row
+    var editorInstanceEdit; // CKEditor instance for the edit modal
 
- 
-    var inputFieldsTwo = []; // Array to store input fields
-    
-    document.addEventListener("DOMContentLoaded", function() {
-                            
-                            var variableTypeSelectTwo = document.getElementById('variable-type-two');
-                            var dynamicFieldsContainerTwo = document.getElementById('dynamic-fields-container-two');
-                            var addButtonTwo = null;
-                   
-                            
-                            variableTypeSelectTwo.addEventListener('change', function() {
-                                clearInputFieldsTwo();
-                                dynamicFieldsContainerTwo.innerHTML = '';
-                                var selectedOptionTwo = variableTypeSelectTwo.value;
+    var variableTypeSelectTwo = document.getElementById('variable-type-two');
+    var dynamicFieldsContainerTwo = document.getElementById('dynamic-fields-container-two');
+    var addButtonTwo = null;
 
-                                // Check if the selected option is "Multiple Box" or "Single Box"
-                                if (selectedOptionTwo === 'Multiple Box' || selectedOptionTwo === 'Single Box') {
-                                
-                                    addButtonTwo = createAddButtonTwo();
-
-                                    dynamicFieldsContainerTwo.appendChild(addButtonTwo);
-                                }
-                            });
-
-                            // Function to create the "Add" button 
-                            function createAddButtonTwo() {
-                                addInputFieldsTwo();
-                                var addButtonTwo = document.createElement('button');
-                                addButtonTwo.textContent = 'Add';
-                                addButtonTwo.classList.add('form-control');
-                                addButtonTwo.style=   "width: 58px;";
-
-                                addButtonTwo.setAttribute('type', 'button');
-                                addButtonTwo.addEventListener('click', function() {
-                                    addInputFieldTwo();
-                                });
-                                return addButtonTwo;
-                            }
-
-                            // Function to add input fields
-                            function addInputFieldsTwo() {
-                                inputFieldsTwo.forEach(function(inputField) {
-                                    dynamicFieldsContainerTwo.appendChild(inputField);
-                                });
-                            }
-
-                            function addInputFieldTwo() {
-                                // Create wrapper div for input field and buttons
-                                var wrapperDiv = document.createElement('div');
-                                wrapperDiv.classList.add('dynamic-field');
-
-                                // Create input field
-                                // var inputField = document.createElement('input');
-                                // inputField.setAttribute('type', 'text');
-                                // inputField.setAttribute('placeholder', 'Enter value');
-
-                                var inputField = document.createElement('input');
-                                inputField.setAttribute('type', 'text');
-                                inputField.setAttribute('placeholder', 'Enter value');
-                                inputField.style.border = '1px solid #ccc'; // Add border
-                                inputField.style.borderRadius = '5px'; // Add border radius
-                                inputField.style.padding = '8px 12px'; // Add padding
-                                inputField.style.width = '200px'; // Set width
-                                inputField.style.boxSizing = 'border-box'; // Include padding and border in the width
-
-                                // Create drag button
-                                var dragButton = document.createElement('button');
-                                dragButton.textContent = '☰'; // Drag icon
-                                dragButton.setAttribute('type', 'button');
-                                dragButton.classList.add('btn', 'btn-primary', 'btn-sm'); 
-                                dragButton.classList.add('drag-button'); // Apply CSS class for styling
-
-                                // Attach drag event listener to the wrapper div
-                                wrapperDiv.addEventListener('dragstart', function(event) {
-                                    event.dataTransfer.setData('text/plain', ''); // Required for drag-and-drop
-                                    event.currentTarget.classList.add('dragging'); // Add class to the dragged element
-                                    event.stopPropagation(); // Prevents parent drag event
-                                });
-
-                                // Set draggable attribute to true for the wrapper div
-                                wrapperDiv.setAttribute('draggable', 'true');
-
-                                // Create delete button
-                                var deleteButton = document.createElement('button');
-                                deleteButton.innerHTML = '&#10005;'; // Cross sign
-                                deleteButton.setAttribute('type', 'button');
-                                deleteButton.classList.add('btn', 'btn-danger', 'btn-sm'); 
-                                deleteButton.addEventListener('click', function() {
-                                    wrapperDiv.remove();
-                                    removeFromInputFieldsTwo(wrapperDiv);
-                                });
-
-                                // Append input field, delete button, and drag button to wrapper div
-                                wrapperDiv.appendChild(inputField);
-                                wrapperDiv.appendChild(dragButton);
-                                wrapperDiv.appendChild(deleteButton);
-
-                                // Append wrapper div to container
-                                dynamicFieldsContainerTwo.insertBefore(wrapperDiv, addButtonTwo);
-                                inputFieldsTwo.push(wrapperDiv); // Add input field to the array
-
-                                // Function to handle dropping elements
-                                wrapperDiv.addEventListener('drop', function(event) {
-                                    event.preventDefault();
-                                    var data = event.dataTransfer.getData("text/plain");
-                                    var draggedElement = document.querySelector('.dragging');
-                                    var targetElement = event.currentTarget;
-                                    if (targetElement) {
-                                        if (targetElement !== draggedElement) {
-                                            if (draggedElement.compareDocumentPosition(targetElement) === Node.DOCUMENT_POSITION_FOLLOWING) {
-                                                targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
-                                            } else {
-                                                targetElement.parentNode.insertBefore(draggedElement, targetElement);
-                                            }
-                                        }
-                                    } else {
-                                        event.target.appendChild(draggedElement);
-                                    }
-                                });
-
-                                // Function to allow dropping elements
-                                wrapperDiv.addEventListener('dragover', function(event) {
-                                    event.preventDefault();
-                                });
-                            }
-
-                            // Function to remove input field from the array
-                            function removeFromInputFieldsTwo(element) {
-                                var index = inputFieldsTwo.indexOf(element);
-                                if (index !== -1) {
-                                    inputFieldsTwo.splice(index, 1);
-                                }
-                            }
-
-                            // Function to clear input fields array
-                            function clearInputFieldsTwo() {
-                                inputFieldsTwo.forEach(function(inputField) {
-                                    inputField.remove();
-                                });
-                                inputFieldsTwo = [];
-                            }
-                        });
-
-                        // Function to allow dropping elements
-                        function allowDrop(event) {
-                            event.preventDefault();
-                        }
-
-                        // Function to handle dropping elements
-                        function drop(event) {
-                            event.preventDefault();
-                            var data = event.dataTransfer.getData("text/plain");
-                            var draggedElement = document.querySelector('.dragging');
-                            var targetElement = event.target.closest('.dynamic-field');
-                            if (targetElement) {
-                                if (targetElement !== draggedElement) {
-                                    if (draggedElement.compareDocumentPosition(targetElement) === Node.DOCUMENT_POSITION_FOLLOWING) {
-                                        targetElement.parentNode.insertBefore(draggedElement, targetElement.nextSibling);
-                                    } else {
-                                        targetElement.parentNode.insertBefore(draggedElement, targetElement);
-                                    }
-                                }
-                            } else {
-                                event.target.appendChild(draggedElement);
-                            }
-                        }
-             
-
-
-
-    $(document).ready(function () {
-        // Reference to the input field and the table
-        var $searchInput = $('#searchInput');
-        var $table = $('#ContractList');
-
-        // Event listener for keyup on the search input
-        $searchInput.on('keyup', function () {
-            var searchText = $(this).val().toLowerCase();
-
-            // Filter the table rows based on the search text
-            $table.find('tbody tr').filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1);
-            });
+    // Initialize CKEditor for the Edit modal
+    ClassicEditor
+        .create(document.querySelector('#ckeditorContentEdit'), {
+            ckfinder: {
+                uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+            }
+        })
+        .then(newEditor => {
+            editorInstanceEdit = newEditor; // Assign to the global variable
+            console.log('CKEditor initialized for Edit modal:', editorInstanceEdit);
+        })
+        .catch(error => {
+            console.error('CKEditor initialization error for Edit modal:', error);
         });
+
+    // Event listener for variable type selection
+    variableTypeSelectTwo.addEventListener('change', function () {
+        clearInputFieldsTwo();
+        dynamicFieldsContainerTwo.innerHTML = '';
+        var selectedOptionTwo = variableTypeSelectTwo.value;
+
+        if (selectedOptionTwo === 'Multiple Box' || selectedOptionTwo === 'Single Box') {
+            addButtonTwo = createAddButtonTwo();
+            dynamicFieldsContainerTwo.appendChild(addButtonTwo);
+        }
     });
 
-    function openModalNew() {
-        // Using Bootstrap's JavaScript to open the product list modal
-        var myModal = new bootstrap.Modal(document.getElementById('exampleModalNew'));
-        myModal.show();
+    function createAddButtonTwo() {
+        addInputFieldsTwo();
+        var addButtonTwo = document.createElement('button');
+        addButtonTwo.textContent = 'Add';
+        addButtonTwo.classList.add('form-control');
+        addButtonTwo.style = "width: 58px;";
+        addButtonTwo.setAttribute('type', 'button');
+        addButtonTwo.addEventListener('click', function () {
+            addInputFieldTwo();
+        });
+        return addButtonTwo;
     }
 
+    function addInputFieldsTwo() {
+        inputFieldsTwo.forEach(function (inputField) {
+            dynamicFieldsContainerTwo.appendChild(inputField);
+        });
+    }
+
+    function addInputFieldTwo() {
+        var uniqueId = 'row_' + new Date().getTime(); // Unique ID for each row
+
+        var wrapperDiv = document.createElement('div');
+        wrapperDiv.classList.add('dynamic-field');
+        wrapperDiv.setAttribute('data-id', uniqueId);
+
+        var inputField = document.createElement('input');
+        inputField.setAttribute('type', 'text');
+        inputField.setAttribute('placeholder', 'Enter value');
+        inputField.style.border = '1px solid #ccc';
+        inputField.style.borderRadius = '5px';
+        inputField.style.padding = '8px 12px';
+        inputField.style.width = '200px';
+        inputField.style.boxSizing = 'border-box';
+        inputField.setAttribute('data-id', uniqueId);
+
+        var dragButton = document.createElement('button');
+        dragButton.textContent = '☰';
+        dragButton.setAttribute('type', 'button');
+        dragButton.classList.add('btn', 'btn-primary', 'btn-sm', 'drag-button');
+
+        wrapperDiv.addEventListener('dragstart', function(event) {
+            event.dataTransfer.setData('text/plain', '');
+            event.currentTarget.classList.add('dragging');
+            event.stopPropagation();
+        });
+
+        wrapperDiv.setAttribute('draggable', 'true');
+
+        var deleteButton = document.createElement('button');
+        deleteButton.innerHTML = '&#10005;';
+        deleteButton.setAttribute('type', 'button');
+        deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+
+        deleteButton.addEventListener('click', function() {
+            wrapperDiv.remove();
+            removeFromInputFieldsTwo(wrapperDiv);
+            delete editorInstancesEdit[uniqueId]; // Remove CKEditor instance associated with this row
+        });
+
+        var EditBodyCKeditor = document.createElement('button');
+        EditBodyCKeditor.innerHTML = '&#9998;';
+        EditBodyCKeditor.setAttribute('type', 'button');
+        EditBodyCKeditor.classList.add('btn', 'btn-primary', 'btn-sm');
+
+        EditBodyCKeditor.addEventListener('click', function() {
+            currentEditingId = uniqueId; // Set current editing ID
+            openCkeditorModalEdit(uniqueId); // Open the CKEditor modal with the correct content
+        });
+
+        wrapperDiv.appendChild(inputField);
+        wrapperDiv.appendChild(dragButton);
+        wrapperDiv.appendChild(deleteButton);
+        wrapperDiv.appendChild(EditBodyCKeditor);
+
+        // Remove the Add button temporarily
+        var addButton = dynamicFieldsContainerTwo.querySelector('.form-control');
+
+        dynamicFieldsContainerTwo.removeChild(addButton);
+
+        // Append the new row
+        dynamicFieldsContainerTwo.appendChild(wrapperDiv);
+
+        // Re-append the Add button
+        dynamicFieldsContainerTwo.appendChild(addButton);
+
+        // Add the new field to the inputFieldsTwo array
+        inputFieldsTwo.push(wrapperDiv);
+
+        // Make the new row draggable
+        makeRowDraggable(wrapperDiv);
+    }
+
+
+    function removeFromInputFieldsTwo(element) {
+        var index = inputFieldsTwo.indexOf(element);
+        if (index !== -1) {
+            inputFieldsTwo.splice(index, 1);
+        }
+    }
+
+    function clearInputFieldsTwo() {
+        inputFieldsTwo.forEach(function (inputField) {
+            inputField.remove();
+        });
+        inputFieldsTwo = [];
+        editorInstancesEdit = {}; // Clear all stored CKEditor data
+    }
+
+    // Function to make a row draggable
+    function makeRowDraggable(row) {
+        var dragButton = row.querySelector('.drag-button');
+
+        dragButton.addEventListener('dragstart', function (event) {
+            event.dataTransfer.setData('text/plain', ''); // Required for drag-and-drop
+            row.classList.add('dragging'); // Add class to the dragged element
+            event.stopPropagation(); // Prevents parent drag event
+        });
+
+        row.addEventListener('dragover', function (event) {
+            event.preventDefault(); // Prevent default behavior to allow drop
+        });
+
+        row.addEventListener('dragenter', function (event) {
+            row.classList.add('drag-over'); // Add class to indicate potential drop target
+        });
+
+        row.addEventListener('dragleave', function (event) {
+            row.classList.remove('drag-over'); // Remove class to indicate no longer potential drop target
+        });
+
+        row.addEventListener('drop', function (event) {
+            var draggedRow = document.querySelector('.dragging');
+            var dropTargetRow = event.currentTarget;
+
+            if (draggedRow.offsetTop < dropTargetRow.offsetTop) {
+                dropTargetRow.parentNode.insertBefore(draggedRow, dropTargetRow.nextSibling);
+            } else {
+                dropTargetRow.parentNode.insertBefore(draggedRow, dropTargetRow);
+            }
+
+            draggedRow.classList.remove('dragging');
+            dropTargetRow.classList.remove('drag-over');
+        });
+    }
+
+    // Function to open the CKEditor modal and load the correct content
+    function openCkeditorModalEdit(uniqueId) {
+        if (editorInstanceEdit) {
+            editorInstanceEdit.setData(''); // Clear any previous content
+            var content = editorInstancesEdit[uniqueId] || ''; // Load the content specific to the current row
+            editorInstanceEdit.setData(content);
+        }
+
+        $('#ckeditorModalEdit').modal('show');
+
+        $('#saveCkeditorContentEdit').off('click').on('click', function () {
+            if (editorInstanceEdit) {
+                var editedContent = editorInstanceEdit.getData();
+                editorInstancesEdit[uniqueId] = editedContent; // Store CKEditor content in the object
+                $('#ckeditorModalEdit').modal('hide');
+            }
+        });
+    }
+
+    // Function to open the main edit modal and load the existing data
+    function openModal(variableID, variableName, variableType, description, variableLabelValue) {
+        document.getElementById('variable-id').value = variableID;
+        document.getElementById('variable-name').value = variableName;
+        document.getElementById('variable-type-two').value = variableType;
+        document.getElementById('description').value = description;
+
+        var dynamicFieldsContainerTwo = document.getElementById('dynamic-fields-container-two');
+        dynamicFieldsContainerTwo.innerHTML = ''; // Clear previous content
+
+        if (variableLabelValue && !['Single Line Text', 'Multiple Line Text', 'Dates'].includes(variableType)) {
+            var variableLabelValueObj = JSON.parse(variableLabelValue);
+
+            variableLabelValueObj.forEach(function (item) {
+                var uniqueId = item.id || 'row_' + new Date().getTime(); // Use existing ID or generate a new one
+
+                var wrapperDiv = document.createElement('div');
+                wrapperDiv.classList.add('dynamic-field');
+                wrapperDiv.setAttribute('data-id', uniqueId);
+
+                var inputField = document.createElement('input');
+                inputField.setAttribute('type', 'text');
+                inputField.setAttribute('value', item.inputValue);
+                inputField.style.border = '1px solid #ccc';
+                inputField.style.borderRadius = '5px';
+                inputField.style.padding = '8px 12px';
+                inputField.style.width = '200px';
+                inputField.style.boxSizing = 'border-box';
+                inputField.setAttribute('data-id', uniqueId);
+
+                var dragButton = document.createElement('button');
+                dragButton.textContent = '☰';
+                dragButton.setAttribute('type', 'button');
+                dragButton.classList.add('btn', 'btn-primary', 'btn-sm', 'drag-button');
+
+                wrapperDiv.addEventListener('dragstart', function (event) {
+                    event.dataTransfer.setData('text/plain', '');
+                    event.currentTarget.classList.add('dragging');
+                    event.stopPropagation();
+                });
+
+                wrapperDiv.setAttribute('draggable', 'true');
+
+                var deleteButton = document.createElement('button');
+                deleteButton.innerHTML = '&#10005;';
+                deleteButton.setAttribute('type', 'button');
+                deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+
+                deleteButton.addEventListener('click', function () {
+                    wrapperDiv.remove();
+                    removeFromInputFieldsTwo(wrapperDiv);
+                    delete editorInstancesEdit[uniqueId];
+                });
+
+                var EditBodyCKeditor = document.createElement('button');
+                EditBodyCKeditor.innerHTML = '&#9998;';
+                EditBodyCKeditor.setAttribute('type', 'button');
+                EditBodyCKeditor.classList.add('btn', 'btn-primary', 'btn-sm');
+
+                EditBodyCKeditor.addEventListener('click', function () {
+                    currentEditingId = uniqueId; // Set current editing ID
+                    openCkeditorModalEdit(uniqueId); // Open the CKEditor modal with the correct content
+                });
+
+                wrapperDiv.appendChild(inputField);
+                wrapperDiv.appendChild(dragButton);
+                wrapperDiv.appendChild(deleteButton);
+                wrapperDiv.appendChild(EditBodyCKeditor);
+
+                dynamicFieldsContainerTwo.appendChild(wrapperDiv);
+                makeRowDraggable(wrapperDiv);
+                
+                // Save CKEditor content if present
+                if (item.ckEditorContent) {
+                    editorInstancesEdit[uniqueId] = item.ckEditorContent;
+                }
+            });
+        } 
+
+        if (variableType === 'Multiple Box' || variableType === 'Single Box') {
+            var addButton = document.createElement('button');
+            addButton.textContent = 'Add';
+            addButton.classList.add('form-control');
+            addButton.style = "width: 58px;";
+            addButton.setAttribute('type', 'button');
+            addButton.addEventListener('click', function () {
+                addInputFieldTwo();
+            });
+            dynamicFieldsContainerTwo.appendChild(addButton);
+        }
+
+        var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+        modal.show();
+    }
+
+    // Function to save the edited variable
+
+    function checkVariableNameExistsForEdit(productName, callback) {
+        $.ajax({
+            url: '/check-variable-name',
+            type: 'GET',
+            data: { VariableName: productName },
+            success: function(response) {
+                callback(response.exists);
+            },
+            error: function(error) {
+                console.error('Error checking variable name:', error);
+            }
+        });
+    }
  
 
-// Function to make a row draggable and droppable
 
-function makeRowDraggable(row) {
-    var dragButton = row.querySelector('.drag-button');
+    function editVariable() {
 
-    // Attach drag event listeners to the drag button
-    dragButton.addEventListener('dragstart', function(event) {
-        event.dataTransfer.setData('text/plain', ''); // Required for drag-and-drop
-        row.classList.add('dragging'); // Add class to the dragged element
-        event.stopPropagation(); // Prevents parent drag event
-    });
+        var VariableID = $('#variable-id').val();
+        var VariableName = $('#variable-name').val();
+        var VariableType = $('#variable-type-two').val();
+        var Description = $('#description').val();
 
-    // Attach dragover event listener to row to allow dropping
-    row.addEventListener('dragover', function(event) {
-        event.preventDefault(); // Prevent default behavior to allow drop
-    });
+        var inputFieldValues = [];
 
-    // Attach dragenter event listener to row to indicate potential drop target
-    row.addEventListener('dragenter', function(event) {
-        row.classList.add('drag-over'); // Add class to indicate potential drop target
-    });
+        $('#dynamic-fields-container-two .dynamic-field').each(function () {
+            var uniqueId = $(this).data('id');
+            var inputValue = $(this).find('input[type="text"]').val();
+            var ckEditorContent = editorInstancesEdit[uniqueId] || '';
 
-    // Attach dragleave event listener to row to remove indication of potential drop target
-    row.addEventListener('dragleave', function(event) {
-        row.classList.remove('drag-over'); // Remove class to indicate no longer potential drop target
-    });
+            inputFieldValues.push({
+                id: uniqueId,
+                inputValue: inputValue,
+                ckEditorContent: ckEditorContent
+            });
+        });
 
-    // Attach drop event listener to row to handle the dropped element
-    row.addEventListener('drop', function(event) {
-        var draggedRow = document.querySelector('.dragging');
-        var dropTargetRow = event.currentTarget;
 
-        // Check if the dragged row is being dropped above or below the drop target row
-        if (draggedRow.offsetTop < dropTargetRow.offsetTop) {
-            dropTargetRow.parentNode.insertBefore(draggedRow, dropTargetRow.nextSibling);
+        checkVariableNameExistsForEdit(VariableName, function(exists) {
+        if (exists) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Variable name already exists. Please choose another name.'
+            });
         } else {
-            dropTargetRow.parentNode.insertBefore(draggedRow, dropTargetRow);
-        }
-
-        // Remove dragging and drag-over classes after drop
-        draggedRow.classList.remove('dragging');
-        dropTargetRow.classList.remove('drag-over');
-    });
-}
-
-
-// Function to open modal and populate fields
-function openModal(variableID, variableName, variableType, description, variableLabelValue) {
-    // Populate modal fields with data
-    document.getElementById('variable-id').value = variableID;
-    document.getElementById('variable-name').value = variableName;
-    document.getElementById('variable-type-two').value = variableType;
-    document.getElementById('description').value = description;
-
-    // Parse and populate VariableLabelValue JSON
-    var variableLabelValueObj = JSON.parse(variableLabelValue);
-    var dynamicFieldsContainer = document.getElementById('dynamic-fields-container-two');
-    dynamicFieldsContainer.innerHTML = ''; // Clear previous content
-
-    // Create input fields, drag buttons, and delete buttons for each value in the JSON object
-    for (var key in variableLabelValueObj) {
-        if (variableLabelValueObj.hasOwnProperty(key)) {
-            // Create input field
-            // var inputField = document.createElement('input');
-            // inputField.setAttribute('type', 'text');
-            // inputField.setAttribute('value', variableLabelValueObj[key]);
-
-            var inputField = document.createElement('input');
-            inputField.setAttribute('type', 'text');
-            inputField.setAttribute('value', variableLabelValueObj[key]);
-            inputField.style.border = '1px solid #ccc'; // Add border
-            inputField.style.borderRadius = '5px'; // Add border radius
-            inputField.style.padding = '8px 12px'; // Add padding
-            inputField.style.width = '200px'; // Set width
-            inputField.style.boxSizing = 'border-box'; // Include padding and border in the width
-
-            // Create drag button
-            var dragButton = document.createElement('button');
-            dragButton.textContent = '☰'; // Drag icon
-            dragButton.setAttribute('type', 'button');
-            dragButton.classList.add('btn', 'btn-primary', 'btn-sm'); 
-            dragButton.classList.add('drag-button'); // Apply CSS class for styling
-            dragButton.setAttribute('draggable', 'true'); // Make drag button draggable
-
-            // Create delete button
-            var deleteButton = document.createElement('button');
-            deleteButton.innerHTML = '&#10005;'; // Cross sign
-            deleteButton.setAttribute('type', 'button');
-            deleteButton.classList.add('btn', 'btn-danger', 'btn-sm'); 
-            
-            deleteButton.addEventListener('click', function() {
-                var wrapperDiv = this.parentNode;
-                wrapperDiv.remove(); // Remove the input field row when delete button is clicked
+            $.ajax({
+                url: '/update-variable/' + VariableID,
+                method: 'POST',
+                data: {
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'VariableName': VariableName,
+                    'VariableType': VariableType,
+                    'Description': Description,
+                    'inputFieldValues': inputFieldValues
+                },
+                success: function (data) {
+                    $('#exampleModal').modal('hide');
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error('Error updating variable:', error);
+                }
             });
-
-            // Create wrapper div for input field, drag button, and delete button
-            var wrapperDiv = document.createElement('div');
-            wrapperDiv.setAttribute('class', 'dynamic-field');
-            wrapperDiv.appendChild(inputField);
-            wrapperDiv.appendChild(dragButton);
-            wrapperDiv.appendChild(deleteButton);
-
-            dynamicFieldsContainer.appendChild(wrapperDiv);
-            makeRowDraggable(wrapperDiv); // Make the row draggable
-        }
-    }
-
-    // Create "Add" button at the bottom
-    if (variableType === 'Single Box' || variableType === 'Multiple Box' ) {
-
-        var addButton = document.createElement('button');
-        addButton.textContent = 'Add';
-        addButton.classList.add('form-control');
-        addButton.style = "width: 58px;"; 
-    
-        addButton.setAttribute('type', 'button');
-        addButton.addEventListener('click', function() {
-            addInputField();
+        } 
         });
 
-        dynamicFieldsContainer.appendChild(addButton);
+ 
 
+                                    // $.ajax({
+
+
+                                    //     url: '/update-variable/' + VariableID,
+                                    //     method: 'POST',
+                                    //     data: {
+                                    //         '_token': $('meta[name="csrf-token"]').attr('content'),
+                                    //         'VariableName': VariableName,
+                                    //         'VariableType': VariableType,
+                                    //         'Description': Description,
+                                    //         'inputFieldValues': inputFieldValues
+                                    //     },
+                                    //     success: function (data) {
+                                    //         $('#exampleModal').modal('hide');
+                                    //         location.reload();
+                                    //     },
+                                    //     error: function (error) {
+                                    //         console.error('Error updating variable:', error);
+                                    //     }
+                                    // });
     }
- 
+        // Ensure it's available globally
+        window.openModal = openModal;
+            // Ensure it's available globally
+         window.editVariable = editVariable;
+});
 
-    // Show the modal
-    var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-    modal.show();
-}
- 
-
-// Function to add new input field row
-    function addInputField() {
-    // Create input field
-    // var inputField = document.createElement('input');
-    // inputField.setAttribute('type', 'text');
-    // inputField.setAttribute('placeholder', 'Enter value');
-
-    var inputField = document.createElement('input');
-    inputField.setAttribute('type', 'text');
-    inputField.setAttribute('placeholder', 'Enter value');
-    inputField.style.border = '1px solid #ccc'; // Add border
-    inputField.style.borderRadius = '5px'; // Add border radius
-    inputField.style.padding = '8px 12px'; // Add padding
-    inputField.style.width = '200px'; // Set width
-    inputField.style.boxSizing = 'border-box'; // Include padding and border in the width
-
-    // Create drag button
-    var dragButton = document.createElement('button');
-    dragButton.textContent = '☰'; // Drag icon
-    dragButton.setAttribute('type', 'button');
-    dragButton.classList.add('drag-button'); // Apply CSS class for styling
-    dragButton.classList.add('btn', 'btn-primary', 'btn-sm'); 
-    dragButton.setAttribute('draggable', 'true'); // Make drag button draggable
-
-    // Create delete button
-    var deleteButton = document.createElement('button');
-    deleteButton.innerHTML = '&#10005;'; // Cross sign
-    deleteButton.setAttribute('type', 'button');
-    deleteButton.classList.add('btn', 'btn-danger', 'btn-sm'); 
-    deleteButton.addEventListener('click', function() {
-        var wrapperDiv = this.parentNode;
-        wrapperDiv.remove(); // Remove the input field row when delete button is clicked
-    });
-
-    // Create wrapper div for input field, drag button, and delete button
-    var wrapperDiv = document.createElement('div');
-    wrapperDiv.setAttribute('class', 'dynamic-field');
-    wrapperDiv.appendChild(inputField);
-    wrapperDiv.appendChild(dragButton);
-    wrapperDiv.appendChild(deleteButton);
-
-    var dynamicFieldsContainer = document.getElementById('dynamic-fields-container-two');
-    dynamicFieldsContainer.insertBefore(wrapperDiv, dynamicFieldsContainer.lastChild); // Insert before the last child (Add button)
-
-    makeRowDraggable(wrapperDiv); // Make the row draggable
-}
- 
-function editVariable() {
-    var VariableID = $('#variable-id').val();
-    var VariableName = $('#variable-name').val();
-    var VariableType = $('#variable-type-two').val();
-    var Description = $('#description').val();
-
-    var inputFieldValues = []; // Initialize as empty array if needed
-
-    // Check if VariableType is 'Multiple Box' or 'Single Box'
-    if (VariableType === 'Multiple Box' || VariableType === 'Single Box') {
-        // Collect values from dynamically added input fields
-        $('#dynamic-fields-container-two .dynamic-field input[type="text"]').each(function() {
-            var value = $(this).val(); // Get the value of the current input field
-            inputFieldValues.push(value); // Push the value into the array
-        });
-    } else if ( VariableType === 'Single Line Text' || VariableType === 'Multiple Line Text'  || VariableType === 'Dates'  ){
-        
-            var value = ''; // Get the value of the current input field
-            inputFieldValues.push(value); // Push the value into the array
-   
-                 
-    }
-
-    console.log('inputFieldValues ----> :', inputFieldValues);
-
-    // AJAX request to update the variable
-    $.ajax({
-        url: '/update-variable/' + VariableID,
-        method: 'POST',
-        data: {
-            '_token': $('meta[name="csrf-token"]').attr('content'), // Updated to use meta tag for CSRF token
-            'VariableName': VariableName,
-            'VariableType': VariableType,
-            'Description': Description,
-            'inputFieldValues': inputFieldValues
-        },
-        success: function(data) {
-            // Handle success, for example, close the modal
-            $('#exampleModal').modal('hide'); // Using jQuery to hide modal
-            location.reload(); // Reload the page to reflect changes
-        },
-        error: function(error) {
-            console.error('Error updating variable:', error);
-        }
-    });
-}
 
 </script>
 

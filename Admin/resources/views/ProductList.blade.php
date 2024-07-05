@@ -274,7 +274,7 @@ function saveProduct() {
             <th style="text-align: left;">Description</th>
             <th style="text-align: left;" >Created Date</th>
             <th style="text-align: left;" >updated Date</th>
-            <th style="text-align: left;">Action</th>
+            <th style="text-align: left;  width: 18%">Action</th>
         </tr>
     </thead>
     <tbody>

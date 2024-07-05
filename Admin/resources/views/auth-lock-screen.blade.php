@@ -67,9 +67,9 @@
                         <div class="mt-5 text-center">
                             <p>Not you ? return <a href="auth-login" class="fw-medium text-primary"> Sign In </a> </p>
                             <p>© <script>
-                                    document.write(new Date().getFullYear())
+                                 document.write(new Date().getFullYear())
 
-                                </script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+</script> Appcontratti Crafted with <i class="mdi mdi-heart text-danger"></i> by Codice 1%</p>
                         </div>
 
                     </div>

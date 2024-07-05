@@ -1,29 +1,32 @@
-
+      
 @extends('layouts.master')
 @section('title')
-    @lang('translation.arifurtable')
+    @lang('translation.Variable-List')
 @endsection
 
 @section('content')
     @component('components.breadcrumb')
         @slot('li_1')
-            Projects
+        Contract List   
         @endslot
         @slot('title')
-            Contract List 
-        @endslot
+         Contract List   
     @endcomponent
+
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
+
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
+
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
 
     <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-
-
      <!--  Arifur change  -->
      <div class="row">
             <div class="col-sm">
@@ -42,6 +45,7 @@
             </div>
     </div>
     
+
 <script>    
     // function redirectTocreatecontract() {
     //     // Redirect to the route associated with createcontract.blade.php
@@ -57,7 +61,6 @@
     }
 </script>
 
- 
 
  <!-- Table content -->
 <div class="table-responsive" style="margin-top:10px;">
@@ -70,7 +73,7 @@
                 <th style="text-align: left;">User Name</th>
                 <th style="text-align: left;">Created Date</th>
                 <th style="text-align: left;">Updated Date</th>
-                <th style="text-align: left;">Action</th>
+                <th style="text-align: left; width: 18%">Action</th>
             </tr>
         </thead>
         <!-- Table body -->
@@ -286,7 +289,7 @@
 
 @endsection
 @section('script')
-<script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+<script src="{{ asset('js/newckeditor/build/ckeditor.js') }}"></script>
 <script>
 
 
@@ -452,7 +455,7 @@
 
  
  
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">

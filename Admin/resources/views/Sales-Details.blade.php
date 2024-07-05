@@ -157,7 +157,7 @@
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/Sales-Lists';
+                    window.location.href = '/Sales-Details/' + {{ $salesDetails->id }} ; 
                 }
             });
         </script>

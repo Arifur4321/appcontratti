@@ -6,7 +6,8 @@ Website: https://themesbrand.com/
 Contact: themesbrand@gmail.com
 File: Main Js File
 */
-
+ 
+ 
 
 (function ($) {
 
@@ -52,7 +53,7 @@ File: Main Js File
 
     function initMetisMenu() {
         //metis menu
-        $("#side-menu").metisMenu();
+       $("#side-menu").metisMenu();
     }
 
     function initLeftMenuCollapse() {
@@ -321,23 +322,28 @@ File: Main Js File
         });
     }
 
-    function init() {
-        initMetisMenu();
-        initLeftMenuCollapse();
-        initActiveMenu();
-        initMenuItemScroll();
-        initHoriMenuActive();
-        initFullScreen();
-        initRightSidebar();
-        initDropdownMenu();
-        initComponents();
-        initSettings();
-        initLanguage();
-        initPreloader();
-        Waves.init();
-        initCheckAll();
-    }
+    $(document).ready(function() {
 
-    init();
+        function init() {
+            initMetisMenu();
+            initLeftMenuCollapse();
+            initActiveMenu();
+            initMenuItemScroll();
+            initHoriMenuActive();
+            initFullScreen();
+            initRightSidebar();
+            initDropdownMenu();
+            initComponents();
+            initSettings();
+            initLanguage();
+            initPreloader();
+            Waves.init();
+            initCheckAll();
+        }
+        init();
+        
+    });
+
+
 
 })(jQuery)

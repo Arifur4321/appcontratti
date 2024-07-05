@@ -177,45 +177,52 @@
                         </li>
                     </ul>
                 </li> -->
+ 
 
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="bx bx-briefcase-alt-2"></i>
-                        <span key="t-projects">@lang('translation.Projects')</span>
+                    <a href="/Contract-List" key="Contract-List" class="waves-effect">
+                        <i class="bx bx-file"></i>
+                        <span>@lang('translation.Contract-List')</span>
                     </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <!-- <li><a href="projects-grid" key="t-p-grid">@lang('translation.Projects_Grid')</a></li>
-                        
-                        <li><a href="projects-list" key="t-p-list">@lang('translation.Projects_List')</a></li>
-
-                        <li><a href="/arifurtable" key="arifurtable-list">@lang('translation.arifurtable')</a></li> -->
-         
-                         <!-- <li><a href="/createcontract" key="createcontract-list">@lang('translation.createcontract')</a></li> -->
-                        
-                        <li><a href="/Contract-List" key="Contract-List">@lang('translation.Contract-List')</a></li>
-
-                        
-                        <!-- <li><a href="Edit-Contract-List" key="Edit-Contract-List">@lang('translation.Edit-Contract-List')</a></li>   -->
-
-                        <li><a href="/Product-List" key="Product-List">@lang('translation.Product-List')</a></li>
-                        
-                        <li><a href="/Variable-List" key="Variable-List">@lang('translation.Variable-List')</a></li> 
-                        <li><a href="/Price-List" key="Price-List">@lang('translation.Price-List')</a></li>  
-
-                        <!-- <li><a href="/Sales-Details" key="Sales-Details">@lang('translation.Sales-Details')</a></li>   -->
-
-                        <li><a href="/Sales-Lists" key="Sales-Lists">@lang('translation.Sales-Lists')</a></li> 
-                        
-
-                        <!-- <li><a href="/Add-New-Price" key="Add-New-Price">@lang('translation.Add-New-Price')</a></li>    -->
-            
-                        <li><a href="/HeaderAndFooter" key="HeaderAndFooter">@lang('translation.HeaderAndFooter')</a></li>   
-
-                        <!-- <li><a href="projects-overview" key="t-p-overview">@lang('translation.Project_Overview')</a>
-                        </li>
-                        <li><a href="projects-create" key="t-create-new">@lang('translation.Create_New')</a></li> -->
-                    </ul>
                 </li>
+                <li>
+                    <a href="/Product-List" key="Product-List" class="waves-effect">
+                        <i class="bx bx-box"></i>
+                        <span>@lang('translation.Product-List')</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Variable-List" key="Variable-List" class="waves-effect">
+                        <i class="bx bx-cog"></i>
+                        <span>@lang('translation.Variable-List')</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Price-List" key="Price-List" class="waves-effect">
+                        <i class="bx bx-dollar-circle"></i>
+                        <span>@lang('translation.Price-List')</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Contract-History" key="Contract-History" class="waves-effect">
+                        <i class="bx bx-history"></i>
+                        <span>@lang('translation.Contract-History')</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Sales-Lists" key="Sales-Lists" class="waves-effect">
+                        <i class="bx bx-cart"></i>
+                        <span>@lang('translation.Sales-Lists')</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/HeaderAndFooter" key="HeaderAndFooter" class="waves-effect">
+                        <i class="bx bx-layout"></i>
+                        <span>@lang('translation.HeaderAndFooter')</span>
+                    </a>
+                </li>
+
+
 
                 <!-- <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">

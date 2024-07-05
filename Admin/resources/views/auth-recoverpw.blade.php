@@ -66,7 +66,7 @@
                             <p>© <script>
                                     document.write(new Date().getFullYear())
 
-                                </script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+</script> Appcontratti Crafted with <i class="mdi mdi-heart text-danger"></i> by Codice 1%</p>
                         </div>
 
                     </div>

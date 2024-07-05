@@ -55,9 +55,9 @@
                         <div class="mt-5 text-center">
                             <p>Did't receive an email ? <a href="#" class="fw-medium text-primary"> Resend </a> </p>
                             <p>© <script>
-                                    document.write(new Date().getFullYear())
+                                   document.write(new Date().getFullYear())
 
-                                </script> Skote. Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+</script> Appcontratti Crafted with <i class="mdi mdi-heart text-danger"></i> by Codice 1%</p>
                         </div>
 
                     </div>

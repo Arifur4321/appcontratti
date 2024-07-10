@@ -1,19 +1,19 @@
-@extends('layouts.master')
-@section('title')
-    @lang('translation.arifurtable')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+    <?php echo app('translator')->get('translation.arifurtable'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title')
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title'); ?>
             Price List 
-        @endslot
-    @endcomponent
+        <?php $__env->endSlot(); ?>
+    <?php echo $__env->renderComponent(); ?>
     <!--code starts here --> 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
@@ -38,7 +38,7 @@
     <div class="col-sm">
         <div class="input-group">
             <span class="input-group-text">Price Name:</span>
-            <input type="text" id="priceName" name="priceName" class="form-control" aria-label="Price Name" value="{{$priceList->pricename }}" required>
+            <input type="text" id="priceName" name="priceName" class="form-control" aria-label="Price Name" value="<?php echo e($priceList->pricename); ?>" required>
         </div>
     </div>
 </div>
@@ -50,10 +50,10 @@
         <div class="input-group">
             <label class="input-group-text" for="currency">Select currency:</label>
             <select class="form-select" id="currency" name="currency">
-            <option value="EUR" {{ $priceList->currency === 'EUR' ? 'selected' : '' }}>Euro (EUR)</option>
-            <option value="USD" {{ $priceList->currency === 'USD' ? 'selected' : '' }}>US Dollar (USD)</option>
-            <option value="GBP" {{ $priceList->currency === 'GBP' ? 'selected' : '' }}>British Pound (GBP)</option>
-            <option value="JPY" {{ $priceList->currency === 'JPY' ? 'selected' : '' }}>Japanese Yen (JPY)</option>
+            <option value="EUR" <?php echo e($priceList->currency === 'EUR' ? 'selected' : ''); ?>>Euro (EUR)</option>
+            <option value="USD" <?php echo e($priceList->currency === 'USD' ? 'selected' : ''); ?>>US Dollar (USD)</option>
+            <option value="GBP" <?php echo e($priceList->currency === 'GBP' ? 'selected' : ''); ?>>British Pound (GBP)</option>
+            <option value="JPY" <?php echo e($priceList->currency === 'JPY' ? 'selected' : ''); ?>>Japanese Yen (JPY)</option>
             <!-- Add more currency options as needed -->
             </select>
         </div>
@@ -97,7 +97,7 @@
                 <div id="fixedInput">
                     <div class="mb-3">
                         <label for="fixedValue" class="form-label">Enter Fixed value:</label>
-                        <input type="number" class="form-control w-100" id="fixedValue" name="fixedValue" value="{{ $priceList->fixedvalue }}">
+                        <input type="number" class="form-control w-100" id="fixedValue" name="fixedValue" value="<?php echo e($priceList->fixedvalue); ?>">
                     </div>
                 </div>
 
@@ -107,16 +107,16 @@
                 <div class="form-check form-switch " dir="ltr" style="margin-left:-48px;">
                     <label class="form-check-label" for="SwitchCheckSizelg">Enable VAT</label>
                     <br>
-                    <input style="margin-left:10px;margin-top:15px;" class="form-check-input" type="checkbox" id="vatCheckbox" name="vatCheckbox" onchange="toggleVATFields()" {{ $priceList->enableVat === 'true' ? 'checked' : '' }}>
+                    <input style="margin-left:10px;margin-top:15px;" class="form-check-input" type="checkbox" id="vatCheckbox" name="vatCheckbox" onchange="toggleVATFields()" <?php echo e($priceList->enableVat === 'true' ? 'checked' : ''); ?>>
                 </div>
              </div>
 
              <div class="col-3" style ="margin-left:-28px;">
-                <div id="vatFields" class="{{ $priceList->enableVat === 'true' ? '' : 'VAThidden' }}">
+                <div id="vatFields" class="<?php echo e($priceList->enableVat === 'true' ? '' : 'VAThidden'); ?>">
                       <div class="mb-3">
                         <label for="vatPercentage" class="form-label">Percentage:</label>
                         <div class="input-group" style="width: 95%;">
-                            <input type="number" id="vatPercentage" name="vatPercentage" class="form-control" min="0" max="100" value="{{ $priceList->vatPercentage }}" {{ $priceList->enableVat === 'true' ? '' : 'disabled' }}>
+                            <input type="number" id="vatPercentage" name="vatPercentage" class="form-control" min="0" max="100" value="<?php echo e($priceList->vatPercentage); ?>" <?php echo e($priceList->enableVat === 'true' ? '' : 'disabled'); ?>>
                             <span class="input-group-text">%</span>
                         </div>
                       </div>
@@ -126,9 +126,9 @@
 
                    <div class="col-2" >
                         <div class="form-check form-switch">
-                        <label style ="margin-left:-46px;" class="form-check-label" for="priceTypeToggle" id="priceTypeLabel">{{ $priceList->price === 'true' ? 'Include on Price' : 'Include on Price' }}</label>
+                        <label style ="margin-left:-46px;" class="form-check-label" for="priceTypeToggle" id="priceTypeLabel"><?php echo e($priceList->price === 'true' ? 'Include on Price' : 'Include on Price'); ?></label>
                            <br>
-                            <input style ="margin-left:-46px;" class="form-check-input" type="checkbox" id="priceTypeToggle" name="priceTypeToggle" value="{{$priceList->price}}" {{ $priceList->enableVat === 'true' ? '' : 'disabled' }} {{ $priceList->price === 'true' ? 'checked' : '' }} onchange="togglePriceType(this)">
+                            <input style ="margin-left:-46px;" class="form-check-input" type="checkbox" id="priceTypeToggle" name="priceTypeToggle" value="<?php echo e($priceList->price); ?>" <?php echo e($priceList->enableVat === 'true' ? '' : 'disabled'); ?> <?php echo e($priceList->price === 'true' ? 'checked' : ''); ?> onchange="togglePriceType(this)">
                         </div>
                     </div>
  
@@ -180,8 +180,8 @@
                     <label class="input-group" for="priceType">PriceType:</label>
                     <div class="input-group" style="width: 125%;" >
                         <select class="form-select" id="priceType" name="priceType" onchange="togglePriceOptions()" style="font-size: 16px;">
-                            <option value="recurring" {{ $priceList->selectPriceType === 'recurring' ? 'selected' : '' }}>Recurring</option>
-                            <option value="oneTime" {{ $priceList->selectPriceType === 'oneTime' ? 'selected' : '' }}>OneTime</option>
+                            <option value="recurring" <?php echo e($priceList->selectPriceType === 'recurring' ? 'selected' : ''); ?>>Recurring</option>
+                            <option value="oneTime" <?php echo e($priceList->selectPriceType === 'oneTime' ? 'selected' : ''); ?>>OneTime</option>
                         </select>
                     </div>
                 </div>  
@@ -191,11 +191,11 @@
         </div>
             
              
-                    <div id="dynamicInput" class="{{ $priceList->selection === 'dynamic' ? '' : 'hidden' }}">
+                    <div id="dynamicInput" class="<?php echo e($priceList->selection === 'dynamic' ? '' : 'hidden'); ?>">
                         <div class="form-group row align-items-center">
                             <label for="minRange" class="col-sm-2 col-form-label">Min Range:</label>
                             <div class="col-sm-4">
-                                <input type="number" class="form-control w-75" id="minRangeInput" value="{{ $priceList->dynamicminRange }}" min="1" max="1000000">
+                                <input type="number" class="form-control w-75" id="minRangeInput" value="<?php echo e($priceList->dynamicminRange); ?>" min="1" max="1000000">
                             </div>
                             <div class="col-sm-6 mt-2">
                                 <div id="minRangeSlider"></div>
@@ -206,7 +206,7 @@
                         <div class="form-group row align-items-center">
                             <label for="maxRange" class="col-sm-2 col-form-label">Max Range:</label>
                             <div class="col-sm-4">
-                                <input type="number" class="form-control w-75" id="maxRangeInput" value="{{ $priceList->dynamicmaxRange }}" min="2" max="1000000">
+                                <input type="number" class="form-control w-75" id="maxRangeInput" value="<?php echo e($priceList->dynamicmaxRange); ?>" min="2" max="1000000">
                             </div>
                             <div class="col-sm-6 mt-2">
                                 <div id="maxRangeSlider"></div>
@@ -227,7 +227,7 @@
 // Initialize min range slider
 var minRangeSlider = document.getElementById('minRangeSlider');
 noUiSlider.create(minRangeSlider, {
-    start: ['{{ $priceList->dynamicminRange }}'],
+    start: ['<?php echo e($priceList->dynamicminRange); ?>'],
     connect: 'lower',
     range: {
         'min': 1,
@@ -238,7 +238,7 @@ noUiSlider.create(minRangeSlider, {
 // Initialize max range slider
 var maxRangeSlider = document.getElementById('maxRangeSlider');
 noUiSlider.create(maxRangeSlider, {
-    start: ['{{ $priceList->dynamicmaxRange }}'],
+    start: ['<?php echo e($priceList->dynamicmaxRange); ?>'],
     connect: 'lower',
     range: {
         'min': 2,
@@ -359,7 +359,7 @@ maxRangeSlider.noUiSlider.on('update', function (values, handle) {
     const dynamicInput = document.getElementById('dynamicInput');
 
     // Check if dynamicmaxRange is greater than 0
-    const dynamicMaxRange = "{{ $priceList->dynamicmaxRange }}";
+    const dynamicMaxRange = "<?php echo e($priceList->dynamicmaxRange); ?>";
     
     // Set the initial state based on the presence of dynamicMaxRange
     if (dynamicMaxRange > 0) {
@@ -419,14 +419,15 @@ function handleExclusiveSelection(checkbox) {
 
  
 
-<div id="oneTimeOptions" class="{{ $priceList->selectPriceType === 'oneTime' ? '' : 'hidden' }}">
+<div id="oneTimeOptions" class="<?php echo e($priceList->selectPriceType === 'oneTime' ? '' : 'hidden'); ?>">
     <label>Payment Options:</label><br>
     
 
     <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="multiplePayments" name="multiplePayments" {{ $priceList->multiplePayments ? 'checked' : '' }} onchange="togglePaymentOption(this)">
+        <input class="form-check-input" type="checkbox" id="multiplePayments" name="multiplePayments" <?php echo e($priceList->multiplePayments ? 'checked' : ''); ?> onchange="togglePaymentOption(this)">
         <label class="form-check-label" for="multiplePayments" id="multiplePaymentsLabel">
-            {{ $priceList->multiplePayments ? 'Multiple Payment' : 'Single Payment' }}
+            <?php echo e($priceList->multiplePayments ? 'Multiple Payment' : 'Single Payment'); ?>
+
         </label>
     </div>
 
@@ -466,7 +467,7 @@ function handleExclusiveSelection(checkbox) {
       <!-- editable dates -->
     
       <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="EditableDates" name="EditableDates" {{ $priceList->EditableDates === 'true' ? 'checked' : '' }}>
+        <input class="form-check-input" type="checkbox" id="EditableDates" name="EditableDates" <?php echo e($priceList->EditableDates === 'true' ? 'checked' : ''); ?>>
         <label class="form-check-label" for="EditableDates" id="editableDatesLabel"> Editable Dates </label>
     </div>
 
@@ -474,28 +475,28 @@ function handleExclusiveSelection(checkbox) {
 
     <br>
     
-    <div id="multiplePaymentOptions" class="{{ $priceList->multiplePayments ? '' : 'multiplepaymenthidden' }}">
+    <div id="multiplePaymentOptions" class="<?php echo e($priceList->multiplePayments ? '' : 'multiplepaymenthidden'); ?>">
  
     <div class="col-5">
         <div class="mb-3">
             <div class="input-group">
                 <label class="input-group-text" for="frequency">Frequency:</label>
                 <select class="form-select" id="frequency" name="frequency">
-                    <option value="daily" {{ $priceList->frequency == 'daily' ? 'selected' : '' }}>Daily</option>
-                    <option value="biweekly" {{ $priceList->frequency == 'biweekly' ? 'selected' : '' }}>Biweekly</option>
-                    <option value="weekly" {{ $priceList->frequency == 'weekly' ? 'selected' : '' }}>Weekly</option>
-                    <option value="monthly" {{ $priceList->frequency == 'monthly' ? 'selected' : '' }}>Monthly</option>
-                    <option value="annually" {{ $priceList->frequency == 'annually' ? 'selected' : '' }}>Annually</option>
+                    <option value="daily" <?php echo e($priceList->frequency == 'daily' ? 'selected' : ''); ?>>Daily</option>
+                    <option value="biweekly" <?php echo e($priceList->frequency == 'biweekly' ? 'selected' : ''); ?>>Biweekly</option>
+                    <option value="weekly" <?php echo e($priceList->frequency == 'weekly' ? 'selected' : ''); ?>>Weekly</option>
+                    <option value="monthly" <?php echo e($priceList->frequency == 'monthly' ? 'selected' : ''); ?>>Monthly</option>
+                    <option value="annually" <?php echo e($priceList->frequency == 'annually' ? 'selected' : ''); ?>>Annually</option>
                 </select>
             </div>
         </div>
     </div>
         
-        <label for="minPaymentRange">Min Range :  <span id="minPaymentValue">{{ $priceList->paymentMinRange }}</span> </label>
+        <label for="minPaymentRange">Min Range :  <span id="minPaymentValue"><?php echo e($priceList->paymentMinRange); ?></span> </label>
         <div id="minPaymentRangeSlider"></div>
        <br>
         
-        <label for="maxPaymentRange">Max Range :  <span id="maxPaymentValue">{{ $priceList->paymentMaxRange }}</span> </label>
+        <label for="maxPaymentRange">Max Range :  <span id="maxPaymentValue"><?php echo e($priceList->paymentMaxRange); ?></span> </label>
         <div id="maxPaymentRangeSlider"></div>
        <br>
 
@@ -506,7 +507,7 @@ function handleExclusiveSelection(checkbox) {
             <div class="col-sm">
                 <div class="input-group">
                     <label class="input-group-text" for="selection">Example Text:</label>
-                    <input type="text" class="form-control" id="minPayment" name="minPayment" value="{{ $priceList->paymentExampleText }}">
+                    <input type="text" class="form-control" id="minPayment" name="minPayment" value="<?php echo e($priceList->paymentExampleText); ?>">
                 </div>
             </div>
         </div>
@@ -523,7 +524,7 @@ function handleExclusiveSelection(checkbox) {
     // Initialize min payment range slider
     var minPaymentRangeSlider = document.getElementById('minPaymentRangeSlider');
     noUiSlider.create(minPaymentRangeSlider, {
-        start: [ ' {{ $priceList->paymentMinRange }} ' ],
+        start: [ ' <?php echo e($priceList->paymentMinRange); ?> ' ],
         connect: 'lower',
         range: {
             'min': 1,
@@ -543,7 +544,7 @@ function handleExclusiveSelection(checkbox) {
     // Initialize max payment range slider
     var maxPaymentRangeSlider = document.getElementById('maxPaymentRangeSlider');
     noUiSlider.create(maxPaymentRangeSlider, {
-        start: [ '{{ $priceList->paymentMaxRange }}'],
+        start: [ '<?php echo e($priceList->paymentMaxRange); ?>'],
         connect: 'lower',
         range: {
             'min': 2,
@@ -617,7 +618,7 @@ function handleExclusiveSelection(checkbox) {
             var multiplePaymentsCheckbox = document.getElementById('multiplePayments');
             
             // Reflect data for Single Payment checkbox
-            if ("{{ $priceList->multiplePayments }}" === "false") {
+            if ("<?php echo e($priceList->multiplePayments); ?>" === "false") {
                // singlePaymentCheckbox.checked = true;
 
                 var multiplePaymentOptions = document.getElementById('multiplePaymentOptions');
@@ -625,7 +626,7 @@ function handleExclusiveSelection(checkbox) {
             
             }  
             // Reflecttion of data for Multiple Payments checkbox
-            if ("{{ $priceList->multiplePayments }}" === "true") {
+            if ("<?php echo e($priceList->multiplePayments); ?>" === "true") {
                 multiplePaymentsCheckbox.checked = true;
             } else {
                 multiplePaymentsCheckbox.checked = false;
@@ -1266,7 +1267,7 @@ maxPaymentRangeSlider.noUiSlider.on('change', updateCalculatedValue);
     // Send AJAX request to update the price
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
         $.ajax({
-        url: '/update-price/' + {{ $priceList->id }},
+        url: '/update-price/' + <?php echo e($priceList->id); ?>,
         type: 'POST',
         data: data,
         headers: {
@@ -1281,7 +1282,7 @@ maxPaymentRangeSlider.noUiSlider.on('change', updateCalculatedValue);
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/edit-price/' + {{ $priceList->id }};
+                    window.location.href = '/edit-price/' + <?php echo e($priceList->id); ?>;
                 }
             });
         },
@@ -1406,4 +1407,5 @@ maxPaymentRangeSlider.noUiSlider.on('change', updateCalculatedValue);
 </script>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/Edit-Price-List.blade.php ENDPATH**/ ?>

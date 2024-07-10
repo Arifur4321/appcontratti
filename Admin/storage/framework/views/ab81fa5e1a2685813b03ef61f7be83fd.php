@@ -1,20 +1,20 @@
       
-@extends('layouts.master')
-@section('title')
-    @lang('translation.Variable-List')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+    <?php echo app('translator')->get('translation.Variable-List'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title')
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title'); ?>
          Contract List   
-    @endcomponent
+    <?php echo $__env->renderComponent(); ?>
 
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
 
@@ -78,28 +78,28 @@
         </thead>
         <!-- Table body -->
         <tbody>
-            @foreach($contracts as $contract)
+            <?php $__currentLoopData = $contracts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $contract): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <tr class="d-sm-table-row">
-                <td style="text-align: left;">{{ $contract->id }}</td>
-                <td style="text-align: left;">{{ $contract->contract_name }}</td>
-                <td style="text-align: left;">{{ Auth::user()->name }}</td>
-                <td style="text-align: left;">{{ $contract->created_at }}</td>
-                <td style="text-align: left;">{{ $contract->updated_at }}</td>
+                <td style="text-align: left;"><?php echo e($contract->id); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->contract_name); ?></td>
+                <td style="text-align: left;"><?php echo e(Auth::user()->name); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->created_at); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->updated_at); ?></td>
                 <td style="text-align: left;">
                     <!-- Action buttons -->
                     <div class="btn-toolbar">
-                        <button class="btn btn-primary" onclick="redirectToEditContract('{{ $contract->id }}')">Edit</button>
-                        <form id="delete-form-{{ $contract->id }}" action="{{ route('contracts.destroy', $contract->id) }}" method="POST" style="display: none;">
-                            @csrf
-                            @method('DELETE')
+                        <button class="btn btn-primary" onclick="redirectToEditContract('<?php echo e($contract->id); ?>')">Edit</button>
+                        <form id="delete-form-<?php echo e($contract->id); ?>" action="<?php echo e(route('contracts.destroy', $contract->id)); ?>" method="POST" style="display: none;">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('DELETE'); ?>
                         </form>
-                        <button type="button" style="margin-left:2px;" onclick="confirmDelete('{{ $contract->id }}');" class="btn btn-danger waves-effect waves-light">
+                        <button type="button" style="margin-left:2px;" onclick="confirmDelete('<?php echo e($contract->id); ?>');" class="btn btn-danger waves-effect waves-light">
                             <i class="bx bx-block font-size-16 align-middle me-2"></i> Delete
                         </button>
                     </div>
                 </td>
             </tr>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tbody>
     </table>
 </div>
@@ -249,24 +249,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($variables as $contract)
+                                <?php $__currentLoopData = $variables; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $contract): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
-                                        <td>{{ $contract->VariableID }}</td>
-                                        <td>{{ $contract->VariableName }}</td>
-                                        <td>{{ $contract->VariableType }}</td>
+                                        <td><?php echo e($contract->VariableID); ?></td>
+                                        <td><?php echo e($contract->VariableName); ?></td>
+                                        <td><?php echo e($contract->VariableType); ?></td>
                                     
                                         <td>
                                             <label class="form-check-label">
                                                 <input type="checkbox" class="form-check-input add-checkbox"
-                                                 onchange="checkCheckbox(this, '{{ $contract->VariableName }}') ">
+                                                 onchange="checkCheckbox(this, '<?php echo e($contract->VariableName); ?>') ">
                                             </label>
                                             <button type="button" class="btn btn-primary add-button"
-                                             data-bs-dismiss="modal" onclick="insertVariable('{{ $contract->VariableName }}')" disabled> Add </button>
+                                             data-bs-dismiss="modal" onclick="insertVariable('<?php echo e($contract->VariableName); ?>')" disabled> Add </button>
                                         </td>
 
 
                                     </tr>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </tbody>
                         </table>
                     </div>
@@ -287,9 +287,9 @@
     }
 </style>
 
-@endsection
-@section('script')
-<script src="{{ asset('js/newckeditor/build/ckeditor.js') }}"></script>
+<?php $__env->stopSection(); ?>
+<?php $__env->startSection('script'); ?>
+<script src="<?php echo e(asset('js/newckeditor/build/ckeditor.js')); ?>"></script>
 <script>
 
 
@@ -357,7 +357,7 @@
                 url: '/updatecontract',
                 type: 'POST',
                 data: {
-                    _token: "{{ csrf_token() }}",
+                    _token: "<?php echo e(csrf_token()); ?>",
                     id: id,
                     contract_name: title,
                     editor_content: content
@@ -561,4 +561,6 @@
 </script>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/ContractList.blade.php ENDPATH**/ ?>

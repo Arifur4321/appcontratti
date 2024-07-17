@@ -221,6 +221,14 @@
                         <span>@lang('translation.HeaderAndFooter')</span>
                     </a>
                 </li>
+                
+                     <li>
+                    <a href="/Sales-Performence" key="Sales-Performence" class="waves-effect">
+                        <i class="bx bx-bar-chart"></i>
+                        <span>@lang('translation.Sales-Performence')</span>
+                    </a>
+                </li>
+
 
 
 

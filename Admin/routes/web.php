@@ -104,6 +104,7 @@ Route::post('/insert-contract-variable', [App\Http\Controllers\EditContractListC
  
 Route::post('/delete-contract-variable', [App\Http\Controllers\EditContractListController::class,'deleteContractVariable']);
 
+Route::get('/Sales-Performence', [App\Http\Controllers\SalesPerformanceController::class, 'index']);
  
 Route::post('/header-and-footer/save', [App\Http\Controllers\HeaderAndFooterController::class, 'save'])->name('header-and-footer.save');
 

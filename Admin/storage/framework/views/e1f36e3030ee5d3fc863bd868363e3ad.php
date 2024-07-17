@@ -218,4 +218,4 @@ unset($__errorArgs, $__bag); ?>
     <script src="<?php echo e(URL::asset('build/js/pages/auth-2-carousel.init.js')); ?>"></script>
     <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.master-without-nav', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/auth/login.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.master-without-nav', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/auth/login.blade.php ENDPATH**/ ?>

@@ -21,4 +21,4 @@
 
     <?php echo $__env->make('layouts.vendor-scripts', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     </body>
-</html><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/layouts/master-without-nav.blade.php ENDPATH**/ ?>
+</html><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/layouts/master-without-nav.blade.php ENDPATH**/ ?>

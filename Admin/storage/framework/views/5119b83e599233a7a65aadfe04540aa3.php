@@ -1,19 +1,19 @@
-@extends('layouts.master')
-@section('title')
-    @lang('translation.Contract-History')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+    <?php echo app('translator')->get('translation.Contract-History'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title')
-        @lang('translation.Contract History')
-        @endslot
-    @endcomponent
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title'); ?>
+        <?php echo app('translator')->get('translation.Contract History'); ?>
+        <?php $__env->endSlot(); ?>
+    <?php echo $__env->renderComponent(); ?>
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
@@ -37,7 +37,7 @@
         <div class="col-sm-auto" style="margin-right:8px;">
             <div class="text-sm-end">
                 <button type="button" class="btn btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
-                @lang('translation.All Sales')  <i class="mdi mdi-chevron-down"></i></button>
+                <?php echo app('translator')->get('translation.All Sales'); ?>  <i class="mdi mdi-chevron-down"></i></button>
                 <div class="dropdown-menu p-3" style="width: 300px;">
                     <div class="input-group mb-2">
                         <input type="text" class="form-control" id="dropdownSearch" placeholder="Search sales...">
@@ -50,22 +50,23 @@
                         </label>
                     </div>
                     <div id="salesDropdownList" style="max-height: 300px; overflow-y: auto;">
-                        @php
+                        <?php
                             $addedSalesNames = [];
-                        @endphp
-                        @foreach($salesListDraft as $item)
-                            @if($item->salesDetails && !in_array($item->salesDetails->name, $addedSalesNames))
+                        ?>
+                        <?php $__currentLoopData = $salesListDraft; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($item->salesDetails && !in_array($item->salesDetails->name, $addedSalesNames)): ?>
                                 <div class="form-check">
-                                    <input class="form-check-input sales-checkbox" type="checkbox" value="{{ $item->salesDetails->name }}" id="salesCheck{{ $item->salesDetails->id }}">
-                                    <label class="form-check-label" for="salesCheck{{ $item->salesDetails->id }}">
-                                        {{ $item->salesDetails->name }}
+                                    <input class="form-check-input sales-checkbox" type="checkbox" value="<?php echo e($item->salesDetails->name); ?>" id="salesCheck<?php echo e($item->salesDetails->id); ?>">
+                                    <label class="form-check-label" for="salesCheck<?php echo e($item->salesDetails->id); ?>">
+                                        <?php echo e($item->salesDetails->name); ?>
+
                                     </label>
                                 </div>
-                                @php
+                                <?php
                                     $addedSalesNames[] = $item->salesDetails->name;
-                                @endphp
-                            @endif
-                        @endforeach
+                                ?>
+                            <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
             </div>
@@ -79,49 +80,50 @@
                 
 
                     <th style="text-align: left;">ID</th>
-                    <th style="text-align: left;" class="sales-column">@lang('translation.Sales')</th>
-                    <th style="text-align: left;">@lang('translation.PDF Name')</th>
-                    <th style="text-align: left;">@lang('translation.Contract Name')</th>
-                    <th style="text-align: left;">@lang('translation.Recipient Email')</th>
-                    <th style="text-align: left;">@lang('translation.Status')</th>
-                    <th style="text-align: left; width: 18%;">@lang('translation.Action')</th>
+                    <th style="text-align: left;" class="sales-column"><?php echo app('translator')->get('translation.Sales'); ?></th>
+                    <th style="text-align: left;"><?php echo app('translator')->get('translation.PDF Name'); ?></th>
+                    <th style="text-align: left;"><?php echo app('translator')->get('translation.Contract Name'); ?></th>
+                    <th style="text-align: left;"><?php echo app('translator')->get('translation.Recipient Email'); ?></th>
+                    <th style="text-align: left;"><?php echo app('translator')->get('translation.Status'); ?></th>
+                    <th style="text-align: left; width: 18%;"><?php echo app('translator')->get('translation.Action'); ?></th>
 
                 </tr>
             </thead>
             <tbody>
-                @foreach($salesListDraft as $item)
-                    <tr data-sales-name="{{ $item->salesDetails->name ?? 'Unknown' }}">
-                        <td style="text-align: left;">{{ $item->id }}</td>
-                        <td style="text-align: left;" class="sales-column">{{ $item->salesDetails->name ?? 'Unknown' }}</td>
-                        <td style="text-align: left;">{{ $item->selected_pdf_name }}</td>
-                        <td style="text-align: left;">{{ $item->contract_name }}</td>
-                        <td style="text-align: left;">{{ $item->recipient_email }}</td>
+                <?php $__currentLoopData = $salesListDraft; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <tr data-sales-name="<?php echo e($item->salesDetails->name ?? 'Unknown'); ?>">
+                        <td style="text-align: left;"><?php echo e($item->id); ?></td>
+                        <td style="text-align: left;" class="sales-column"><?php echo e($item->salesDetails->name ?? 'Unknown'); ?></td>
+                        <td style="text-align: left;"><?php echo e($item->selected_pdf_name); ?></td>
+                        <td style="text-align: left;"><?php echo e($item->contract_name); ?></td>
+                        <td style="text-align: left;"><?php echo e($item->recipient_email); ?></td>
                         <td style="text-align: left;" class="
-                            @if($item->status == 'pending') 
+                            <?php if($item->status == 'pending'): ?> 
                                 text-danger
-                            @elseif($item->status == 'viewed') 
+                            <?php elseif($item->status == 'viewed'): ?> 
                                 text-warning
-                            @elseif($item->status == 'signed') 
+                            <?php elseif($item->status == 'signed'): ?> 
                                 text-success
-                            @else 
+                            <?php else: ?> 
                                 text-secondary
-                            @endif">
-                            {{ $item->status }}
+                            <?php endif; ?>">
+                            <?php echo e($item->status); ?>
+
                         </td>
                         <td style="text-align: left;">
                             <div class="btn-toolbar">
-                                @if($item->status == 'signed')
-                                    <button onclick="openSignedPDF('{{ $item->id }}')" class="btn btn-success">PDF</button>
-                                @else
+                                <?php if($item->status == 'signed'): ?>
+                                    <button onclick="openSignedPDF('<?php echo e($item->id); ?>')" class="btn btn-success">PDF</button>
+                                <?php else: ?>
                                     <!-- Comment out Edit button -->
-                                @endif
-                                <button type="button" style="margin-left:2px;" onclick="DeleteSalesContract('{{ $item->id }}')" class="btn btn-danger waves-effect waves-light">
-                                    <i class="bx bx-block font-size-16 align-middle me-2"></i> @lang('translation.Delete')
+                                <?php endif; ?>
+                                <button type="button" style="margin-left:2px;" onclick="DeleteSalesContract('<?php echo e($item->id); ?>')" class="btn btn-danger waves-effect waves-light">
+                                    <i class="bx bx-block font-size-16 align-middle me-2"></i> <?php echo app('translator')->get('translation.Delete'); ?>
                                 </button>
                             </div>
                         </td>
                     </tr>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </tbody>
         </table>
     </div>
@@ -232,4 +234,6 @@
             window.location.href = "/Edit-New-Contracts/" + id;
         }
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/Contract-History.blade.php ENDPATH**/ ?>

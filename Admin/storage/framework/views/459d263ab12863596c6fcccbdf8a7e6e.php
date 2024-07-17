@@ -1,7 +1,8 @@
-      
+ 
+ 
 
 <?php $__env->startSection('title'); ?>
-    <?php echo app('translator')->get('translation.Variable-List'); ?>
+    <?php echo app('translator')->get('translation.Contract-List'); ?>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -10,9 +11,10 @@
             Projects
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-         Contract List   
+        <?php echo app('translator')->get('translation.Contract-List'); ?> 
+        <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
-
+ 
 
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
@@ -40,7 +42,8 @@
 
             <div class="col-sm-auto">
                 <div class="text-sm-end">
-                    <button type="button" class="btn btn-primary" onclick="redirectTocreatecontract()">Add New Contract</button>
+                    <button type="button" class="btn btn-primary" onclick="redirectTocreatecontract()">
+                    <?php echo app('translator')->get('translation.Add New Contract'); ?> </button>
                 </div>
             </div>
     </div>
@@ -68,12 +71,13 @@
         <!-- Table header -->
         <thead>
             <tr>
-                <th style="text-align: left;">ID</th>
-                <th style="text-align: left;">Contract Name</th>
-                <th style="text-align: left;">User Name</th>
-                <th style="text-align: left;">Created Date</th>
-                <th style="text-align: left;">Updated Date</th>
-                <th style="text-align: left; width: 18%">Action</th>
+            <th style="text-align: left;">ID</th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Contract Name'); ?></th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.User Name'); ?></th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Created Date'); ?></th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Updated Date'); ?></th>
+            <th style="text-align: left; width: 18%"><?php echo app('translator')->get('translation.Action'); ?></th>
+
             </tr>
         </thead>
         <!-- Table body -->
@@ -88,13 +92,14 @@
                 <td style="text-align: left;">
                     <!-- Action buttons -->
                     <div class="btn-toolbar">
-                        <button class="btn btn-primary" onclick="redirectToEditContract('<?php echo e($contract->id); ?>')">Edit</button>
+                        <button class="btn btn-primary" onclick="redirectToEditContract('<?php echo e($contract->id); ?>')">
+                        <?php echo app('translator')->get('translation.Edit'); ?></button>
                         <form id="delete-form-<?php echo e($contract->id); ?>" action="<?php echo e(route('contracts.destroy', $contract->id)); ?>" method="POST" style="display: none;">
                             <?php echo csrf_field(); ?>
                             <?php echo method_field('DELETE'); ?>
                         </form>
                         <button type="button" style="margin-left:2px;" onclick="confirmDelete('<?php echo e($contract->id); ?>');" class="btn btn-danger waves-effect waves-light">
-                            <i class="bx bx-block font-size-16 align-middle me-2"></i> Delete
+                            <i class="bx bx-block font-size-16 align-middle me-2"></i> <?php echo app('translator')->get('translation.Delete'); ?>
                         </button>
                     </div>
                 </td>
@@ -563,4 +568,4 @@
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/ContractList.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/ContractList.blade.php ENDPATH**/ ?>

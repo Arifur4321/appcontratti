@@ -8,4 +8,4 @@
 <link href="<?php echo e(URL::asset('build/css/app.min.css')); ?>" id="app-style" rel="stylesheet" type="text/css" />
 
 <!-- App js -->
-<script src="<?php echo e(URL::asset('build/js/plugin.js')); ?>"></script><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/layouts/head-css.blade.php ENDPATH**/ ?>
+<script src="<?php echo e(URL::asset('build/js/plugin.js')); ?>"></script><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/layouts/head-css.blade.php ENDPATH**/ ?>

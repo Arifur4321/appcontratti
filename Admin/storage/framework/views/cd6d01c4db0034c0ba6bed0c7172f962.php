@@ -55,4 +55,4 @@
 <!-- /Right-bar -->
 
 <!-- Right bar overlay-->
-<div class="rightbar-overlay"></div><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/layouts/right-sidebar.blade.php ENDPATH**/ ?>
+<div class="rightbar-overlay"></div><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/layouts/right-sidebar.blade.php ENDPATH**/ ?>

@@ -1,21 +1,21 @@
-@extends('layouts.master')
-@section('title')
-    @lang('translation.Variable-List')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+    <?php echo app('translator')->get('translation.Variable-List'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title')
-        @lang('translation.Variable List')
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title'); ?>
+        <?php echo app('translator')->get('translation.Variable List'); ?>
 
-        @endslot
-    @endcomponent
+        <?php $__env->endSlot(); ?>
+    <?php echo $__env->renderComponent(); ?>
 
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
@@ -37,7 +37,7 @@
 
     <div class="col-sm-auto">
         <div class="text-sm-end">
-            <button type="button" class="btn btn-primary" onclick="openModalNew()"> @lang('translation.Add New Variable') </button>
+            <button type="button" class="btn btn-primary" onclick="openModalNew()"> <?php echo app('translator')->get('translation.Add New Variable'); ?> </button>
         </div>
     </div>
 </div>
@@ -49,21 +49,21 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabelNew">@lang('translation.New Variable')</h5>
+                <h5 class="modal-title" id="exampleModalLabelNew"><?php echo app('translator')->get('translation.New Variable'); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="productFormNew">
               
                     <div class="mb-3">
-                        <label for="product-name-new" class="col-form-label"> @lang('translation.Variable Name'):</label>
+                        <label for="product-name-new" class="col-form-label"> <?php echo app('translator')->get('translation.Variable Name'); ?>:</label>
                         <input type="text" class="form-control" id="product-name-new">
                     </div>
 
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
-                                <label for="variable-type" class="col-form-label">@lang('translation.Variable Type'):</label>
+                                <label for="variable-type" class="col-form-label"><?php echo app('translator')->get('translation.Variable Type'); ?>:</label>
                                 <select class="form-select" id="variable-type">
                                                         <option value="Single Line Text">Single Line Text</option>
                                                         <option value="Multiple Line Text">Multiple Line Text</option>
@@ -80,16 +80,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="description-new" class="col-form-label">@lang('translation.Description'):</label>
+                        <label for="description-new" class="col-form-label"><?php echo app('translator')->get('translation.Description'); ?>:</label>
                         <textarea class="form-control" id="description-new"></textarea>
                     </div>
 
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('translation.Close')</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo app('translator')->get('translation.Close'); ?></button>
 
-                <button type="button" class="btn btn-primary" onclick="saveVariable()"> @lang('translation.Save Variable') </button>
+                <button type="button" class="btn btn-primary" onclick="saveVariable()"> <?php echo app('translator')->get('translation.Save Variable'); ?> </button>
 
             </div>
         </div>
@@ -142,7 +142,7 @@
 
 <!-- ---------------------------------------------------------- end  --->
 
-<script src="{{ asset('js/newckeditor/build/ckeditor.js') }}"></script>
+<script src="<?php echo e(asset('js/newckeditor/build/ckeditor.js')); ?>"></script>
 
 <script>
 
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ClassicEditor
         .create(document.querySelector('#ckeditorContent'), {
             ckfinder: {
-                uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                uploadUrl: "<?php echo e(route('ckeditor.upload', ['_token' => csrf_token()])); ?>",
             }
         })
         .then(newEditor => {
@@ -416,48 +416,48 @@ function openModalNew() {
     <thead>
         <tr>
             <th style="text-align: left;">ID</th>
-            <th style="text-align: left;">@lang('translation.Variable Name')</th>
-            <th style="text-align: left;">@lang('translation.Variable Type')</th>
-            <th style="text-align: left;">@lang('translation.Description')</th>
-            <th style="text-align: left;">@lang('translation.Created Date')</th>
-            <th style="text-align: left;">@lang('translation.Updated Date')</th>
-            <th style="text-align: left; width: 18%">@lang('translation.Action')</th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Variable Name'); ?></th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Variable Type'); ?></th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Description'); ?></th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Created Date'); ?></th>
+            <th style="text-align: left;"><?php echo app('translator')->get('translation.Updated Date'); ?></th>
+            <th style="text-align: left; width: 18%"><?php echo app('translator')->get('translation.Action'); ?></th>
         </tr>
     </thead>
     <tbody>
-        @foreach($variables as $contract)
+        <?php $__currentLoopData = $variables; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $contract): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <tr>
-                <td style="text-align: left;">{{ $contract->VariableID }}</td>
-                <td style="text-align: left;">{{ $contract->VariableName }}</td>
-                <td style="text-align: left;">{{ $contract->VariableType }}</td>
-                <td style="text-align: left;">{{ $contract->Description }}</td>
-                <td style="text-align: left;">{{ $contract->created_at }}</td>
-                <td style="text-align: left;">{{ $contract->updated_at }}</td>
+                <td style="text-align: left;"><?php echo e($contract->VariableID); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->VariableName); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->VariableType); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->Description); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->created_at); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->updated_at); ?></td>
                 <td style="text-align: left;">
                     <div class="btn-toolbar">
                         <button class="btn btn-primary" 
                             onclick="openModal(
-                                '{{ $contract->VariableID }}', 
-                                '{{ addslashes($contract->VariableName) }}', 
-                                '{{ $contract->VariableType }}', 
-                                '{{ addslashes($contract->Description) }}', 
-                                '{{ htmlentities($contract->VariableLabelValue, ENT_QUOTES, 'UTF-8') }}'
+                                '<?php echo e($contract->VariableID); ?>', 
+                                '<?php echo e(addslashes($contract->VariableName)); ?>', 
+                                '<?php echo e($contract->VariableType); ?>', 
+                                '<?php echo e(addslashes($contract->Description)); ?>', 
+                                '<?php echo e(htmlentities($contract->VariableLabelValue, ENT_QUOTES, 'UTF-8')); ?>'
                             )">
-                                @lang('translation.Edit')
+                                <?php echo app('translator')->get('translation.Edit'); ?>
                         </button>
 
-                        <form id="deleteForm-{{ $contract->VariableID }}" action="{{ route('contract.delete', $contract->VariableID) }}" method="POST">
-                            @csrf
-                            @method('POST')
+                        <form id="deleteForm-<?php echo e($contract->VariableID); ?>" action="<?php echo e(route('contract.delete', $contract->VariableID)); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
+                            <?php echo method_field('POST'); ?>
                             <button type="button" style="margin-left:2px;" class="btn btn-danger waves-effect waves-light"
-                                onclick="confirmDelete('{{ $contract->VariableID }}');">
-                                <i class="bx bx-block font-size-16 align-middle me-2"></i>   @lang('translation.Delete')
+                                onclick="confirmDelete('<?php echo e($contract->VariableID); ?>');">
+                                <i class="bx bx-block font-size-16 align-middle me-2"></i>   <?php echo app('translator')->get('translation.Delete'); ?>
                             </button>
                         </form>
                     </div>
                 </td>
             </tr>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </tbody>
 </table>
 
@@ -547,7 +547,7 @@ $(document).ready(function() {
                             url: '/HowmanyVariable',
                             method: 'POST',
                             data: {
-                                _token: "{{ csrf_token() }}",
+                                _token: "<?php echo e(csrf_token()); ?>",
                                 VariableID: contractId
                             },
                             success: function(response) {
@@ -596,20 +596,20 @@ $(document).ready(function() {
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"> @lang('translation.Edit Variable')  </h5>
+                <h5 class="modal-title" id="exampleModalLabel"> <?php echo app('translator')->get('translation.Edit Variable'); ?>  </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="variableForm">
                     <input type="hidden" id="variable-id" name="variable_id">
                     <div class="mb-3">
-                        <label for="variable-name" class="col-form-label"> @lang('translation.Variable Name'):</label>
+                        <label for="variable-name" class="col-form-label"> <?php echo app('translator')->get('translation.Variable Name'); ?>:</label>
                         <input type="text" class="form-control" id="variable-name" name="variableName">
                     </div>
                     <div class="row">
                         <div class="col-6">
                             <div class="mb-3">
-                                <label for="variable-type-two" class="col-form-label">@lang('translation.Variable Type'):</label>
+                                <label for="variable-type-two" class="col-form-label"><?php echo app('translator')->get('translation.Variable Type'); ?>:</label>
                                 <select class="form-select" id="variable-type-two">
                                     <option value="Single Line Text">Single Line Text</option>
                                     <option value="Multiple Line Text">Multiple Line Text</option>
@@ -624,14 +624,14 @@ $(document).ready(function() {
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label for="description" class="col-form-label">@lang('translation.Description'):</label>
+                        <label for="description" class="col-form-label"><?php echo app('translator')->get('translation.Description'); ?>:</label>
                         <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('translation.Close')</button>
-                <button type="button" class="btn btn-primary" onclick="editVariable()"> @lang('translation.Save Variable') </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo app('translator')->get('translation.Close'); ?></button>
+                <button type="button" class="btn btn-primary" onclick="editVariable()"> <?php echo app('translator')->get('translation.Save Variable'); ?> </button>
             </div>
         </div>
     </div>
@@ -688,7 +688,7 @@ $(document).ready(function() {
     ClassicEditor
         .create(document.querySelector('#ckeditorContentEdit'), {
             ckfinder: {
-                uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                uploadUrl: "<?php echo e(route('ckeditor.upload', ['_token' => csrf_token()])); ?>",
             }
         })
         .then(newEditor => {
@@ -1200,4 +1200,5 @@ $(document).ready(function() {
 </script>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/variablelist.blade.php ENDPATH**/ ?>

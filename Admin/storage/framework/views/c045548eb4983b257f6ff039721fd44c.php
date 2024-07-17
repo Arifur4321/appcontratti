@@ -1,18 +1,18 @@
-@extends('layouts.master')
-@section('title')
-    @lang('translation.Product-List')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+    <?php echo app('translator')->get('translation.Product-List'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title')
-        @lang('translation.Product List')
-        @endslot
-    @endcomponent
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title'); ?>
+        <?php echo app('translator')->get('translation.Product List'); ?>
+        <?php $__env->endSlot(); ?>
+    <?php echo $__env->renderComponent(); ?>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
@@ -37,7 +37,7 @@
     <div class="col-sm-auto">
         <div class="text-sm-end">
        
-            <button type="button" class="btn btn-primary" onclick="openModalNew()">@lang('translation.Add New Product')</button>
+            <button type="button" class="btn btn-primary" onclick="openModalNew()"><?php echo app('translator')->get('translation.Add New Product'); ?></button>
 
         </div>
     </div>
@@ -49,18 +49,18 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabelNew">@lang('translation.New Product')</h5>
+                <h5 class="modal-title" id="exampleModalLabelNew"><?php echo app('translator')->get('translation.New Product'); ?></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="productFormNew">
               
                     <div class="mb-3">
-                        <label for="product-name-new" class="col-form-label">@lang('translation.Product Name'):</label>
+                        <label for="product-name-new" class="col-form-label"><?php echo app('translator')->get('translation.Product Name'); ?>:</label>
                         <input type="text" class="form-control" id="product-name-new">
                     </div>
                     <div class="mb-3">
-                        <label for="description-new" class="col-form-label">@lang('translation.Description'):</label>
+                        <label for="description-new" class="col-form-label"><?php echo app('translator')->get('translation.Description'); ?>:</label>
                         <textarea class="form-control" id="description-new"></textarea>
                     </div>
                
@@ -68,8 +68,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('translation.Close')</button>
-                <button type="button" class="btn btn-primary" onclick="saveProduct()"> @lang('translation.Save Product')  </button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?php echo app('translator')->get('translation.Close'); ?></button>
+                <button type="button" class="btn btn-primary" onclick="saveProduct()"> <?php echo app('translator')->get('translation.Save Product'); ?>  </button>
             </div>
         </div>
     </div>
@@ -81,26 +81,26 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">  @lang('translation.Edit Product')   </h5>
+        <h5 class="modal-title" id="exampleModalLabel">  <?php echo app('translator')->get('translation.Edit Product'); ?>   </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form id="editVariableForm">
           <input type="hidden" id="variable-id">
           <div class="mb-3">
-            <label for="variable-name" class="form-label"> @lang('translation.Product Name')  </label>
+            <label for="variable-name" class="form-label"> <?php echo app('translator')->get('translation.Product Name'); ?>  </label>
             <input type="text" class="form-control" id="variable-name" required>
           </div>
      
           <div class="mb-3">
-            <label for="description" class="form-label">  @lang('translation.Description') </label>
+            <label for="description" class="form-label">  <?php echo app('translator')->get('translation.Description'); ?> </label>
             <textarea class="form-control" id="description" required></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> @lang('translation.Close') </button>
-        <button type="button" class="btn btn-primary" onclick="editVariable()">@lang('translation.Save Product')</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"> <?php echo app('translator')->get('translation.Close'); ?> </button>
+        <button type="button" class="btn btn-primary" onclick="editVariable()"><?php echo app('translator')->get('translation.Save Product'); ?></button>
       </div>
     </div>
   </div>
@@ -272,35 +272,35 @@ function saveProduct() {
     <thead>
         <tr>
         <th style="text-align: left;">ID</th>
-        <th style="text-align: left;">@lang('translation.Product Name')</th>
-        <th style="text-align: left;">@lang('translation.Description')</th>
-        <th style="text-align: left;">@lang('translation.Created Date')</th>
-        <th style="text-align: left;">@lang('translation.Updated Date')</th>
-        <th style="text-align: left; width: 18%">@lang('translation.Action')</th>
+        <th style="text-align: left;"><?php echo app('translator')->get('translation.Product Name'); ?></th>
+        <th style="text-align: left;"><?php echo app('translator')->get('translation.Description'); ?></th>
+        <th style="text-align: left;"><?php echo app('translator')->get('translation.Created Date'); ?></th>
+        <th style="text-align: left;"><?php echo app('translator')->get('translation.Updated Date'); ?></th>
+        <th style="text-align: left; width: 18%"><?php echo app('translator')->get('translation.Action'); ?></th>
 
         </tr>
     </thead>
     <tbody>
-        @foreach($products as $contract)
+        <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $contract): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <tr>
-                <td style="text-align: left;" >{{ $contract->id }}</td>
-                <td style="text-align: left;" >{{ $contract->product_name }}</td>
-                <td style="text-align: left;">{{ $contract->description }}</td>
-                <td style="text-align: left;">{{ $contract->created_at }}</td>
-                <td style="text-align: left;" >{{ $contract->updated_at }}</td>
+                <td style="text-align: left;" ><?php echo e($contract->id); ?></td>
+                <td style="text-align: left;" ><?php echo e($contract->product_name); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->description); ?></td>
+                <td style="text-align: left;"><?php echo e($contract->created_at); ?></td>
+                <td style="text-align: left;" ><?php echo e($contract->updated_at); ?></td>
                 <td style="text-align: left;">
 
 
                 <div class="btn-toolbar">
-                                <button class="btn btn-primary"  onclick="openModal('{{  $contract->id}}', '{{ $contract->product_name }}',
-                     '{{ $contract->description }}')">   @lang('translation.Edit')  </button>
+                                <button class="btn btn-primary"  onclick="openModal('<?php echo e($contract->id); ?>', '<?php echo e($contract->product_name); ?>',
+                     '<?php echo e($contract->description); ?>')">   <?php echo app('translator')->get('translation.Edit'); ?>  </button>
 
 
-                    <form id="deleteForm-{{ $contract->id }}" action="{{ route('product.delete', $contract->id) }}" method="POST">
-                        @csrf
-                        @method('POST')
-                        <button type="button" style="margin-left:2px;"   class="btn btn-danger waves-effect waves-light" onclick="confirmDelete('{{ $contract->id }}');">
-                        <i class="bx bx-block font-size-16 align-middle me-2"></i>  @lang('translation.Delete')
+                    <form id="deleteForm-<?php echo e($contract->id); ?>" action="<?php echo e(route('product.delete', $contract->id)); ?>" method="POST">
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('POST'); ?>
+                        <button type="button" style="margin-left:2px;"   class="btn btn-danger waves-effect waves-light" onclick="confirmDelete('<?php echo e($contract->id); ?>');">
+                        <i class="bx bx-block font-size-16 align-middle me-2"></i>  <?php echo app('translator')->get('translation.Delete'); ?>
                         </button>
                     </form>
                                 
@@ -313,27 +313,27 @@ function saveProduct() {
 </tr>
 
 <!-- Modal for Editing Contract -->
-        <div class="modal fade" id="editContractModal{{ $contract->id }}" tabindex="-1" role="dialog" aria-labelledby="editContractModalLabel{{ $contract->id }}" aria-hidden="true">
+        <div class="modal fade" id="editContractModal<?php echo e($contract->id); ?>" tabindex="-1" role="dialog" aria-labelledby="editContractModalLabel<?php echo e($contract->id); ?>" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="editContractModalLabel{{ $contract->id }}">Edit Contract</h5>
+                        <h5 class="modal-title" id="editContractModalLabel<?php echo e($contract->id); ?>">Edit Contract</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <!-- CKEditor for editing contract content -->
-                        <textarea id="contractContent{{ $contract->id }}" name="contractContent">{{ $contract->editor_content }}</textarea>
+                        <textarea id="contractContent<?php echo e($contract->id); ?>" name="contractContent"><?php echo e($contract->editor_content); ?></textarea>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" onclick="saveEditedContent('{{ $contract->id }}')">Save</button>
+                        <button type="button" class="btn btn-primary" onclick="saveEditedContent('<?php echo e($contract->id); ?>')">Save</button>
                     </div>
                 </div>
             </div>
         </div>
-        @endforeach
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     </tbody>
 </table>
 </div>
@@ -447,7 +447,7 @@ $(document).ready(function() {
     });
  </script>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
     <!-- CKEditor script -->
     <script src="https://cdn.ckeditor.com/ckeditor5/35.0.0/classic/ckeditor.js"></script>
 
@@ -465,7 +465,7 @@ $(document).ready(function() {
                 url: '/save',
                 type: 'POST',
                 data: {
-                    _token: "{{ csrf_token() }}",
+                    _token: "<?php echo e(csrf_token()); ?>",
                     title: title,
                     content: content
                 },
@@ -614,5 +614,7 @@ $(document).ready(function() {
 </script>
 
 
-@endsection
-@endsection
+<?php $__env->stopSection(); ?>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/ProductList.blade.php ENDPATH**/ ?>

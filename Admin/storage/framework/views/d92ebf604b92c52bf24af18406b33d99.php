@@ -1,19 +1,19 @@
-@extends('layouts.master')
-@section('title')
-    @lang('translation.HeaderAndFooter')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+    <?php echo app('translator')->get('translation.HeaderAndFooter'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title')
-        @lang('translation.Header And Footer Entries')
-        @endslot
-    @endcomponent
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title'); ?>
+        <?php echo app('translator')->get('translation.Header And Footer Entries'); ?>
+        <?php $__env->endSlot(); ?>
+    <?php echo $__env->renderComponent(); ?>
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
@@ -36,7 +36,7 @@
 
     <div class="col-sm-auto">
         <div class="text-sm-end">
-            <button type="button" class="btn btn-primary" onclick="openModalNew()">@lang('translation.Add New HeaderOrFooter')</button>
+            <button type="button" class="btn btn-primary" onclick="openModalNew()"><?php echo app('translator')->get('translation.Add New HeaderOrFooter'); ?></button>
         </div>
     </div>
 </div>
@@ -148,41 +148,41 @@
         
 
                 <th style="text-align: left;">ID</th>
-                <th style="text-align: left;">@lang('translation.Name')</th>
-                <th style="text-align: left;">@lang('translation.Type')</th>
-                <th style="text-align: left;">@lang('translation.Created Date')</th>
-                <th style="text-align: left;">@lang('translation.Updated Date')</th>
-                <th style="text-align: left; width: 18%;">@lang('translation.Action')</th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Name'); ?></th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Type'); ?></th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Created Date'); ?></th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Updated Date'); ?></th>
+                <th style="text-align: left; width: 18%;"><?php echo app('translator')->get('translation.Action'); ?></th>
 
             </tr>
         </thead>
        
         <tbody>
-           @foreach($headerAndFooterEntries as $entry)
+           <?php $__currentLoopData = $headerAndFooterEntries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $entry): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
-                    <td style="text-align: left;" >{{ $entry->id }}</td>
-                    <td  style="text-align: left;" >{{ $entry->name }}</td>
-                    <td style="text-align: left;" >{{ $entry->type }}</td>
-                    <!-- <td>{{ $entry->editor_content }}</td> -->
-                    <td style="text-align: left;" >{{ $entry->created_at }}</td>
-                    <td style="text-align: left;">{{ $entry->updated_at }}</td>
+                    <td style="text-align: left;" ><?php echo e($entry->id); ?></td>
+                    <td  style="text-align: left;" ><?php echo e($entry->name); ?></td>
+                    <td style="text-align: left;" ><?php echo e($entry->type); ?></td>
+                    <!-- <td><?php echo e($entry->editor_content); ?></td> -->
+                    <td style="text-align: left;" ><?php echo e($entry->created_at); ?></td>
+                    <td style="text-align: left;"><?php echo e($entry->updated_at); ?></td>
                     <td style="text-align: left;">
 
 
                     <div class="btn-toolbar">
                                 <button class="btn btn-primary"
-                                onclick="openModal('{{ $entry->id }}', '{{ $entry->name }}', '{{ $entry->type }}', '{{ $entry->editor_content }}')">
-                                @lang('translation.Edit')</button>
+                                onclick="openModal('<?php echo e($entry->id); ?>', '<?php echo e($entry->name); ?>', '<?php echo e($entry->type); ?>', '<?php echo e($entry->editor_content); ?>')">
+                                <?php echo app('translator')->get('translation.Edit'); ?></button>
 
 
-                                 <form id="deleteForm-{{ $entry->id }}" action="{{ route('entry.delete', $entry->id) }}" method="POST" style="display: none;">
-                                    @csrf
-                                    @method('POST')
+                                 <form id="deleteForm-<?php echo e($entry->id); ?>" action="<?php echo e(route('entry.delete', $entry->id)); ?>" method="POST" style="display: none;">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('POST'); ?>
                                 </form>
 
                                 <button type="button" style="margin-left:2px;" class="btn btn-danger waves-effect waves-light" 
-                                onclick="confirmDelete('{{ $entry->id }}');">
-                                <i class="bx bx-block font-size-16 align-middle me-2"></i> @lang('translation.Delete')
+                                onclick="confirmDelete('<?php echo e($entry->id); ?>');">
+                                <i class="bx bx-block font-size-16 align-middle me-2"></i> <?php echo app('translator')->get('translation.Delete'); ?>
                                 </button>
 
                                
@@ -200,16 +200,16 @@
                 
                    
                 <a href="#" class="dropdown-item edit-list" 
-                onclick="openModal('{{ $entry->id }}', '{{ $entry->name }}', '{{ $entry->type }}', '{{ $entry->editor_content }}')">
+                onclick="openModal('<?php echo e($entry->id); ?>', '<?php echo e($entry->name); ?>', '<?php echo e($entry->type); ?>', '<?php echo e($entry->editor_content); ?>')">
                     <i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit
                 </a>
  
-                <form id="deleteForm-{{ $entry->id }}" action="{{ route('entry.delete', $entry->id) }}" method="POST" style="display: none;">
-                    @csrf
-                    @method('POST')
+                <form id="deleteForm-<?php echo e($entry->id); ?>" action="<?php echo e(route('entry.delete', $entry->id)); ?>" method="POST" style="display: none;">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('POST'); ?>
                 </form>
 
-                <a href="#" class="dropdown-item edit-list" onclick="confirmDelete('{{ $entry->id }}');">
+                <a href="#" class="dropdown-item edit-list" onclick="confirmDelete('<?php echo e($entry->id); ?>');">
                     <i class="mdi mdi-trash-can font-size-16 text-danger me-1"></i> Delete
                 </a>
 
@@ -224,7 +224,7 @@
 
 </td>
                 </tr>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tbody>
     </table>
 </div>
@@ -339,14 +339,14 @@
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script> -->
 
 <!--  classic CSKEDitor custom build  -->
-<script src="{{ asset('js/ckeditor/build/ckeditor.js') }}"></script>
+<script src="<?php echo e(asset('js/ckeditor/build/ckeditor.js')); ?>"></script>
 <script>
     let editor; // Global variable for main CKEditor instance
 
     ClassicEditor
         .create(document.querySelector('#entry-editor-content'),{
                 ckfinder: {
-                        uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                        uploadUrl: "<?php echo e(route('ckeditor.upload', ['_token' => csrf_token()])); ?>",
                     }
             }
             )
@@ -363,7 +363,7 @@
      ClassicEditor
         .create(document.querySelector('#entry-editor-content-edit'),{
                 ckfinder: {
-                        uploadUrl: "{{ route('ckeditor.upload', ['_token' => csrf_token()]) }}",
+                        uploadUrl: "<?php echo e(route('ckeditor.upload', ['_token' => csrf_token()])); ?>",
                     }
             }
             )
@@ -473,7 +473,7 @@
             url: '/header-and-footer/update/' + id, // Update the URL to match your Laravel route
             method: 'POST',
             data: {
-                '_token': '{{ csrf_token() }}', // Add CSRF token for Laravel
+                '_token': '<?php echo e(csrf_token()); ?>', // Add CSRF token for Laravel
                 'name': name,
                 'type': type,
                 'editor_content': editorContent
@@ -550,5 +550,7 @@ $(document).ready(function() {
 });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/HeaderAndFooter.blade.php ENDPATH**/ ?>

@@ -1,7 +1,8 @@
+
  
-@extends('layouts.master')
+ @extends('layouts.master')
 @section('title')
-    @lang('translation.Variable-List')
+    @lang('translation.Contract-List')
 @endsection
 
 @section('content')
@@ -10,9 +11,10 @@
             Projects
         @endslot
         @slot('title')
-        Edit Contract List 
+        @lang('translation.Edit Contract')
         @endslot
     @endcomponent
+
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <!-- Include SweetAlert CSS -->
@@ -28,6 +30,7 @@
  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
 
  <!-- Include MetisMenu via CDN -->
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
 
 
@@ -36,6 +39,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="HeaderOrFooterModalLabel">Header/Footer Entries</h5>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -96,25 +100,30 @@
                     
                      <!-- For larger screens (md and above) -->
                      <div class="d-none d-md-flex align-items-center mb-3">
-                            <label for="title" class="form-label me-2" style="width: 125px;">Contract Name</label>
+                        
+                            <label for="title" class="form-label me-2" style="width: 125px;">@lang('translation.Contract Name')</label>
+
                             <input type="text" class="form-control w-75" id="title" name="contract_name" value="{{ $contract->contract_name }}">
                             
                             <div class="dropdown" style="margin-left: 3px;">
                                 <button type="button" class="btn btn-primary dropdown-toggle  " style="margin-left: 13px;" data-bs-toggle="dropdown" aria-expanded="false">
-                                    All Actions <i class="mdi mdi-chevron-down"></i>
+                                @lang('translation.All Actions') <i class="mdi mdi-chevron-down"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    <li><button class="dropdown-item" type="button"  onclick="previewPDFNew()"  id="mytestButton">Preview</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()">Header/Footer</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('{{$contract->id}}')">Add Price</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('{{$contract->id}}')">Product</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('{{$contract->id}}')">Variable</button></li>
-                                    <li><button class="dropdown-item" type="button" id="signbutton">Signature</button></li>
+                             
                                     <!-- <li><button class="dropdown-item" type="button" onclick="saveData()">Update</button></li> -->
+                                    <li><button class="dropdown-item" type="button" onclick="previewPDFNew()" id="mytestButton">@lang('translation.Preview')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()">@lang('translation.Header/Footer')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('{{$contract->id}}')">@lang('translation.Add Price')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('{{$contract->id}}')">@lang('translation.Product')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('{{$contract->id}}')">@lang('translation.Variable')</button></li>
+                                    <li><button class="dropdown-item" type="button" id="signbutton">@lang('translation.Signature')</button></li>
+
+                              
                                 </ul>
                             </div>
                             
-                             <button type="button" class="btn btn-success "    style="margin-left:6px;" onclick="saveData()" >Update</button>  
+                             <button type="button" class="btn btn-success "    style="margin-left:6px;" onclick="saveData()" > @lang('translation.Update')</button>  
                         </div>
                         
                         <div class="d-md-none mb-3">
@@ -126,20 +135,20 @@
                             
                             <div class="dropdown" style="margin-left: 3px;">
                                 <button type="button" class="btn btn-primary dropdown-toggle " style="margin-left: 10px;" data-bs-toggle="dropdown" aria-expanded="false">
-                                    All Actions <i class="mdi mdi-chevron-down"></i>
+                                @lang('translation.All Actions')<i class="mdi mdi-chevron-down"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    <li><button class="dropdown-item" type="button"  onclick="previewPDFNew()" id="mytestButton" >Preview</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()">Header/Footer</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('{{$contract->id}}')">Add Price</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('{{$contract->id}}')">Product</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('{{$contract->id}}')">Variable</button></li>
-                                    <li><button class="dropdown-item" type="button" id="signbutton">Signature</button></li>
+                                <li><button class="dropdown-item" type="button" onclick="previewPDFNew()" id="mytestButton">@lang('translation.Preview')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()">@lang('translation.Header/Footer')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('{{$contract->id}}')">@lang('translation.Add Price')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('{{$contract->id}}')">@lang('translation.Product')</button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('{{$contract->id}}')">@lang('translation.Variable')</button></li>
+                                    <li><button class="dropdown-item" type="button" id="signbutton">@lang('translation.Signature')</button></li>
                                     <!-- <li><button class="dropdown-item" type="button" onclick="saveData()">Update</button></li> -->
                                 </ul>
                             </div>
                         
-                            <button type="button" class="btn btn-success   "    style="margin-left:6px;" onclick="saveData()">Update</button>
+                            <button type="button" class="btn btn-success   "    style="margin-left:6px;" onclick="saveData()">  @lang('translation.Update')</button>
                         </div>
                     </div>
 

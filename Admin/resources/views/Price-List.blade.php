@@ -10,7 +10,8 @@
             Projects
         @endslot
         @slot('title')
-            Price List 
+        @lang('translation.Price List')
+
         @endslot
     @endcomponent
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -35,7 +36,7 @@
 
             <div class="col-sm-auto">
                 <div class="text-sm-end">
-                    <button type="button" class="btn btn-primary" onclick="redirectToEditPrice()">Add New Price</button>
+                    <button type="button" class="btn btn-primary" onclick="redirectToEditPrice()"> @lang('translation.Add New Price') </button>
                 </div>
             </div>
     </div>
@@ -60,12 +61,13 @@
     <!-- Table header -->
     <thead>
         <tr>
-            <th  style="text-align: left;">ID</th>
-            <th  style="text-align: left;">Price Name</th>
-            <th  style="text-align: left;">User Name</th>
-            <th  style="text-align: left;">Created Date</th>
-            <th  style="text-align: left;">Updated Date</th>
-            <th  style="text-align: left;  width: 18%">Action</th>
+            <th style="text-align: left;">ID</th>
+            <th style="text-align: left;">@lang('translation.Price Name')</th>
+            <th style="text-align: left;">@lang('translation.User Name')</th>
+            <th style="text-align: left;">@lang('translation.Created Date')</th>
+            <th style="text-align: left;">@lang('translation.Updated Date')</th>
+            <th style="text-align: left; width: 18%">@lang('translation.Action')</th>
+
         </tr>
     </thead>
     <!-- Table body  -->
@@ -81,11 +83,11 @@
      
             <div class="btn-toolbar">
                                 <button class="btn btn-primary" 
-                                onclick="editPrice({{ $price->id }})">Edit</button>
+                                onclick="editPrice({{ $price->id }})">  @lang('translation.Edit') </button>
 
                         <button type="button" style="margin-left:2px;"   class="btn btn-danger waves-effect waves-light" 
                         onclick="deletePrice({{ $price->id }})">
-                        <i class="bx bx-block font-size-16 align-middle me-2"></i> Delete
+                        <i class="bx bx-block font-size-16 align-middle me-2"></i>   @lang('translation.Delete')
                         </button>
             
                                 

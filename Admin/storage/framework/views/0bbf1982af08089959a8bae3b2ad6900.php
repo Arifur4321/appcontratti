@@ -1,7 +1,8 @@
- 
 
+ 
+ 
 <?php $__env->startSection('title'); ?>
-    <?php echo app('translator')->get('translation.Variable-List'); ?>
+    <?php echo app('translator')->get('translation.Contract-List'); ?>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -10,9 +11,10 @@
             Projects
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-        Edit Contract List 
+        <?php echo app('translator')->get('translation.Edit Contract'); ?>
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
+
 
 <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 <!-- Include SweetAlert CSS -->
@@ -28,6 +30,7 @@
  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
 
  <!-- Include MetisMenu via CDN -->
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/metisMenu/3.0.7/metisMenu.min.js"></script>
 
 
@@ -36,6 +39,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="HeaderOrFooterModalLabel">Header/Footer Entries</h5>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -96,25 +100,30 @@
                     
                      <!-- For larger screens (md and above) -->
                      <div class="d-none d-md-flex align-items-center mb-3">
-                            <label for="title" class="form-label me-2" style="width: 125px;">Contract Name</label>
+                        
+                            <label for="title" class="form-label me-2" style="width: 125px;"><?php echo app('translator')->get('translation.Contract Name'); ?></label>
+
                             <input type="text" class="form-control w-75" id="title" name="contract_name" value="<?php echo e($contract->contract_name); ?>">
                             
                             <div class="dropdown" style="margin-left: 3px;">
                                 <button type="button" class="btn btn-primary dropdown-toggle  " style="margin-left: 13px;" data-bs-toggle="dropdown" aria-expanded="false">
-                                    All Actions <i class="mdi mdi-chevron-down"></i>
+                                <?php echo app('translator')->get('translation.All Actions'); ?> <i class="mdi mdi-chevron-down"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    <li><button class="dropdown-item" type="button"  onclick="previewPDFNew()"  id="mytestButton">Preview</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()">Header/Footer</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('<?php echo e($contract->id); ?>')">Add Price</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('<?php echo e($contract->id); ?>')">Product</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('<?php echo e($contract->id); ?>')">Variable</button></li>
-                                    <li><button class="dropdown-item" type="button" id="signbutton">Signature</button></li>
+                             
                                     <!-- <li><button class="dropdown-item" type="button" onclick="saveData()">Update</button></li> -->
+                                    <li><button class="dropdown-item" type="button" onclick="previewPDFNew()" id="mytestButton"><?php echo app('translator')->get('translation.Preview'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()"><?php echo app('translator')->get('translation.Header/Footer'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('<?php echo e($contract->id); ?>')"><?php echo app('translator')->get('translation.Add Price'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('<?php echo e($contract->id); ?>')"><?php echo app('translator')->get('translation.Product'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('<?php echo e($contract->id); ?>')"><?php echo app('translator')->get('translation.Variable'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" id="signbutton"><?php echo app('translator')->get('translation.Signature'); ?></button></li>
+
+                              
                                 </ul>
                             </div>
                             
-                             <button type="button" class="btn btn-success "    style="margin-left:6px;" onclick="saveData()" >Update</button>  
+                             <button type="button" class="btn btn-success "    style="margin-left:6px;" onclick="saveData()" > <?php echo app('translator')->get('translation.Update'); ?></button>  
                         </div>
                         
                         <div class="d-md-none mb-3">
@@ -126,20 +135,20 @@
                             
                             <div class="dropdown" style="margin-left: 3px;">
                                 <button type="button" class="btn btn-primary dropdown-toggle " style="margin-left: 10px;" data-bs-toggle="dropdown" aria-expanded="false">
-                                    All Actions <i class="mdi mdi-chevron-down"></i>
+                                <?php echo app('translator')->get('translation.All Actions'); ?><i class="mdi mdi-chevron-down"></i>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    <li><button class="dropdown-item" type="button"  onclick="previewPDFNew()" id="mytestButton" >Preview</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()">Header/Footer</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('<?php echo e($contract->id); ?>')">Add Price</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('<?php echo e($contract->id); ?>')">Product</button></li>
-                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('<?php echo e($contract->id); ?>')">Variable</button></li>
-                                    <li><button class="dropdown-item" type="button" id="signbutton">Signature</button></li>
+                                <li><button class="dropdown-item" type="button" onclick="previewPDFNew()" id="mytestButton"><?php echo app('translator')->get('translation.Preview'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openHeaderOrFooterModal()"><?php echo app('translator')->get('translation.Header/Footer'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openpricemodal('<?php echo e($contract->id); ?>')"><?php echo app('translator')->get('translation.Add Price'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openproductmodal('<?php echo e($contract->id); ?>')"><?php echo app('translator')->get('translation.Product'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" onclick="openModalNew('<?php echo e($contract->id); ?>')"><?php echo app('translator')->get('translation.Variable'); ?></button></li>
+                                    <li><button class="dropdown-item" type="button" id="signbutton"><?php echo app('translator')->get('translation.Signature'); ?></button></li>
                                     <!-- <li><button class="dropdown-item" type="button" onclick="saveData()">Update</button></li> -->
                                 </ul>
                             </div>
                         
-                            <button type="button" class="btn btn-success   "    style="margin-left:6px;" onclick="saveData()">Update</button>
+                            <button type="button" class="btn btn-success   "    style="margin-left:6px;" onclick="saveData()">  <?php echo app('translator')->get('translation.Update'); ?></button>
                         </div>
                     </div>
 
@@ -1606,4 +1615,4 @@ function openHeaderOrFooterModal() {
 
 
  
-<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/Edit-ContractList.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/Edit-ContractList.blade.php ENDPATH**/ ?>

@@ -1,21 +1,21 @@
-@extends('layouts.master')
-@section('title')
-    @lang('translation.Product-List')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+    <?php echo app('translator')->get('translation.Product-List'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title' )
-        @lang('translation.Sales List')
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title' ); ?>
+        <?php echo app('translator')->get('translation.Sales List'); ?>
 
-        @endslot
-    @endcomponent
+        <?php $__env->endSlot(); ?>
+    <?php echo $__env->renderComponent(); ?>
 
 <!-- -----------------------------  --> 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
@@ -32,34 +32,34 @@
     <div class="col-md-6">
     <div class="card">
         <div class="card-header">
-            <h5 class="card-title"> @lang('translation.Sales Details')  </h5>
+            <h5 class="card-title"> <?php echo app('translator')->get('translation.Sales Details'); ?>  </h5>
         </div>
         <div class="card-body">
-        <form id="salesDetailsForm" action="/save-sales-details{{ isset($salesDetails) ? '/' . $salesDetails->id : '' }}" method="POST">
-                @csrf
-                @if(isset($salesDetails))
-                    @method('POST')
-                @endif
+        <form id="salesDetailsForm" action="/save-sales-details<?php echo e(isset($salesDetails) ? '/' . $salesDetails->id : ''); ?>" method="POST">
+                <?php echo csrf_field(); ?>
+                <?php if(isset($salesDetails)): ?>
+                    <?php echo method_field('POST'); ?>
+                <?php endif; ?>
                 <!-- Your form fields here -->
                 <div class="mb-3">
-                    <label for="name" class="form-label">@lang('translation.Name')</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ isset($salesDetails) ? $salesDetails->name : '' }}" required>
+                    <label for="name" class="form-label"><?php echo app('translator')->get('translation.Name'); ?></label>
+                    <input type="text" class="form-control" id="name" name="name" value="<?php echo e(isset($salesDetails) ? $salesDetails->name : ''); ?>" required>
                 </div>
                 <div class="mb-3">
-                    <label for="surname" class="form-label">@lang('translation.Surname')</label>
-                    <input type="text" class="form-control" id="surname" name="surname" value="{{ isset($salesDetails) ? $salesDetails->surname : '' }}">
+                    <label for="surname" class="form-label"><?php echo app('translator')->get('translation.Surname'); ?></label>
+                    <input type="text" class="form-control" id="surname" name="surname" value="<?php echo e(isset($salesDetails) ? $salesDetails->surname : ''); ?>">
                 </div>
                 <div class="mb-3">
-                    <label for="nickname" class="form-label">@lang('translation.Nick Name')</label>
-                    <input type="text" class="form-control" id="nickname" name="nickname" value="{{ isset($salesDetails) ? $salesDetails->nickname : '' }}" required>
+                    <label for="nickname" class="form-label"><?php echo app('translator')->get('translation.Nick Name'); ?></label>
+                    <input type="text" class="form-control" id="nickname" name="nickname" value="<?php echo e(isset($salesDetails) ? $salesDetails->nickname : ''); ?>" required>
                 </div>
                 <div class="mb-3">
-                    <label for="phone" class="form-label">@lang('translation.Phone')</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" value="{{ isset($salesDetails) ? $salesDetails->phone : '' }}" required>
+                    <label for="phone" class="form-label"><?php echo app('translator')->get('translation.Phone'); ?></label>
+                    <input type="tel" class="form-control" id="phone" name="phone" value="<?php echo e(isset($salesDetails) ? $salesDetails->phone : ''); ?>" required>
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ isset($salesDetails) ? $salesDetails->email : '' }}" required>
+                    <input type="email" class="form-control" id="email" name="email" value="<?php echo e(isset($salesDetails) ? $salesDetails->email : ''); ?>" required>
                 </div>
                 <div class="row">
                     <div class="col-md-8">
@@ -78,7 +78,7 @@
                     </div>
                     <div class="col-md-4">
                         <button type="button" class="btn btn-primary" onClick=generatePass() style="margin-top:27px;">
-                        @lang('translation.Generate Password')
+                        <?php echo app('translator')->get('translation.Generate Password'); ?>
 
                         </button>
                         <script>
@@ -98,8 +98,8 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label">@lang('translation.Description')</label>
-                    <textarea class="form-control" id="description" name="description" rows="3">{{ isset($salesDetails) ? $salesDetails->description : '' }}</textarea>
+                    <label for="description" class="form-label"><?php echo app('translator')->get('translation.Description'); ?></label>
+                    <textarea class="form-control" id="description" name="description" rows="3"><?php echo e(isset($salesDetails) ? $salesDetails->description : ''); ?></textarea>
                 </div>
             </form>
         </div>
@@ -107,13 +107,14 @@
            <!-- Save button for Sales Details
         <div class="text-end">
              <button  type="submit" form="salesDetailsForm" class="btn btn-primary">
-                {{ isset($salesDetails) ? 'Update' : 'Save' }} Sales Details</button>
+                <?php echo e(isset($salesDetails) ? 'Update' : 'Save'); ?> Sales Details</button>
         </div> 
          -->
 
         <div class="text-end">
             <button type="submit" form="salesDetailsForm" class="btn btn-primary">
-                {{ isset($salesDetails) ? __('translation.Update Sales Details') : __('translation.Save Sales Details') }}
+                <?php echo e(isset($salesDetails) ? __('translation.Update Sales Details') : __('translation.Save Sales Details')); ?>
+
             </button>
         </div>
 
@@ -134,22 +135,22 @@
  
     <!-- Your body content -->
 
-    @if(Session::has('success'))
+    <?php if(Session::has('success')): ?>
         <script>
             Swal.fire({
                 title: 'Success!',
-                text: "{{ Session::get('success') }}",
+                text: "<?php echo e(Session::get('success')); ?>",
                 icon: 'success',
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/Sales-Details/' + {{ $salesDetails->id }} ; 
+                    window.location.href = '/Sales-Details/' + <?php echo e($salesDetails->id); ?> ; 
                 }
             });
         </script>
-    @endif
+    <?php endif; ?>
 
-    @if($errors->has('email'))
+    <?php if($errors->has('email')): ?>
         <script>
             Swal.fire({
                 title: 'Error!',
@@ -158,9 +159,9 @@
                 confirmButtonText: 'OK'
             });
         </script>
-    @endif
+    <?php endif; ?>
 
-    @if($errors->has('nickname'))
+    <?php if($errors->has('nickname')): ?>
         <script>
             Swal.fire({
                 title: 'Error!',
@@ -169,28 +170,28 @@
                 confirmButtonText: 'OK'
             });
         </script>
-    @endif
+    <?php endif; ?>
  
 
 <!--  
-        @if(Session::has('success'))
+        <?php if(Session::has('success')): ?>
             <script>
-                alert("{{ Session::get('success') }}");
+                alert("<?php echo e(Session::get('success')); ?>");
                 window.location.href = '/Sales-Lists';
             </script>
-        @endif
+        <?php endif; ?>
 
-        @if($errors->has('email'))
+        <?php if($errors->has('email')): ?>
             <script>
                 alert("email already exists. Please choose a different one.");
             </script>
-        @endif
+        <?php endif; ?>
 
-        @if($errors->has('nickname'))
+        <?php if($errors->has('nickname')): ?>
             <script>
                 alert("nickname already exists. Please choose a different one.");
             </script>
-        @endif -->
+        <?php endif; ?> -->
 
             <script>
           
@@ -242,7 +243,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title">@lang('translation.Product Details')</h5>
+                    <h5 class="card-title"><?php echo app('translator')->get('translation.Product Details'); ?></h5>
                 </div>
                 <div class="card-body">
                     <div class="col-sm">
@@ -263,20 +264,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($products as $product)
+                            <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td style="text-align: left;">{{ $product->id }}</td>
-                                <td style="text-align: left;">{{ $product->product_name }}</td>
+                                <td style="text-align: left;"><?php echo e($product->id); ?></td>
+                                <td style="text-align: left;"><?php echo e($product->product_name); ?></td>
                                 <td style="text-align: left;">
 
                                  
 
 
-                                    <input type="checkbox" class="product-checkbox" data-product-id="{{ $product->id }}" @if($product->isSelected) checked @endif>
+                                    <input type="checkbox" class="product-checkbox" data-product-id="<?php echo e($product->id); ?>" <?php if($product->isSelected): ?> checked <?php endif; ?>>
                                 
                                 </td>
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table> -->
 
@@ -286,22 +287,22 @@
                         <thead>
                             <tr>
                                 <th style="text-align: left;">ID</th>
-                                <th style="text-align: left;">@lang('translation.Product Name')</th>
-                                <th style="text-align: left;">@lang('translation.Select')</th>
+                                <th style="text-align: left;"><?php echo app('translator')->get('translation.Product Name'); ?></th>
+                                <th style="text-align: left;"><?php echo app('translator')->get('translation.Select'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($products as $product)
+                            <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td style="text-align: left;">{{ $product->id }}</td>
-                                <td style="text-align: left;">{{ $product->product_name }}</td>
+                                <td style="text-align: left;"><?php echo e($product->id); ?></td>
+                                <td style="text-align: left;"><?php echo e($product->product_name); ?></td>
                                 <td style="text-align: left;">
                                     <div class="form-check form-switch">
-                                        <input class="product-checkbox form-check-input" type="checkbox" data-product-id="{{ $product->id }}" @if($product->isSelected) checked @endif>
+                                        <input class="product-checkbox form-check-input" type="checkbox" data-product-id="<?php echo e($product->id); ?>" <?php if($product->isSelected): ?> checked <?php endif; ?>>
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
 
@@ -457,7 +458,7 @@ $(document).ready(function() {
         // Event listener for clicking on checkbox
         $('.product-checkbox').on('change', function() {
             var productId = $(this).data('product-id');
-            var salesDetailsId = "{{ $salesDetails->id }}";
+            var salesDetailsId = "<?php echo e($salesDetails->id); ?>";
             var isChecked = $(this).is(':checked');
 
             // Call the function to update product status 
@@ -469,7 +470,7 @@ $(document).ready(function() {
 <script>
     $(document).ready(function() {
         // Make an AJAX call to fetch product status
-        var salesid = "{{ $salesDetails->id }}";
+        var salesid = "<?php echo e($salesDetails->id); ?>";
         $.ajax({
             url: '/sales.details.displayChecked',
             type: 'GET',
@@ -603,4 +604,6 @@ $(document).ready(function() {
 </script>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/Sales-Details.blade.php ENDPATH**/ ?>

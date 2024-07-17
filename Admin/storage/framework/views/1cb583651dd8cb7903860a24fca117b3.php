@@ -49,4 +49,4 @@
 <!-- App js -->
 <script src="<?php echo e(URL::asset('build/js/app.js')); ?>"></script>
 
-<?php echo $__env->yieldContent('script-bottom'); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/layouts/vendor-scripts.blade.php ENDPATH**/ ?>
+<?php echo $__env->yieldContent('script-bottom'); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/layouts/vendor-scripts.blade.php ENDPATH**/ ?>

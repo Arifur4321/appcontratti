@@ -1,14 +1,131 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\SalesDetails; 
 use App\Models\ProductToSales;
+use App\Mail\SalesDetailsMail;
+use Illuminate\Support\Facades\Mail;
 
 class SalesDetailsController extends Controller
 
 {
+
+
+    public function save(Request $request, $id = null)
+    {
+        if ($id) {
+            $salesDetails = SalesDetails::findOrFail($id);
+
+            if ($request->nickname !== $salesDetails->nickname) {
+                if (SalesDetails::where('nickname', $request->nickname)->exists()) {
+                    return redirect()->back()->withErrors(['nickname' => 'Nickname already exists.'])->withInput();
+                }
+            }
+
+            if ($request->email !== $salesDetails->email) {
+                if (SalesDetails::where('email', $request->email)->exists()) {
+                    return redirect()->back()->withErrors(['email' => 'Email already exists.'])->withInput();
+                }
+            }
+
+            $salesDetails->update([
+                'name' => $request->name,
+                'surname' => $request->surname,
+                'nickname' => $request->nickname,
+                'phone' => $request->phone,
+                'email' => $request->email,
+                'password' => $request->password,
+                'description' => $request->description,
+            ]);
+        } else {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'surname' => 'required|string|max:255',
+                'nickname' => 'required|string|max:255|unique:sales_details',
+                'phone' => 'required|string|max:255|unique:sales_details',
+                'email' => 'required|string|email|max:255|unique:sales_details',
+                'password' => 'required|string|max:255',
+                'description' => 'required|string',
+            ]);
+
+            $salesDetails = SalesDetails::create($validatedData);
+        }
+
+        // Send the email
+        Mail::to($salesDetails->email)->send(new SalesDetailsMail($salesDetails->name, $salesDetails->email, $request->password));
+
+        $request->session()->flash('success', 'Sales details saved successfully.');
+
+        return redirect()->back();
+    }
+
+    // public function save(Request $request, $id = null)
+    //     {
+    //         // If $id is provided, it's an edit operation
+    //         if ($id) {
+    //             // Find the SalesDetails record to edit
+    //             $salesDetails = SalesDetails::findOrFail($id);
+
+    //             // Check uniqueness of nickname, phone, and email before updating
+    //             if ($request->nickname !== $salesDetails->nickname) {
+    //                 if (SalesDetails::where('nickname', $request->nickname)->exists()) {
+    //                     return redirect()->back()->withErrors(['nickname' => 'Nickname already exists.'])->withInput();
+    //                 }
+    //             }
+
+    //             // if ($request->password !== $salesDetails->password) {
+    //             //     if (SalesDetails::where('password', $request->password)->exists()) {
+    //             //         return redirect()->back()->withErrors(['password' => 'password number already exists.'])->withInput();
+    //             //     }
+    //             // }
+
+    //              if ($request->email !== $salesDetails->email) {
+    //                  if (SalesDetails::where('email', $request->email)->exists()) {
+    //                     return redirect()->back()->withErrors(['email' => 'Email already exists.'])->withInput();
+    //                  }
+    //              }
+
+    //             // Update the record with the provided data
+    //             $salesDetails->update([
+    //                 'name' => $request->name,
+    //                 'surname' => $request->surname,
+    //                 'nickname' => $request->nickname,
+    //                 'phone' => $request->phone,
+    //                 'email' => $request->email,
+    //                 'password' => $request->password,
+    //                 'description' => $request->description,
+    //             ]);
+    //         } else {
+    //             // It's a new entry creation
+    //             // Validate the incoming request data
+    //             $validatedData = $request->validate([
+    //                 'name' => 'required|string|max:255',
+    //                 'surname' => 'required|string|max:255',
+    //                 'nickname' => 'required|string|max:255|unique:sales_details',
+    //                 'phone' => 'required|string|max:255|unique:sales_details',
+    //                 'email' => 'required|string|email|max:255|unique:sales_details',
+    //                 'password' => 'required|string|max:255',
+    //                 'description' => 'required|string',
+    //             ]);
+
+    //             // Create a new sales details instance and save it to the database
+    //             SalesDetails::create($validatedData);
+    //         }
+
+    //         // Flash success message to session
+    //         $request->session()->flash('success', 'Sales details saved successfully.');
+
+    //         // Redirect back
+    //         return redirect()->back();
+    //     }
+
+
+
+
+
         public function checkUnique(Request $request)
         {
             // Retrieve field and value from the request
@@ -179,67 +296,7 @@ class SalesDetailsController extends Controller
         // }
 
 
-        public function save(Request $request, $id = null)
-        {
-            // If $id is provided, it's an edit operation
-            if ($id) {
-                // Find the SalesDetails record to edit
-                $salesDetails = SalesDetails::findOrFail($id);
-
-                // Check uniqueness of nickname, phone, and email before updating
-                if ($request->nickname !== $salesDetails->nickname) {
-                    if (SalesDetails::where('nickname', $request->nickname)->exists()) {
-                        return redirect()->back()->withErrors(['nickname' => 'Nickname already exists.'])->withInput();
-                    }
-                }
-
-                // if ($request->password !== $salesDetails->password) {
-                //     if (SalesDetails::where('password', $request->password)->exists()) {
-                //         return redirect()->back()->withErrors(['password' => 'password number already exists.'])->withInput();
-                //     }
-                // }
-
-                 if ($request->email !== $salesDetails->email) {
-                     if (SalesDetails::where('email', $request->email)->exists()) {
-                        return redirect()->back()->withErrors(['email' => 'Email already exists.'])->withInput();
-                     }
-                 }
-
-                // Update the record with the provided data
-                $salesDetails->update([
-                    'name' => $request->name,
-                    'surname' => $request->surname,
-                    'nickname' => $request->nickname,
-                    'phone' => $request->phone,
-                    'email' => $request->email,
-                    'password' => $request->password,
-                    'description' => $request->description,
-                ]);
-            } else {
-                // It's a new entry creation
-                // Validate the incoming request data
-                $validatedData = $request->validate([
-                    'name' => 'required|string|max:255',
-                    'surname' => 'required|string|max:255',
-                    'nickname' => 'required|string|max:255|unique:sales_details',
-                    'phone' => 'required|string|max:255|unique:sales_details',
-                    'email' => 'required|string|email|max:255|unique:sales_details',
-                    'password' => 'required|string|max:255',
-                    'description' => 'required|string',
-                ]);
-
-                // Create a new sales details instance and save it to the database
-                SalesDetails::create($validatedData);
-            }
-
-            // Flash success message to session
-            $request->session()->flash('success', 'Sales details saved successfully.');
-
-            // Redirect back
-            return redirect()->back();
-        }
-
-
+    
         public function destroy($id)
         {
             $SalesDetails = SalesDetails::findOrFail($id);

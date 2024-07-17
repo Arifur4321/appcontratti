@@ -9,7 +9,8 @@
             Projects
         <?php $__env->endSlot(); ?>
         <?php $__env->slot('title'); ?>
-            Price List 
+        <?php echo app('translator')->get('translation.Price List'); ?>
+
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
     <!--code starts here --> 
@@ -37,7 +38,7 @@
   <div class="row mt-3">
     <div class="col-sm">
         <div class="input-group">
-            <span class="input-group-text">Price Name:</span>
+            <span class="input-group-text">  <?php echo app('translator')->get('translation.Price Name'); ?> :</span>
             <input type="text" id="priceName" name="priceName" class="form-control" aria-label="Price Name" value="<?php echo e($priceList->pricename); ?>" required>
         </div>
     </div>
@@ -48,7 +49,7 @@
 <div class="row mt-3">
     <div class="col-sm">
         <div class="input-group">
-            <label class="input-group-text" for="currency">Select currency:</label>
+            <label class="input-group-text" for="currency"> <?php echo app('translator')->get('translation.Select Currency'); ?>:</label>
             <select class="form-select" id="currency" name="currency">
             <option value="EUR" <?php echo e($priceList->currency === 'EUR' ? 'selected' : ''); ?>>Euro (EUR)</option>
             <option value="USD" <?php echo e($priceList->currency === 'USD' ? 'selected' : ''); ?>>US Dollar (USD)</option>
@@ -73,7 +74,7 @@
 <div class="row mt-3">
     <div class="col-sm">
         <div class="input-group">
-            <label class="input-group-text" for="selection">Total Price:</label>
+            <label class="input-group-text" for="selection"><?php echo app('translator')->get('translation.Total Price'); ?>:</label>
             <select class="form-select" id="selection" name="selection">
                 
                     <option value="dynamic" selected>Dynamic</option>
@@ -96,7 +97,7 @@
             <div class="col-3">
                 <div id="fixedInput">
                     <div class="mb-3">
-                        <label for="fixedValue" class="form-label">Enter Fixed value:</label>
+                        <label for="fixedValue" class="form-label"><?php echo app('translator')->get('translation.Enter Fixed Value'); ?>:</label>
                         <input type="number" class="form-control w-100" id="fixedValue" name="fixedValue" value="<?php echo e($priceList->fixedvalue); ?>">
                     </div>
                 </div>
@@ -105,7 +106,7 @@
            
             <div class="col-2">
                 <div class="form-check form-switch " dir="ltr" style="margin-left:-48px;">
-                    <label class="form-check-label" for="SwitchCheckSizelg">Enable VAT</label>
+                    <label class="form-check-label" for="SwitchCheckSizelg"><?php echo app('translator')->get('translation.Enable VAT'); ?></label>
                     <br>
                     <input style="margin-left:10px;margin-top:15px;" class="form-check-input" type="checkbox" id="vatCheckbox" name="vatCheckbox" onchange="toggleVATFields()" <?php echo e($priceList->enableVat === 'true' ? 'checked' : ''); ?>>
                 </div>
@@ -114,7 +115,7 @@
              <div class="col-3" style ="margin-left:-28px;">
                 <div id="vatFields" class="<?php echo e($priceList->enableVat === 'true' ? '' : 'VAThidden'); ?>">
                       <div class="mb-3">
-                        <label for="vatPercentage" class="form-label">Percentage:</label>
+                        <label for="vatPercentage" class="form-label"><?php echo app('translator')->get('translation.Percentage'); ?>:</label>
                         <div class="input-group" style="width: 95%;">
                             <input type="number" id="vatPercentage" name="vatPercentage" class="form-control" min="0" max="100" value="<?php echo e($priceList->vatPercentage); ?>" <?php echo e($priceList->enableVat === 'true' ? '' : 'disabled'); ?>>
                             <span class="input-group-text">%</span>
@@ -123,7 +124,7 @@
                 </div> 
               </div>
                 
-
+<!-- 
                    <div class="col-2" >
                         <div class="form-check form-switch">
                         <label style ="margin-left:-46px;" class="form-check-label" for="priceTypeToggle" id="priceTypeLabel"><?php echo e($priceList->price === 'true' ? 'Include on Price' : 'Include on Price'); ?></label>
@@ -131,25 +132,45 @@
                             <input style ="margin-left:-46px;" class="form-check-input" type="checkbox" id="priceTypeToggle" name="priceTypeToggle" value="<?php echo e($priceList->price); ?>" <?php echo e($priceList->enableVat === 'true' ? '' : 'disabled'); ?> <?php echo e($priceList->price === 'true' ? 'checked' : ''); ?> onchange="togglePriceType(this)">
                         </div>
                     </div>
- 
+  -->
 
+                <div class="col-2">
+                    <div class="form-check form-switch">
+                        <label style="margin-left:-46px;" class="form-check-label" for="priceTypeToggle" id="priceTypeLabel">
+                            <?php echo e($priceList->price === 'true' ? __('translation.Include on Price') : __('translation.Include on Price')); ?>
 
+                        </label>
+                        <br>
+                        <input style="margin-left:-46px;" class="form-check-input" type="checkbox" id="priceTypeToggle" name="priceTypeToggle" value="<?php echo e($priceList->price); ?>" <?php echo e($priceList->enableVat === 'true' ? '' : 'disabled'); ?> <?php echo e($priceList->price === 'true' ? 'checked' : ''); ?> onchange="togglePriceType(this)">
+                    </div>
+                </div>
 
                     <script>
+                          function togglePriceType(checkbox) {
+                            var label = document.getElementById('priceTypeLabel');
 
-                    function togglePriceType(checkbox) {
-                        var label = document.getElementById('priceTypeLabel');
-
-                        if (checkbox.checked) {
-                           
-                            label.textContent = 'Include on Price';
-                            label.setAttribute('for', 'includeOnPrice');
-                        } else {
-                            
-                            label.textContent = 'Include on Price';
-                            label.setAttribute('for', 'external');
+                            if (checkbox.checked) {
+                                label.textContent = <?php echo json_encode(__('translation.Include on Price'), 15, 512) ?>;
+                                label.setAttribute('for', 'includeOnPrice');
+                            } else {
+                                label.textContent = <?php echo json_encode(__('translation.Include on Price'), 15, 512) ?>;
+                                label.setAttribute('for', 'external');
+                            }
                         }
-                    }
+
+                    // function togglePriceType(checkbox) {
+                    //     var label = document.getElementById('priceTypeLabel');
+
+                    //     if (checkbox.checked) {
+                           
+                    //         label.textContent = 'Include on Price';
+                    //         label.setAttribute('for', 'includeOnPrice');
+                    //     } else {
+                            
+                    //         label.textContent = 'Include on Price';
+                    //         label.setAttribute('for', 'external');
+                    //     }
+                    // }
 
                     function toggleVATFields() {
                         var vatCheckbox = document.getElementById('vatCheckbox');
@@ -177,7 +198,7 @@
                   
             <div class="col-2">
                 <div class="mb-3" style="margin-left: -30px;">
-                    <label class="input-group" for="priceType">PriceType:</label>
+                    <label class="input-group" for="priceType"> <?php echo app('translator')->get('translation.PriceType'); ?>:</label>
                     <div class="input-group" style="width: 125%;" >
                         <select class="form-select" id="priceType" name="priceType" onchange="togglePriceOptions()" style="font-size: 16px;">
                             <option value="recurring" <?php echo e($priceList->selectPriceType === 'recurring' ? 'selected' : ''); ?>>Recurring</option>
@@ -420,13 +441,53 @@ function handleExclusiveSelection(checkbox) {
  
 
 <div id="oneTimeOptions" class="<?php echo e($priceList->selectPriceType === 'oneTime' ? '' : 'hidden'); ?>">
-    <label>Payment Options:</label><br>
+    <label> <?php echo app('translator')->get('translation.Payment Options'); ?>:</label><br>
     
 
-    <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="multiplePayments" name="multiplePayments" <?php echo e($priceList->multiplePayments ? 'checked' : ''); ?> onchange="togglePaymentOption(this)">
+    <!--   <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="multiplePayments" name="multiplePayments"
+         <?php echo e($priceList->multiplePayments ? 'checked' : ''); ?> onchange="togglePaymentOption(this)">
         <label class="form-check-label" for="multiplePayments" id="multiplePaymentsLabel">
             <?php echo e($priceList->multiplePayments ? 'Multiple Payment' : 'Single Payment'); ?>
+
+        </label>
+    </div>
+
+    <script>
+      
+        window.onload = function() {
+            togglePriceTypePayment(document.getElementById('multiplePayments'));
+        };
+
+        function togglePaymentOption(checkbox) {
+            var multiplePaymentsCheckbox = document.getElementById('multiplePayments');
+            var multiplePaymentOptions = document.getElementById('multiplePaymentOptions');
+
+            if (checkbox.checked) {
+                if (checkbox.id === 'multiplePayments') {
+                    multiplePaymentOptions.classList.remove('multiplepaymenthidden');
+                    togglePriceTypePayment(checkbox);  
+                }
+            } else {
+                multiplePaymentOptions.classList.add('multiplepaymenthidden');
+                togglePriceTypePayment(checkbox);  
+            }
+        }
+
+        function togglePriceTypePayment(checkbox) {
+            var label = document.getElementById('multiplePaymentsLabel');
+            if (checkbox.checked) {
+                label.textContent = 'Multiple Payment';
+            } else {
+                label.textContent = 'Multiple Payment';
+            }
+        }  
+    </script> -->
+    <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="multiplePayments" name="multiplePayments"
+        <?php echo e($priceList->multiplePayments ? 'checked' : ''); ?> onchange="togglePaymentOption(this)">
+        <label class="form-check-label" for="multiplePayments" id="multiplePaymentsLabel">
+            <?php echo e($priceList->multiplePayments ? __('translation.Multiple Payment') : __('translation.Single Payment')); ?>
 
         </label>
     </div>
@@ -455,9 +516,9 @@ function handleExclusiveSelection(checkbox) {
         function togglePriceTypePayment(checkbox) {
             var label = document.getElementById('multiplePaymentsLabel');
             if (checkbox.checked) {
-                label.textContent = 'Multiple Payment';
+                label.textContent = <?php echo json_encode(__('translation.Multiple Payment'), 15, 512) ?>;
             } else {
-                label.textContent = 'Multiple Payment';
+                label.textContent = <?php echo json_encode(__('translation.Single Payment'), 15, 512) ?>;
             }
         }
     </script>
@@ -468,7 +529,7 @@ function handleExclusiveSelection(checkbox) {
     
       <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" id="EditableDates" name="EditableDates" <?php echo e($priceList->EditableDates === 'true' ? 'checked' : ''); ?>>
-        <label class="form-check-label" for="EditableDates" id="editableDatesLabel"> Editable Dates </label>
+        <label class="form-check-label" for="EditableDates" id="editableDatesLabel">  <?php echo app('translator')->get('translation.Editable Dates'); ?> </label>
     </div>
 
 
@@ -480,13 +541,14 @@ function handleExclusiveSelection(checkbox) {
     <div class="col-5">
         <div class="mb-3">
             <div class="input-group">
-                <label class="input-group-text" for="frequency">Frequency:</label>
+                <label class="input-group-text" for="frequency"><?php echo app('translator')->get('translation.Frequency'); ?> :</label>
+
                 <select class="form-select" id="frequency" name="frequency">
-                    <option value="daily" <?php echo e($priceList->frequency == 'daily' ? 'selected' : ''); ?>>Daily</option>
-                    <option value="biweekly" <?php echo e($priceList->frequency == 'biweekly' ? 'selected' : ''); ?>>Biweekly</option>
-                    <option value="weekly" <?php echo e($priceList->frequency == 'weekly' ? 'selected' : ''); ?>>Weekly</option>
-                    <option value="monthly" <?php echo e($priceList->frequency == 'monthly' ? 'selected' : ''); ?>>Monthly</option>
-                    <option value="annually" <?php echo e($priceList->frequency == 'annually' ? 'selected' : ''); ?>>Annually</option>
+                    <option value="daily" <?php echo e($priceList->frequency == 'daily' ? 'selected' : ''); ?>>  Daily</option>
+                    <option value="biweekly" <?php echo e($priceList->frequency == 'biweekly' ? 'selected' : ''); ?>>  Biweekly</option>
+                    <option value="weekly" <?php echo e($priceList->frequency == 'weekly' ? 'selected' : ''); ?>>  Weekly</option>
+                    <option value="monthly" <?php echo e($priceList->frequency == 'monthly' ? 'selected' : ''); ?>> Monthly</option>
+                    <option value="annually" <?php echo e($priceList->frequency == 'annually' ? 'selected' : ''); ?>> Annually</option>
                 </select>
             </div>
         </div>
@@ -506,7 +568,7 @@ function handleExclusiveSelection(checkbox) {
         <div class="row mt-3">
             <div class="col-sm">
                 <div class="input-group">
-                    <label class="input-group-text" for="selection">Example Text:</label>
+                    <label class="input-group-text" for="selection"> <?php echo app('translator')->get('translation.Example Text'); ?>: </label>
                     <input type="text" class="form-control" id="minPayment" name="minPayment" value="<?php echo e($priceList->paymentExampleText); ?>">
                 </div>
             </div>
@@ -681,7 +743,7 @@ function handleExclusiveSelection(checkbox) {
 </div>
 
 <!-- Main update button to insert data in database -->
-<button type="button" style="margin-top:4px;" id="saveButton" class="btn btn-success me-2 btn-lg"  >Update</button>
+<button type="button" style="margin-top:4px;" id="saveButton" class="btn btn-success me-2 btn-lg"  > <?php echo app('translator')->get('translation.Update'); ?> </button>
 
             </div>
 
@@ -691,17 +753,17 @@ function handleExclusiveSelection(checkbox) {
             
 
                 <div class="row">
-                    <p class="col-6">Price Name:</p>
+                    <p class="col-6"><?php echo app('translator')->get('translation.Price Name'); ?>:</p>
                     <div class='col-6' id='selectedpricename1'></div>
                 </div>
 
                 <div class="row">
-                    <p class="col-6">Selected currency:</p>
+                    <p class="col-6"><?php echo app('translator')->get('translation.Select Currency'); ?>:</p>
                     <div class='col-6' id='selectedcurrency1'></div>
                 </div>
 
                 <div class="row">
-                    <p class="col-6">Calculated tax Value:</p>
+                    <p class="col-6"><?php echo app('translator')->get('translation.Calculated Tax Value'); ?>:</p>
                     <div class='col-6' id='selectedfoxedvalue1'></div>
                 </div>
 
@@ -1408,4 +1470,4 @@ maxPaymentRangeSlider.noUiSlider.on('change', updateCalculatedValue);
 
 
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/Edit-Price-List.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/Edit-Price-List.blade.php ENDPATH**/ ?>

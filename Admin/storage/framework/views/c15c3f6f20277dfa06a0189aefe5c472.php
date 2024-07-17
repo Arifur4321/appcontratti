@@ -1,7 +1,6 @@
 
-
 <?php $__env->startSection('title'); ?>
-    <?php echo app('translator')->get('translation.arifurtable'); ?>
+    <?php echo app('translator')->get('translation.Product-List'); ?>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -9,12 +8,19 @@
         <?php $__env->slot('li_1'); ?>
             Projects
         <?php $__env->endSlot(); ?>
-        <?php $__env->slot('title'); ?>
-            Price List 
+        <?php $__env->slot('title' ); ?>
+        <?php echo app('translator')->get('translation.Sales List'); ?>
+
         <?php $__env->endSlot(); ?>
     <?php echo $__env->renderComponent(); ?>
-    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
+
+ 
+
+
+
+<!-- -----------------------------  --> 
+<meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
 
@@ -35,7 +41,7 @@
 
             <div class="col-sm-auto">
                 <div class="text-sm-end">
-                    <button type="button" class="btn btn-primary" onclick="redirectToEditPrice()">Add New Price</button>
+                    <button type="button" class="btn btn-primary"  onclick="salesDetailspage()"> <?php echo app('translator')->get('translation.Add New Sales'); ?> </button>
                 </div>
             </div>
     </div>
@@ -52,69 +58,67 @@
         // Redirect to the Add-New-Price page
         window.location.href = 'Add-New-Price';
     }
+
+    function salesDetailspage() {
+        // Redirect to the Add-New-Price page
+        window.location.href = 'Sales-Details';
+    }
+ 
 </script>
 
 <!-- Table content -->
-<div class="table-responsive" style="margin-top:10px;">
-<table id="PriceList" class="table">
-    <!-- Table header -->
-    <thead>
-        <tr>
-            <th  style="text-align: left;">ID</th>
-            <th  style="text-align: left;">Price Name</th>
-            <th  style="text-align: left;">User Name</th>
-            <th  style="text-align: left;">Created Date</th>
-            <th  style="text-align: left;">Updated Date</th>
-            <th  style="text-align: left;  width: 18%">Action</th>
-        </tr>
-    </thead>
-    <!-- Table body  -->
-    <tbody>
-        <?php $__currentLoopData = $priceLists; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $price): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <tr>
-            <td  style="text-align: left;"><?php echo e($price->id); ?></td>
-            <td  style="text-align: left;"><?php echo e($price->pricename); ?></td>
-            <td  style="text-align: left;"><?php echo e(Auth::user()->name); ?></td>
-            <td  style="text-align: left;"><?php echo e($price->created_at); ?></td>
-            <td  style="text-align: left;"><?php echo e($price->updated_at); ?></td>
-            <td  style="text-align: left;">
-     
-            <div class="btn-toolbar">
-                                <button class="btn btn-primary" 
-                                onclick="editPrice(<?php echo e($price->id); ?>)">Edit</button>
+<div class="table-responsive"  style="margin-top:10px;" >
+    <table id="PriceList" class="table">
+        <!-- Table header -->
+        <thead>
+            <tr>
+                <th style="text-align: left;">ID</th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Name'); ?></th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Surname'); ?></th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Nick Name'); ?></th>
+                <th style="text-align: left;" >Email</th>
+                <th style="text-align: left;"><?php echo app('translator')->get('translation.Phone'); ?></th>
+                <th style="text-align: left; width: 18%;"><?php echo app('translator')->get('translation.Action'); ?></th>
+            </tr>
+        </thead>
+        <!-- Table body  -->
+        <tbody>
+            <?php $__currentLoopData = $salesDetails; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <tr>
+                <td style="text-align: left;"><?php echo e($detail->id); ?></td>
+                <td style="text-align: left;" ><?php echo e($detail->name); ?></td>
+                <td style="text-align: left;" ><?php echo e($detail->surname); ?></td>
+                <td style="text-align: left;" ><?php echo e($detail->nickname); ?></td>
+                <td style="text-align: left;" ><?php echo e($detail->email); ?></td>
+                <td style="text-align: left;"><?php echo e($detail->phone); ?></td>
+               
+                <td>
+               
 
-                        <button type="button" style="margin-left:2px;"   class="btn btn-danger waves-effect waves-light" 
-                        onclick="deletePrice(<?php echo e($price->id); ?>)">
-                        <i class="bx bx-block font-size-16 align-middle me-2"></i> Delete
+                <div class="btn-toolbar">
+                                <button class="btn btn-primary" 
+                                onclick="editSales(<?php echo e($detail->id); ?>)">
+                                <?php echo app('translator')->get('translation.Edit'); ?>  </button>
+
+
+           
+                        <button type="button" style="margin-left:2px;"   class="btn btn-danger waves-effect waves-light"
+                        onclick="deleteSales(<?php echo e($detail->id); ?>)">
+                        <i class="bx bx-block font-size-16 align-middle me-2"></i>  <?php echo app('translator')->get('translation.Delete'); ?>
                         </button>
-            
+               
                                 
                 </div>
 
 
-                <!-- <div class="dropdown">
-                    <a href="#" class="dropdown-toggle card-drop" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="mdi mdi-dots-horizontal font-size-18"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-               
-                        <a href="#" class="dropdown-item edit-list" onclick="editPrice(<?php echo e($price->id); ?>)">
-                            <i class="mdi mdi-pencil font-size-16 text-success me-1"></i> Edit
-                        </a>
-                  
-                        <a href="#" class="dropdown-item delete-list" onclick="deletePrice(<?php echo e($price->id); ?>)">
-                            <i class="mdi mdi-delete font-size-16 text-danger me-1"></i> Delete
-                        </a>
-
-                    </div>
-                </div> -->
-
-            </td>
-        </tr>
-        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    </tbody>
-</table>
+                </td>
+            </tr>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </tbody>
+    </table>
 </div>
+
+
 
 
 <!-- For pagination  -->
@@ -167,7 +171,8 @@
 
 
 <script>
-//    let table = new DataTable('#ContractList');
+//    let table = new DataTable('#ContractList');  PriceList
+ 
 $(document).ready(function() {
         let table = new DataTable('#PriceList', {
             pagingType: 'full_numbers',
@@ -194,15 +199,15 @@ $(document).ready(function() {
 
 
 <script>
-    function editPrice(id) {
-        window.location.href = "/edit-price/" + id;
+    function editSales(id) {
+        window.location.href = "/Sales-Details/" + id;
     }
 
-// function deletePrice(id) {
-//     if (confirm('Are you sure you want to delete this price list?')) {
+// function deleteSales(id) {
+//     if (confirm('Are you sure you want to delete this Sales ?')) {
 //         var csrfToken = $('meta[name="csrf-token"]').attr('content');
 //         $.ajax({
-//             url: '/price-lists/' + id,
+//             url: '/delete-sales/' + id,
 //             type: 'DELETE',
 //             headers: {
 //                 'X-CSRF-TOKEN': csrfToken
@@ -211,7 +216,7 @@ $(document).ready(function() {
 //                 // Remove the row from the table upon successful deletion
 //                 // $('#PriceList tr[data-id="' + id + '"]').remove();
 //                 alert('Data deleted successfully from the price List!');
-//                 window.location.href = "Price-List";
+//                 window.location.href = "Sales-Lists";
 //             },
 //             error: function(xhr, status, error) {
 //                 console.error(error);
@@ -221,13 +226,12 @@ $(document).ready(function() {
 //     }
 // }
 
-
-function deletePrice(id) {
+function deleteSales(id) {
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         Swal.fire({
             title: 'Are you sure?',
-            text: "Do you want to delete this price list?",
+            text: "Do you want to delete this Sales?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -237,7 +241,7 @@ function deletePrice(id) {
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: '/price-lists/' + id,
+                    url: '/delete-sales/' + id,
                     type: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken
@@ -245,17 +249,17 @@ function deletePrice(id) {
                     success: function(response) {
                         Swal.fire(
                             'Deleted!',
-                            'The price list has been deleted.',
+                            'The sales record has been deleted.',
                             'success'
                         ).then(() => {
-                            window.location.href = "Price-List";
+                            window.location.href = "Sales-Lists";
                         });
                     },
                     error: function(xhr, status, error) {
                         console.error(error);
                         Swal.fire(
                             'Error!',
-                            'Error occurred while deleting the price list.',
+                            'Error occurred while deleting the sales record.',
                             'error'
                         );
                     }
@@ -266,10 +270,8 @@ function deletePrice(id) {
             }
         });
     }
-    
+
 </script>
-
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -376,8 +378,6 @@ function deletePrice(id) {
     });
 </script>
 
-
-
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/Price-List.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/Sales-Lists.blade.php ENDPATH**/ ?>

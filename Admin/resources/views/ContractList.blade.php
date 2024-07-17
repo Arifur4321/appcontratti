@@ -1,7 +1,8 @@
-      
+ 
+ 
 @extends('layouts.master')
 @section('title')
-    @lang('translation.Variable-List')
+    @lang('translation.Contract-List')
 @endsection
 
 @section('content')
@@ -10,9 +11,10 @@
             Projects
         @endslot
         @slot('title')
-         Contract List   
+        @lang('translation.Contract-List') 
+        @endslot
     @endcomponent
-
+ 
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -40,7 +42,8 @@
 
             <div class="col-sm-auto">
                 <div class="text-sm-end">
-                    <button type="button" class="btn btn-primary" onclick="redirectTocreatecontract()">Add New Contract</button>
+                    <button type="button" class="btn btn-primary" onclick="redirectTocreatecontract()">
+                    @lang('translation.Add New Contract') </button>
                 </div>
             </div>
     </div>
@@ -68,12 +71,13 @@
         <!-- Table header -->
         <thead>
             <tr>
-                <th style="text-align: left;">ID</th>
-                <th style="text-align: left;">Contract Name</th>
-                <th style="text-align: left;">User Name</th>
-                <th style="text-align: left;">Created Date</th>
-                <th style="text-align: left;">Updated Date</th>
-                <th style="text-align: left; width: 18%">Action</th>
+            <th style="text-align: left;">ID</th>
+            <th style="text-align: left;">@lang('translation.Contract Name')</th>
+            <th style="text-align: left;">@lang('translation.User Name')</th>
+            <th style="text-align: left;">@lang('translation.Created Date')</th>
+            <th style="text-align: left;">@lang('translation.Updated Date')</th>
+            <th style="text-align: left; width: 18%">@lang('translation.Action')</th>
+
             </tr>
         </thead>
         <!-- Table body -->
@@ -88,13 +92,14 @@
                 <td style="text-align: left;">
                     <!-- Action buttons -->
                     <div class="btn-toolbar">
-                        <button class="btn btn-primary" onclick="redirectToEditContract('{{ $contract->id }}')">Edit</button>
+                        <button class="btn btn-primary" onclick="redirectToEditContract('{{ $contract->id }}')">
+                        @lang('translation.Edit')</button>
                         <form id="delete-form-{{ $contract->id }}" action="{{ route('contracts.destroy', $contract->id) }}" method="POST" style="display: none;">
                             @csrf
                             @method('DELETE')
                         </form>
                         <button type="button" style="margin-left:2px;" onclick="confirmDelete('{{ $contract->id }}');" class="btn btn-danger waves-effect waves-light">
-                            <i class="bx bx-block font-size-16 align-middle me-2"></i> Delete
+                            <i class="bx bx-block font-size-16 align-middle me-2"></i> @lang('translation.Delete')
                         </button>
                     </div>
                 </td>

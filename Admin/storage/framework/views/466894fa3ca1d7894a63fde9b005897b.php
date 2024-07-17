@@ -221,6 +221,14 @@
                         <span><?php echo app('translator')->get('translation.HeaderAndFooter'); ?></span>
                     </a>
                 </li>
+                
+                     <li>
+                    <a href="/Sales-Performence" key="Sales-Performence" class="waves-effect">
+                        <i class="bx bx-bar-chart"></i>
+                        <span><?php echo app('translator')->get('translation.Sales-Performence'); ?></span>
+                    </a>
+                </li>
+
 
 
 
@@ -471,4 +479,4 @@
     </div>
 </div>
 <!-- Left Sidebar End -->
-<?php /**PATH F:\Giacometti\Skote_Html_Laravel_v4.2.1\Laravel\Server-Backup\New-Branch-Work-6-10-2024\working-one\appcontratti\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
+<?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/layouts/sidebar.blade.php ENDPATH**/ ?>

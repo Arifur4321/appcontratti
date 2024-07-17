@@ -9,6 +9,26 @@ use App\Models\contractvariablecheckbox;
 
 class VariableListController extends Controller
 {
+    
+     public function index()
+    {
+        $variables = VariableList::all();
+    
+        // Encode VariableLabelValue as JSON string
+        foreach ($variables as $variable) {
+            if (is_array($variable->VariableLabelValue) || is_object($variable->VariableLabelValue)) {
+                $variable->VariableLabelValue = json_encode($variable->VariableLabelValue);
+            } else {
+                // Handle cases where VariableLabelValue is null or not in expected format
+                $variable->VariableLabelValue = json_encode([]);
+            }
+        }
+    
+        return view('variablelist', compact('variables'));
+    }
+    
+    
+
     //to check how many time variable is checked
 
     public function countVariableIDs(Request $request)
@@ -44,13 +64,17 @@ class VariableListController extends Controller
     // }
 
     //to view all page
-    public function index()
+  
+  /*  public function index()
     {
         $variables = VariableList::all();
         return view('variablelist', compact('variables'));
-        //return view('ProductList', compact('products'));
-        //return view('variable-list.index', compact('variables'));
+   
     }
+    */
+    
+    
+
     
     public function deleteContract($id)
     {

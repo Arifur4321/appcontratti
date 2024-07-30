@@ -1,4 +1,4 @@
-@extends('layouts.master-without-nav')
+ @extends('layouts.master-without-nav')
 
 @section('title')
     @lang('translation.Register') 2
@@ -22,7 +22,7 @@
             <div class="container-fluid p-0">
                 <div class="row g-0">
 
-                    <div class="col-xl-9">
+                    <div class="col-xl-8">
                         <div class="auth-full-bg pt-lg-5 p-4">
                             <div class="w-100">
                                 <div class="bg-overlay"></div>
@@ -85,15 +85,16 @@
                     </div>
                     <!-- end col -->
 
-                    <div class="col-xl-3">
+                    <div class="col-xl-4">
                         <div class="auth-full-page-content p-md-5 p-4">
                             <div class="w-100">
 
                                 <div class="d-flex flex-column h-100">
                                     <div class="mb-4 mb-md-5">
                                         <a href="index" class="d-block auth-logo">
-                                            <img src="{{ URL::asset('build/images/logo-dark.png') }}" alt="" height="18"
-                                                class="auth-logo-dark">
+                                            <img src="{{ URL::asset('build/images/logo-dark.png') }}" alt="" 
+                                            height="55" width="100" class="auth-logo-dark mx-auto"
+                                                >
                                             <img src="{{ URL::asset('build/images/logo-light.png') }}" alt="" height="18"
                                                 class="auth-logo-light">
                                         </a>
@@ -101,7 +102,7 @@
                                     <div class="my-auto">
 
                                         <div>
-                                            <h5 class="text-primary">Register account</h5>
+                                            <h5 class="text-primary">Register Your Company account</h5>
                                             <p class="text-muted">Get your account now.</p>
                                         </div>
 
@@ -131,27 +132,78 @@
                                                     @enderror
                                                 </div>
         
-                                                <div class="mb-3">
+                                         <div class="mb-3">
                                                     <label for="userpassword" class="form-label">Password <span class="text-danger">*</span></label>
+                                                    
+                                                    <div class="input-group">
+
                                                     <input type="password" class="form-control @error('password') is-invalid @enderror" id="userpassword" name="password"
-                                                        placeholder="Enter password" autofocus required>
+                                                        placeholder="Enter password"    
+                                                        aria-label="Password" aria-describedby="password-addon" autofocus required  >
+
+                                                        <button class="btn btn-light " type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button> 
+                                                    </div>      
                                                         @error('password')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
+                                                   
                                                     @enderror
+                                                    
                                                 </div>
         
-                                                <div class="mb-3">
+                                                <!-- <div class="mb-3">
                                                     <label for="confirmpassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
-                                                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="confirmpassword"
-                                                    name="password_confirmation" placeholder="Enter Confirm password" autofocus required>
+                                                   
+                                                    <div class="input-group">
+
+                                                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" 
+                                                    id="confirmpassword"
+                                                    name="password_confirmation" placeholder="Enter Confirm password" 
+                                                    aria-label="password_confirmation" aria-describedby="password_confirmation" autofocus required>
+                                                   
+                                                    <button class="btn btn-light " type="button" id="password_confirmation"><i class="mdi mdi-eye-outline"></i></button> 
+
+                                                    </div>    
+                                                    
                                                     @error('password_confirmation')
                                                         <span class="invalid-feedback" role="alert">
                                                             <strong>{{ $message }}</strong>
                                                         </span>
                                                     @enderror
-                                                </div>
+                                                </div>   -->
+
+                                                <div class="mb-3">
+                                                    <label for="confirmpassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                                    
+                                                    <div class="input-group">
+                                                        <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" 
+                                                        id="confirmpassword"
+                                                        name="password_confirmation" placeholder="Enter Confirm password" 
+                                                        aria-label="password_confirmation" aria-describedby="password_confirmation" autofocus required>
+                                                        
+                                                        <button class="btn btn-light" type="button" id="togglePassword"><i class="mdi mdi-eye-outline"></i></button>
+                                                    </div>    
+                                                    
+                                                    @error('password_confirmation')
+                                                        <span class="invalid-feedback" role="alert">
+                                                            <strong>{{ $message }}</strong>
+                                                        </span>
+                                                    @enderror
+                                                </div>  
+
+                                                <script>
+                                                    document.getElementById('togglePassword').addEventListener('click', function (e) {
+                                                        const passwordInput = document.getElementById('confirmpassword');
+                                                        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                                                        passwordInput.setAttribute('type', type);
+
+                                                        // Toggle the eye icon
+                                                        this.innerHTML = type === 'password' ? '<i class="mdi mdi-eye-outline"></i>' : '<i class="mdi mdi-eye-off-outline"></i>';
+                                                    });
+                                                </script>
+
+                                                
         
                                                 <div class="mb-3">
                                                     <label for="userdob">Date of Birth <span class="text-danger">*</span></label>

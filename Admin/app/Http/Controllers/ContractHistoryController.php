@@ -63,9 +63,14 @@ class ContractHistoryController extends Controller
     public function showAll()
     {
         // Fetch all rows from SalesListDraft table with related SalesDetails
-        $salesListDraft = SalesListDraft::with('salesDetails')->get();
+      //  $salesListDraft = SalesListDraft::with('salesDetails')->get();
 
-        // Return the view with the fetched data
+      $user = Auth::user();
+        
+      // Fetch products where company_id matches the authenticated user's company_id
+      $salesListDraft = SalesListDraft::where('company_id', $user->company_id)->get();
+      
+      // Return the view with the fetched data
         return view('Contract-History', compact('salesListDraft'));
     }  
 

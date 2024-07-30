@@ -12,12 +12,13 @@ class CreateVariableListsTable extends Migration
             $table->bigIncrements('VariableID');
             $table->string('VariableName');
             $table->string('VariableType');
-         //   $table->string('VariableLabelValue')->nullable();
+         
             $table->json('VariableLabelValue')->nullable();
   
             $table->text('Description');
-           // $table->timestamp('CreatedDate')->useCurrent();
-            //$table->timestamp('UpdatedDate')->nullable()->useCurrent();
+
+            $table->unsignedBigInteger('company_id')->nullable();
+         
             $table->timestamps();
         });
     }

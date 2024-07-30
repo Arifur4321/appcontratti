@@ -30,6 +30,7 @@
     <div class="row">
      
     <div class="col-md-6">
+
     <div class="card">
         <div class="card-header">
             <h5 class="card-title"> @lang('translation.Sales Details')  </h5>
@@ -160,6 +161,17 @@
         </script>
     @endif
 
+    @if($errors->has('name'))
+        <script>
+            Swal.fire({
+                title: 'Error!',
+                text: 'name already exists in your company. Please choose a different one.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        </script>
+    @endif
+
     @if($errors->has('nickname'))
         <script>
             Swal.fire({
@@ -172,25 +184,7 @@
     @endif
  
 
-<!--  
-        @if(Session::has('success'))
-            <script>
-                alert("{{ Session::get('success') }}");
-                window.location.href = '/Sales-Lists';
-            </script>
-        @endif
-
-        @if($errors->has('email'))
-            <script>
-                alert("email already exists. Please choose a different one.");
-            </script>
-        @endif
-
-        @if($errors->has('nickname'))
-            <script>
-                alert("nickname already exists. Please choose a different one.");
-            </script>
-        @endif -->
+ 
 
             <script>
           

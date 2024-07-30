@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use App\Models\Contract;
@@ -41,16 +42,32 @@ class HomeController extends Controller
         return view('/');
     }
 
+    // public function contractList()
+    // {
+    //     // Fetch contracts from the database if needed
+    //     $contracts = Contract::all();
+    //     $variables = VariableList::all();
+    //     return view('ContractList', compact('contracts', 'variables'));
+    // }
+
     public function contractList()
     {
-        // Fetch contracts from the database if needed
- 
+        // Get the authenticated user
+        $user = Auth::user();
 
+        // Use a join query to fetch contracts where the company_id matches
+        $contracts = DB::table('contracts')
+            ->join('users', 'contracts.company_id', '=', 'users.company_id')
+            ->where('users.id', '=', $user->id)
+            ->select('contracts.*')
+            ->get();
 
-        $contracts = Contract::all();
+        // Fetch all variables
         $variables = VariableList::all();
+
         return view('ContractList', compact('contracts', 'variables'));
     }
+
 
     /*Language Translation*/
     public function lang($locale)

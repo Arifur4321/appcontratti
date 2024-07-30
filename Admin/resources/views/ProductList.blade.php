@@ -52,6 +52,7 @@
                 <h5 class="modal-title" id="exampleModalLabelNew">@lang('translation.New Product')</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
             <div class="modal-body">
                 <form id="productFormNew">
               
@@ -63,10 +64,11 @@
                         <label for="description-new" class="col-form-label">@lang('translation.Description'):</label>
                         <textarea class="form-control" id="description-new"></textarea>
                     </div>
-               
-                     
+
                 </form>
+            
             </div>
+            
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@lang('translation.Close')</button>
                 <button type="button" class="btn btn-primary" onclick="saveProduct()"> @lang('translation.Save Product')  </button>
@@ -108,45 +110,47 @@
 
 
 <script>
-function saveProduct() {
-    // Get form data
-    var productName = $('#product-name-new').val();
-    var description = $('#description-new').val();
+    
+    function saveProduct() {
+        
+        // Get form data
+        var productName = $('#product-name-new').val();
+        var description = $('#description-new').val();
 
-    // Basic validation
-    if (!productName || !description   ) {
-        console.error('All fields must be filled out.');
-        return;
-    }
-
-    // Get the CSRF token from the meta tag
-    var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-    // Send data to the server using AJAX
-    $.ajax({
-        url: '/save-product',
-        type: 'POST',
-        data: {
-            productName: productName,
-            description: description,
-        },
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        },
-        success: function (response) {
-            // Handle success
-            console.log('Data saved successfully.');
-            // Optionally, close the modal or perform other actions.
-            location.reload();
-        },
-        error: function (error) {
-            // Handle error
-            console.error('Error saving data:', error);
+        // Basic validation
+        if (!productName || !description   ) {
+            console.error('All fields must be filled out.');
+            return;
         }
-    });
 
-    $('#exampleModalNew').modal('hide');
-}
+        // Get the CSRF token from the meta tag
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        // Send data to the server using AJAX
+        $.ajax({
+            url: '/save-product',
+            type: 'POST',
+            data: {
+                productName: productName,
+                description: description,
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function (response) {
+                // Handle success
+                console.log('Data saved successfully.');
+                // Optionally, close the modal or perform other actions.
+                location.reload();
+            },
+            error: function (error) {
+                // Handle error
+                console.error('Error saving data:', error);
+            }
+        });
+
+        $('#exampleModalNew').modal('hide');
+    }
 
 
 </script>

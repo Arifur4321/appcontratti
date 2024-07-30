@@ -4,9 +4,6 @@
     <title>Sales Registration</title>
 </head>
 <body>
-  
- 
-
     <p>Ciao {{ $name }},</p>
     <p>Sei registrato come nuovo venditore nell'app 1% Contract.</p>
     <p>Le tue credenziali di accesso sono le seguenti:</p>

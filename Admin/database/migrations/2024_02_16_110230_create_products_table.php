@@ -17,7 +17,8 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('product_name');
             $table->string('description');
-            
+
+            $table->unsignedBigInteger('company_id')->nullable();
             // Add other columns as needed
             $table->timestamps();
         });

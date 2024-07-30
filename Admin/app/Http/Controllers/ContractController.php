@@ -9,56 +9,73 @@ use App\Models\VariableList;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
 
+use App\Models\User;
+
+use Illuminate\Support\Facades\Auth;
+ 
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
 class ContractController extends Controller
 {
 
 
     // to land on new contract page 
 
+    // public function createContractWithUpdatePage()
+    // {
+        
+    //     $contract = new Contract();
+    //     $contract->contract_name = "Write your contract name";  
+    //     $contract->save();
+ 
+    //     $contractId = $contract->id;
+    //    echo '<script>window.location.href = "/edit-contract-list/' . $contractId . '";</script>';
+    
+    // }
+
+
     public function createContractWithUpdatePage()
     {
+        // Get the authenticated user
+        $user = Auth::user();
+
         // Create a new contract with only the ID incremented
         $contract = new Contract();
         $contract->contract_name = "Write your contract name"; // Set the default value for contract_name
+        $contract->company_id = $user->company_id; // Set the company_id from the authenticated user
         $contract->save();
 
         // Get the ID of the newly created contract
         $contractId = $contract->id;
 
         // Redirect to the edit-contract-list page with the new contract ID
-       // return redirect()->route('edit-contract-list', ['contractId' => $contractId]);
-       echo '<script>window.location.href = "/edit-contract-list/' . $contractId . '";</script>';
-    
+        echo '<script>window.location.href = "/edit-contract-list/' . $contractId . '";</script>';
     }
+
 
     /**
      * Display a listing of the contracts.
      */
     public function index(Request $request)
     {
-        //$perPage = $request->input('perPage', 10); // Default to 10 items per page if not specified
-        //$contracts = Contract::paginate($perPage);
-        $contracts = Contract::all();
-        $variables = VariableList::all();
+  
+         // Get the authenticated user
+        $user = Auth::user();
+
+        // $contracts = Contract::all();
+         // Use a join query to fetch contracts where the company_id matches
+        $contracts = DB::table('contracts')
+             ->join('users', 'contracts.company_id', '=', 'users.company_id')
+             ->where('users.id', '=', $user->id)
+             ->select('contracts.*')
+             ->get();
+       
+       $variables = VariableList::all();
         return view('ContractList', compact('contracts', 'variables'));
     }
 
-    // Display a listing of the contracts with pagination search enable
-    // public function index(Request $request)
-    // {
-    //     $perPage = $request->input('perPage', 10); // Default to 10 items per page if not specified
-    //     $search = $request->input('search'); // Get the search query parameter
-    //     $query = Contract::query();
-    
-    //     if ($search) {
-    //         $query->where('column_name', 'like', '%'.$search.'%'); // Adjust 'column_name' to the actual column you are searching on
-    //     }
-    
-    //     $contracts = $query->paginate($perPage)->withQueryString();
-    //     $variables = VariableList::all();
-    
-    //     return view('ContractList', compact('contracts', 'variables'));
-    // }
+  
     
  
     public function destroy($id)

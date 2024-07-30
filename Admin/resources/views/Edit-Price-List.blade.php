@@ -1346,13 +1346,22 @@ maxPaymentRangeSlider.noUiSlider.on('change', updateCalculatedValue);
             });
         },
         error: function(xhr, status, error) {
-            console.error(error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Fill all the Form while updating price.',
-                confirmButtonText: 'OK'
-            });
+            if (xhr.status === 422) { // Unprocessable Entity status code
+                    var response = JSON.parse(xhr.responseText);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.error || 'Fill all the Form while updating price.',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An unexpected error occurred.',
+                        confirmButtonText: 'OK'
+                    });
+                }
         }
     });
 

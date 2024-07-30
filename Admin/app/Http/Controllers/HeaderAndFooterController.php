@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Storage;
 
 use App\PDF\CustomPDF; // Import the custom TCPDF class
 
+use Illuminate\Support\Facades\Auth;
+
 class HeaderAndFooterController extends Controller
 {
    
@@ -195,7 +197,13 @@ class HeaderAndFooterController extends Controller
 
     public function show()
     {
-        $headerAndFooterEntries = HeaderAndFooter::all();
+        //$headerAndFooterEntries = HeaderAndFooter::all();
+        
+        $user = Auth::user();
+
+        // Fetch price lists where company_id matches the authenticated user's company_id
+        $headerAndFooterEntries = HeaderAndFooter::where('company_id', $user->company_id)->get();
+        
         return view('HeaderAndFooter', compact('headerAndFooterEntries'));
     }
 
@@ -204,14 +212,23 @@ class HeaderAndFooterController extends Controller
 
     public function save(Request $request)
     {
+        
+        $user = Auth::user();
+
         try {
+            
+          
             $entry = HeaderAndFooter::updateOrCreate(
                 ['id' => $request->id], // If ID exists, update, otherwise create
                 [
                     'name' => $request->name,
                     'type' => $request->type,
-                    'editor_content' => $request->editor_content
-                ]
+
+                    'editor_content' => $request->editor_content,
+                    
+                    'company_id' => $user->company_id,
+                
+                    ]
             );
     
             return response()->json(['success' => true, 'message' => 'Header/Footer entry saved successfully.']);

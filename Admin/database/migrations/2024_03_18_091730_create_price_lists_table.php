@@ -1,6 +1,5 @@
 <?php
  
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -28,6 +27,7 @@ class CreatePriceListsTable extends Migration
             $table->integer('paymentMinRange')->nullable();
             $table->integer('paymentMaxRange')->nullable();
             $table->string('paymentExampleText')->nullable();
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->timestamps();
         });
     }

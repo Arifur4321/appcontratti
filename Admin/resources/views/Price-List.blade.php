@@ -18,7 +18,6 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
-
     <!-- SweetAlert2 -->
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -73,6 +72,7 @@
     <!-- Table body  -->
     <tbody>
         @foreach ($priceLists as $price)
+        
         <tr>
             <td  style="text-align: left;">{{ $price->id }}</td>
             <td  style="text-align: left;">{{ $price->pricename }}</td>

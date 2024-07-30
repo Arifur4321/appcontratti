@@ -29,12 +29,40 @@ Route::get('/arifurtable', [App\Http\Controllers\ProjectController::class, 'show
 
 // for Contractlist page  in office -----------------
  
+ 
+// Admin login routes
+Route::get('/admin/login', [App\Http\Controllers\AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [App\Http\Controllers\AdminController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
+
+// Protect the /company/registercompany and /register routes with the admin login middleware
+Route::middleware(['adminlogin'])->group(function () {
+    Route::get('/company/registercompany', [App\Http\Controllers\CompanyController::class, 'create'])->name('registercompany');
+    Route::post('/company/registercompany', [App\Http\Controllers\CompanyController::class, 'store'])->name('company.store');
+    Route::get('/register', [App\Http\Controllers\CompanyController::class, 'showRegisterPage'])->name('register'); // Ensure to use the correct controller and method
+});
+
+ 
+ 
+// Admin login routes
+// Route::get('/admin/login', [App\Http\Controllers\AdminController::class, 'showLoginForm'])->name('admin.login');
+// Route::post('/admin/login', [App\Http\Controllers\AdminController::class, 'login'])->name('admin.login.submit');
+// Route::post('/admin/logout', [App\Http\Controllers\AdminController::class, 'logout'])->name('admin.logout');
+
+// // Protect the /company/registercompany route with the admin login middleware
+// Route::middleware(['adminlogin'])->group(function () {
+//     Route::get('/company/registercompany', [App\Http\Controllers\CompanyController::class, 'create'])->name('registercompany');
+//     Route::post('/company/registercompany', [App\Http\Controllers\CompanyController::class, 'store'])->name('company.store');
+// });
+
+
+
+
 Route::get('/Contract-History', [App\Http\Controllers\ContractHistoryController::class, 'showAll']);
 
 Route::delete('/sales-list-draft/{id}', [App\Http\Controllers\ContractHistoryController::class, 'destroy']);
 
 Route::get('/insert-mandatory-status', [App\Http\Controllers\EditContractListController::class, 'insertMandatoryStatus']);
-
 
 Route::get('/check-unique', [App\Http\Controllers\SalesDetailsController::class, 'checkUnique']);
 

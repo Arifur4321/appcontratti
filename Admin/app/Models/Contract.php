@@ -18,6 +18,7 @@ class Contract extends Model
         'contract_name',
         'product_id',
         'price_id',
+        'company_id',
         'editor_content',
         'logged_in_user_name',
         'image_url', // Add this line for the new column

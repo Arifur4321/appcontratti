@@ -29,5 +29,6 @@ class PriceList extends Model
         'paymentMinRange', 
         'paymentMaxRange', 
         'paymentExampleText',
+        'company_id',
     ];
 }

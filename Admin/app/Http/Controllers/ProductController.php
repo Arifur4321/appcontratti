@@ -12,15 +12,36 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Illuminate\Support\Facades\Storage;
 
+use App\Models\User;
+
+use Illuminate\Support\Facades\Auth;
+ 
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
+ 
+
 class ProductController extends Controller
+
 {
-    public function index()
-    {
-        $products = Product::all();
-        return view('ProductList', compact('products'));
-    }
-
-
+    
+        public function index()
+        {
+            // Get the authenticated user
+            $user = Auth::user();
+    
+            // Fetch products where company_id matches the authenticated user's company_id
+            $products = Product::where('company_id', $user->company_id)->get();
+    
+            return view('ProductList', compact('products'));
+        }
+    
+    // public function index()
+    // {
+    //     $products = Product::all();
+    //     return view('ProductList', compact('products'));
+    // }
+ 
 //********************************* */
  
     public function generatePdfforSales(Request $request)
@@ -357,31 +378,48 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Variable deleted successfully'); // Redirect back with success message
     }
 
-    public function saveProduct(Request $request)
-    {
-        // Validate the request data
-        $validatedData = $request->validate([
+    
+        public function saveProduct(Request $request)
+        {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'productName' => 'required',
+                'description' => 'required',
+            ]);
+
+            // Get the authenticated user
+            $user = Auth::user();
+
+            // Create a new product instance
+            $product = new Product;
+            $product->product_name = $validatedData['productName'];
+            $product->description = $validatedData['description'];
+            $product->company_id = $user->company_id; // Set the company_id from the authenticated user
+
+            // Save the product to the database
+            $product->save();
+
+            return response()->json(['message' => 'Product saved successfully']);
+        }
+    
+    // public function saveProduct(Request $request)
+    // {
+    //     $validatedData = $request->validate([
         
-            'productName' => 'required',
-            'description' => 'required',
+    //         'productName' => 'required',
+    //         'description' => 'required',
     
         
-        ]);
+    //     ]);
 
-    // Create a new product instance
-    $product = new Product;
+    // $product = new Product;
+    // $product->product_name = $validatedData['productName'];
+    // $product->description = $validatedData['description'];
+    // $product->save();
  
-    $product->product_name = $validatedData['productName'];
-    $product->description = $validatedData['description'];
-   
- 
+    // return response()->json(['message' => 'Product saved successfully']);
+    // }
 
-    // Save the product to the database
-    $product->save();
-
-    // Optionally, you can return a response or redirect to another page
-    return response()->json(['message' => 'Product saved successfully']);
-    }
 
  
     public function update(Request $request, $id)

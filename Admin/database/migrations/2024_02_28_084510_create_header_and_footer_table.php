@@ -13,6 +13,7 @@ class CreateHeaderAndFooterTable extends Migration
             $table->string('name');
             $table->string('type');
             $table->text('editor_content');
+            $table->unsignedBigInteger('company_id')->nullable();
             $table->timestamps();
         });
     }

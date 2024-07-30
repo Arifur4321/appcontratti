@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title')
-    @lang('translation.Product-List')
+    @lang('translation.Sales List')
 @endsection
 
 @section('content')
@@ -15,9 +15,6 @@
     @endcomponent
 
  
-
-
-
 <!-- -----------------------------  --> 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 

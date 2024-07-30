@@ -23,6 +23,9 @@ class CreateSalesDetailsTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->text('description')->nullable();
+
+            $table->unsignedBigInteger('company_id')->nullable();
+            
             $table->rememberToken();
             $table->timestamps();
         });
@@ -35,9 +38,7 @@ class CreateSalesDetailsTable extends Migration
             'email' => 'hatbazar627@gmail.com',
             'email_verified_at' => '2022-01-02 17:04:58',
             'password' => Hash::make('12345678'), // Hashing the password
-            'description' => null, // Assuming description is nullable
-            // Assuming you don't have avatar and dob columns in sales_details table
-            
+            'description' => null, // Assuming description is nullable   
             'created_at' => now(),
             'updated_at' => now(), // Assuming you have updated_at column in the sales_details table
         ]);

@@ -17,7 +17,17 @@ class SalesDetails extends Authenticatable implements MustVerifyEmail
 
     protected $table = 'sales_details'; // Set the table name
 
-    protected $fillable = ['name', 'surname', 'nickname' ,'phone','email', 'password','description']; // Define fillable fields
+    protected $fillable = [
+        'name', 
+        'surname', 
+        'nickname' ,
+        'phone',
+        'email', 
+        'password',
+        'description',
+        'company_id',
+
+    ];  
 
       
     protected $hidden = [

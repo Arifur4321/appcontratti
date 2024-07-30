@@ -341,29 +341,69 @@ class EditContractListController extends Controller
     //     return view('Edit-ContractList', compact('contract', 'variables', 'products','headerEntries', 'footerEntries','priceLists'));
     // }
 
-    public function edit($id)
-    {
-        // Fetch the contract details
-        $contract = Contract::findOrFail($id);
+    
+    // public function edit($id)
+    
+    // {
+       
+    //     $contract = Contract::findOrFail($id);
         
-        // Fetch all variables and products
-        $variables = VariableList::all();
-        $products = Product::all();
+     
+    //     $variables = VariableList::all();
+    //     $products = Product::all();
 
-        // Fetch header and footer entries
-        $headerEntries = HeaderAndFooter::where('type', 'Header')->pluck('name', 'id')->toArray();
-        $footerEntries = HeaderAndFooter::where('type', 'Footer')->pluck('name', 'id')->toArray();
+ 
+    //     $headerEntries = HeaderAndFooter::where('type', 'Header')->pluck('name', 'id')->toArray();
+    //     $footerEntries = HeaderAndFooter::where('type', 'Footer')->pluck('name', 'id')->toArray();
 
-        // Fetch price lists
-        $priceLists = PriceList::all();
+      
+    //     $priceLists = PriceList::all();
 
-        // Fetch existing header/footer settings for the contract
-        $headerFooterData = HeaderAndFooterContractpage::where('contractID', $id)->first();
+     
+    //     $headerFooterData = HeaderAndFooterContractpage::where('contractID', $id)->first();
 
-        // Pass all the necessary data to the view
-        return view('Edit-ContractList', compact('contract', 'variables', 'products', 'headerEntries', 'footerEntries', 'priceLists', 'headerFooterData'));
-    }
+ 
+    //     return view('Edit-ContractList', compact('contract', 'variables', 'products', 'headerEntries', 'footerEntries', 'priceLists', 'headerFooterData'));
+    // }
 
+
+
+
+        public function edit($id)
+        {
+            // Get the current logged-in user
+            $user = Auth::user();
+            $companyId = $user->company_id;
+
+            // Fetch the contract details with the matching company_id
+            $contract = Contract::where('id', $id)->where('company_id', $companyId)->firstOrFail();
+
+            // Fetch all variables associated with the same company_id
+            $variables = VariableList::where('company_id', $companyId)->get();
+
+            // Fetch all products associated with the same company_id
+            $products = Product::where('company_id', $companyId)->get();
+
+            // Fetch header and footer entries with the same company_id
+            $headerEntries = HeaderAndFooter::where('type', 'Header')
+                            ->where('company_id', $companyId)
+                            ->pluck('name', 'id')
+                            ->toArray();
+
+            $footerEntries = HeaderAndFooter::where('type', 'Footer')
+                            ->where('company_id', $companyId)
+                            ->pluck('name', 'id')
+                            ->toArray();
+
+            // Fetch price lists with the same company_id
+            $priceLists = PriceList::where('company_id', $companyId)->get();
+
+            // Fetch existing header/footer settings for the contract with the same company_id
+            $headerFooterData = HeaderAndFooterContractpage::where('contractID', $id)->first();
+
+            // Pass all the necessary data to the view
+            return view('Edit-ContractList', compact('contract', 'variables', 'products', 'headerEntries', 'footerEntries', 'priceLists', 'headerFooterData'));
+        }
 
 
     public function updateContract(Request $request)

@@ -16,5 +16,6 @@ class HeaderAndFooter extends Model
         'name',
         'type',
         'editor_content',
+        'company_id',
     ];
 }

@@ -14,10 +14,6 @@
         @endslot
     @endcomponent
 
- 
-
-
-
 <!-- -----------------------------  --> 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
@@ -30,11 +26,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  
- 
-  
     <!-- Include Chart.js library -->
- 
- 
     <style>
         .chart-container {
             position: relative;
@@ -43,11 +35,11 @@
     </style>
  
     <div class="container">
-         
         <div class="chart-container">
             <canvas id="salesPerformanceChart"></canvas>
         </div>
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -85,6 +77,7 @@
                             data: pendingData,
                             backgroundColor: 'rgba(255, 206, 86, 0.2)',
                             borderColor: 'rgba(255, 206, 86, 1)',
+
                             borderWidth: 1
                         },
                         {
@@ -103,7 +96,7 @@
                         y: {
                             beginAtZero: true,
                             ticks: {
-                                stepSize: 1
+                                stepSize: 5
                             }
                         }
                     },

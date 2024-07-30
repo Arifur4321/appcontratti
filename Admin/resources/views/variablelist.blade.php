@@ -364,7 +364,7 @@ function saveVariable() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Variable name already exists. Please choose another name.'
+                text: 'Variable name already exists in your company. Please choose another name.'
             });
         } else {
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -1036,7 +1036,7 @@ $(document).ready(function() {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Variable name already exists. Please choose another name.'
+                text: 'Variable name already exists in your company. Please choose another name.'
             });
         } else {
             $.ajax({

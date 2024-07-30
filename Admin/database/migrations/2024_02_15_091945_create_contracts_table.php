@@ -18,11 +18,14 @@ class CreateContractsTable extends Migration
                 $table->id();
                 $table->string('contract_name');
                 $table->unsignedBigInteger('product_id')->nullable();
-                //$table->foreign('product_id')->references('id')->on('products');
+        
                 $table->foreign('product_id')->references('id')->on('products')->name('contracts_product_id_foreign');
                 $table->unsignedBigInteger('price_id')->nullable();
+                
                 $table->foreign('price_id')->references('id')->on('price_lists')->name('contracts_price_id_foreign');
-            
+                
+                $table->unsignedBigInteger('company_id')->nullable();
+
                 $table->longText('editor_content')->nullable();
                 $table->text('logged_in_user_name')->nullable();
                 $table->string('image_url')->nullable();

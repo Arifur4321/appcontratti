@@ -1,21 +1,21 @@
-@extends('layouts.master')
-@section('title')
-@lang('translation.Sales-Performence')
-@endsection
 
-@section('content')
-    @component('components.breadcrumb')
-        @slot('li_1')
+<?php $__env->startSection('title'); ?>
+<?php echo app('translator')->get('translation.Sales-Performence'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+    <?php $__env->startComponent('components.breadcrumb'); ?>
+        <?php $__env->slot('li_1'); ?>
             Projects
-        @endslot
-        @slot('title' )
-        @lang('translation.Sales-Performence')
+        <?php $__env->endSlot(); ?>
+        <?php $__env->slot('title' ); ?>
+        <?php echo app('translator')->get('translation.Sales-Performence'); ?>
 
-        @endslot
-    @endcomponent
+        <?php $__env->endSlot(); ?>
+    <?php echo $__env->renderComponent(); ?>
 
 <!-- -----------------------------  --> 
-<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script> 
     <link rel="stylesheet" href="//cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="//cdn.datatables.net/2.0.2/js/dataTables.min.js"></script>
@@ -44,7 +44,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var ctx = document.getElementById('salesPerformanceChart').getContext('2d');
-            var salesData = @json($salesData);
+            var salesData = <?php echo json_encode($salesData, 15, 512) ?>;
 
             var labels = salesData.map(data => data.sales_name);
             var totalData = salesData.map(data => data.total);
@@ -228,4 +228,6 @@
     });
 </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.master', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/u121027207/domains/appcontratti.it/public_html/resources/views/Sales-Performence.blade.php ENDPATH**/ ?>

@@ -72,7 +72,10 @@ return [
   "HeaderAndFooter" => "HeaderAndFooter",
   "Variable-List" => " Variable-List",
   "Add New Contract" => "Add New Contract",
+  
   "Sales-Performence" => "Sales-Performence",
+  
+
   "Contract Name" => "Contract Name",
   "User Name" => "User Name",
   "Created Date" =>  "Created Date",
@@ -145,6 +148,8 @@ return [
   "Add New HeaderOrFooter" => "Add New HeaderOrFooter",
   "Type" => "Type",
   "Update Password" => "Update Password",
+  
+
   "Project_Overview" => "Project Overview",
   "Create_New" => "Create New",
   "Tasks" => "Tasks",
@@ -263,6 +268,7 @@ return [
   "Edit_Details" => "Edit Details",
   "Placeholders" => "Placeholders",
   "Toasts" => "Toasts",
+  
   "Jobs" => "Jobs",
   "Job_List" => "Job List",
   "Job_Grid" => "Job Grid",

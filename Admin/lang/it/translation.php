@@ -8,6 +8,7 @@ return [
   "Saas" => "Saas",
   "Crypto" => "Crypto",
   "Blog" => "Blog",
+
   "Contract-List" => "Lista-Contratti",
   "Price-List" => "Lista-Prezzi",
   "Contract-History" => "Storico-Contratti",
@@ -18,7 +19,9 @@ return [
   "Product-List" => "Lista-Prodotti",
   "HeaderAndFooter" => "IntestazioneEPièDiPagina",
   "Variable-List" => "Lista-Variabili",
+
   "Add New Contract" => "Aggiungi Nuovo Contratto",
+
   "Contract Name" => "Nome Contratto",
   "User Name" => "Nome Utente",
   "Created Date" => "Data Creazione",
@@ -76,7 +79,7 @@ return [
   "Status" => "Stato",
   "All Sales" => "Tutte Vendite",
   "Sales List" => "Lista Vendite",
-  "Add New Sales" => "Aggiungi Nuove Venditore",
+  "Add New Sales" => "Aggiungi Nuovo Venditore",
   "Name" => "Nome",
   "Surname" => "Cognome",
   "Nick Name" => "Soprannome",
@@ -90,8 +93,11 @@ return [
   "Header And Footer Entries" => "Intestazione e Piè di Pagina",
   "Add New HeaderOrFooter" => "Aggiungi HeaderOrFooter",
   "Type" => "Tipo",
-  "Update Password" => "Aggiorna Password",
-  "Sales-Performence" => "Prestazioni di Vendita",
+    "Update Password" => "Aggiorna Password",
+      "Sales-Performence" => "Prestazioni di Vendita",
+
+
+
   "Layouts" => "Layout",
   "Vertical" => "Verticale",
   "Light_Sidebar" => "Barra laterale leggera",
@@ -262,6 +268,7 @@ return [
   "Edit_Details" => "Modifica i dettagli",
   "Placeholders" => "segnaposto",
   "Toasts" => "brindisi",
+
   "Jobs" => "Lavori",
   "Job_List" => "Elenco lavori",
   "Job_Grid" => "Griglia di lavoro",
